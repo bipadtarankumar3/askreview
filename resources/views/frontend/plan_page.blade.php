@@ -146,6 +146,24 @@
                               </div>
                               <br><br>
                             @endif
+                          @elseif ($item->type == 'google')
+                            @if ($item->status == 'active')
+                              @if (isset($googleFeedbackTemplates) && count($googleFeedbackTemplates) > 0)
+                              <a href="javascript:void(0)" onclick="open_google_reviews_popup('{{$item->review_links}}')" class="mt-4">
+                                <button type="button" class="btn btn-secondary google_btn" style="text-align: left;
+                                  border-radius: 20px;">
+                                  <span><img src="{{$item->button_icon}}" alt="" width="25px"></span> <div class="btn_text">{{$item->button_name}}</div>
+                                </button>
+                              </a><br><br>
+                              @else
+                              <a href="{{$item->review_links}}" onclick="review_links_analytics('{{$item->type}}')" target="_blank" class="mt-4">
+                                <button type="button" class="btn btn-secondary google_btn" style="text-align: left;
+                                  border-radius: 20px;">
+                                  <span><img src="{{$item->button_icon}}" alt="" width="25px"></span> <div class="btn_text">{{$item->button_name}}</div>
+                                </button>
+                              </a><br><br>
+                              @endif
+                            @endif
                           @else
                             @if ($item->status == 'active')
                             <a href="{{$item->review_links}}"  onclick="review_links_analytics('{{$item->type}}')" target="_blank" class="mt-4">
@@ -203,14 +221,21 @@
                       @endif
   
                       @if (isset($IntegrationGoogle) && $IntegrationGoogle->status == 'active')
-                          
+                          @if (isset($googleFeedbackTemplates) && count($googleFeedbackTemplates) > 0)
+                          <a href="javascript:void(0)" onclick="open_google_reviews_popup('{{$IntegrationGoogle->review_links}}')" class="mt-4">
+                            <button type="button" class="btn btn-secondary google_btn" style="text-align: left;
+                              border-radius: 20px;">
+                              <span><img src="{{asset('frontend/images/google.png')}}" alt="" width="25px"></span> <div class="btn_text">Google</div>
+                            </button>
+                          </a><br><br>
+                          @else
                           <a href="{{$IntegrationGoogle->review_links}}"  onclick="review_links_analytics('google')" target="_blank" class="mt-4">
                             <button type="button" class="btn btn-secondary google_btn" style="text-align: left;
                               border-radius: 20px;">
                               <span><img src="{{asset('frontend/images/google.png')}}" alt="" width="25px"></span> <div class="btn_text">Google</div>
-                              
                             </button>
                           </a><br><br>
+                          @endif
                       @endif
                       @if (isset($IntegrationFacebook)  && $IntegrationFacebook->status == 'active')
                           
@@ -1238,6 +1263,166 @@ var overlay = document.querySelector('.overlay');
 
 
     
+  </script>
+
+  <!-- Google Reviews Selection Modal -->
+  <div class="modal fade" id="googleReviewsPopupModal" tabindex="-1" aria-labelledby="googleReviewsPopupModalLabel" aria-hidden="true" style="z-index: 1055;">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden; background: #ffffff;">
+        <div class="modal-header border-0 pb-0" style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); padding: 1.25rem 1.25rem 0.5rem 1.25rem;">
+          <div class="d-flex align-items-center gap-2">
+            <img src="{{URL::to('frontend/images/google.png')}}" width="32px" height="32px" alt="Google">
+            <div>
+              <h5 class="modal-title font-weight-bold mb-0 text-dark" id="googleReviewsPopupModalLabel" style="font-size: 1.15rem; font-weight: 700;">Google Review Options</h5>
+              <small class="text-muted" style="font-size: 0.8rem;">Tap any comment to copy & open Google Reviews</small>
+            </div>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeGoogleReviewsPopup()"></button>
+        </div>
+
+        <div class="modal-body p-3 pt-2" style="background-color: #fafbfc;">
+          <!-- Notification Banner when copied -->
+          <div id="copy_feedback_toast" class="alert alert-success d-none py-2 px-3 mb-2 rounded-3 shadow-sm align-items-center gap-2 border-0" style="background-color: #e6f4ea; color: #137333;">
+            <div class="d-flex align-items-center gap-2">
+              <i class="fa-solid fa-circle-check fa-lg text-success"></i>
+              <div class="small">
+                <strong>Comment copied!</strong> Opening Google Reviews... Just paste (Ctrl+V / Tap & Hold) in Google's review box!
+              </div>
+            </div>
+          </div>
+
+          <p class="text-secondary small mb-3">
+            Click any compliment below to copy it automatically and proceed to Google Reviews, or write your own review:
+          </p>
+
+          <div class="d-flex flex-column gap-2 mb-3" id="google_templates_popup_list">
+            @if(isset($googleFeedbackTemplates) && count($googleFeedbackTemplates) > 0)
+              @foreach($googleFeedbackTemplates as $tmpl)
+                <div class="google-comment-card p-3 rounded-3 border bg-white shadow-sm position-relative mb-2" 
+                     onclick="selectAndCopyReview({{ json_encode($tmpl->feedback_text) }})"
+                     style="cursor: pointer; transition: all 0.2s ease-in-out; border-color: #e5e7eb !important;">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <div class="text-warning" style="letter-spacing: 2px; font-size: 0.85rem;">
+                      <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <span class="badge bg-light text-primary border rounded-pill px-2 py-1" style="font-size: 0.72rem; font-weight: 600;">
+                      <i class="fa-regular fa-copy me-1"></i> Tap to Copy & Review
+                    </span>
+                  </div>
+                  <div class="comment-text text-dark" style="font-size: 0.92rem; line-height: 1.45;">
+                    "{{$tmpl->feedback_text}}"
+                  </div>
+                </div>
+              @endforeach
+            @endif
+          </div>
+
+          <!-- Option to write custom review directly -->
+          <div class="text-center pt-2 border-top">
+            <p class="small text-muted mb-2">Want to write your own personalized review?</p>
+            <button type="button" class="btn btn-outline-dark btn-sm rounded-pill px-3 py-1 font-weight-bold" onclick="openDirectGoogleReview()">
+              <i class="fa-solid fa-pen-to-square me-1"></i> Write My Own Review on Google
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .google-comment-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08) !important;
+      border-color: #4285f4 !important;
+      background-color: #f8fbff !important;
+    }
+    .google-comment-card:active {
+      transform: scale(0.99);
+    }
+  </style>
+
+  <script>
+    var currentGoogleReviewUrl = '';
+
+    function open_google_reviews_popup(reviewUrl) {
+        currentGoogleReviewUrl = reviewUrl || '{{ $IntegrationGoogle->review_links ?? "" }}';
+        review_links_analytics('google');
+        
+        $('#copy_feedback_toast').addClass('d-none');
+        
+        var modalEl = document.getElementById('googleReviewsPopupModal');
+        if (modalEl) {
+            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                var myModal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                myModal.show();
+            } else {
+                $(modalEl).modal('show');
+            }
+        }
+    }
+
+    function closeGoogleReviewsPopup() {
+        var modalEl = document.getElementById('googleReviewsPopupModal');
+        if (modalEl) {
+            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                var myModal = bootstrap.Modal.getInstance(modalEl);
+                if (myModal) myModal.hide();
+            } else {
+                $(modalEl).modal('hide');
+            }
+        }
+    }
+
+    function selectAndCopyReview(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text).then(function() {
+                finishCopyAction();
+            }).catch(function() {
+                fallbackCopyText(text);
+            });
+        } else {
+            fallbackCopyText(text);
+        }
+    }
+
+    function fallbackCopyText(text) {
+        var textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-999999px";
+        textArea.style.top = "-999999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+            document.execCommand('copy');
+        } catch (err) {
+            console.error('Fallback copy error', err);
+        }
+        document.body.removeChild(textArea);
+        finishCopyAction();
+    }
+
+    function finishCopyAction() {
+        $('#copy_feedback_toast').removeClass('d-none');
+        
+        if (typeof toastr !== 'undefined') {
+            toastr.success('Review copied! Opening Google Reviews...', 'Copied to Clipboard');
+        }
+        
+        setTimeout(function() {
+            if (currentGoogleReviewUrl) {
+                window.open(currentGoogleReviewUrl, '_blank');
+            }
+        }, 700);
+    }
+
+    function openDirectGoogleReview() {
+        if (currentGoogleReviewUrl) {
+            window.open(currentGoogleReviewUrl, '_blank');
+        }
+        closeGoogleReviewsPopup();
+    }
   </script>
 
 </body>

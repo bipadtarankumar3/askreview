@@ -27,6 +27,7 @@ use App\Models\video_testimonial;
 use App\Models\QrTrack;
 use App\Models\ReviewLinksAnalytics;
 use App\Models\Payment;
+use App\Models\GoogleFeedbackTemplate;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -141,6 +142,11 @@ class FrontendController extends Controller
 
                 
                 $array['integrationList'] = Integration::where('user_id',$user->id)->orderBy('button_order','asc')->get();
+
+                $array['googleFeedbackTemplates'] = GoogleFeedbackTemplate::where('user_id', $userDate->id)
+                    ->where('status', 'active')
+                    ->orderBy('sort_order', 'asc')
+                    ->get();
 
                 $array['video_access_show'] = false;
                 if ($userDate->user_create_type == 'sign_up') {

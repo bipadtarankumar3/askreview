@@ -165,6 +165,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
     Route::get('video_testimonial_delete/{id}', [ReviewController::class,'video_testimonial_delete']);
     Route::post('integration_start', [ReviewController::class,'integration_start']);
     Route::post('update-integration-order', [ReviewController::class,'update_integration_order']);
+    Route::get('google_feedback_templates', [ReviewController::class, 'get_google_feedback_templates']);
+    Route::post('google_feedback_template_add', [ReviewController::class, 'add_google_feedback_template']);
+    Route::post('google_feedback_template_delete', [ReviewController::class, 'delete_google_feedback_template']);
+    Route::post('google_feedback_template_reorder', [ReviewController::class, 'reorder_google_feedback_templates']);
 
     // ----------------- Review Links End------------------------
 

@@ -18,6 +18,7 @@ use App\Models\SocialReview;
 use App\Models\video_testimonial;
 use App\Models\Service;
 use App\Models\Payment;
+use App\Models\GoogleFeedbackTemplate;
 
 use Response;
 use PDF;
@@ -295,8 +296,88 @@ class ReviewController extends Controller
             $data['Integration'] = Integration::where('user_id',Auth::user()->id)
             ->where('type',$request->type)
             ->first();
+
+            if ($request->type == 'google') {
+                $data['googleFeedbackTemplates'] = GoogleFeedbackTemplate::where('user_id', Auth::user()->id)
+                    ->orderBy('sort_order', 'asc')
+                    ->get();
+            }
+
             return view('user.review_links.integration_remove_modal',$data);
         }
+    }
+
+    public function get_google_feedback_templates(Request $request)
+    {
+        if (Auth::check()) {
+            $templates = GoogleFeedbackTemplate::where('user_id', Auth::user()->id)
+                ->orderBy('sort_order', 'asc')
+                ->get();
+            return response()->json([
+                'status' => 1,
+                'data' => $templates
+            ]);
+        }
+        return response()->json(['status' => 0, 'message' => 'Unauthorized'], 401);
+    }
+
+    public function add_google_feedback_template(Request $request)
+    {
+        if (Auth::check()) {
+            $request->validate([
+                'feedback_text' => 'required|string|max:1000',
+            ]);
+
+            $maxOrder = GoogleFeedbackTemplate::where('user_id', Auth::user()->id)->max('sort_order') ?? 0;
+
+            $template = GoogleFeedbackTemplate::create([
+                'user_id' => Auth::user()->id,
+                'feedback_text' => trim($request->feedback_text),
+                'sort_order' => $maxOrder + 1,
+                'status' => 'active',
+            ]);
+
+            return response()->json([
+                'status' => 1,
+                'message' => 'Default feedback template added!',
+                'data' => $template
+            ]);
+        }
+        return response()->json(['status' => 0, 'message' => 'Unauthorized'], 401);
+    }
+
+    public function delete_google_feedback_template(Request $request)
+    {
+        if (Auth::check()) {
+            GoogleFeedbackTemplate::where('user_id', Auth::user()->id)
+                ->where('id', $request->id)
+                ->delete();
+
+            return response()->json([
+                'status' => 1,
+                'message' => 'Feedback template deleted!'
+            ]);
+        }
+        return response()->json(['status' => 0, 'message' => 'Unauthorized'], 401);
+    }
+
+    public function reorder_google_feedback_templates(Request $request)
+    {
+        if (Auth::check()) {
+            $order = $request->order;
+            if (is_array($order)) {
+                foreach ($order as $index => $id) {
+                    GoogleFeedbackTemplate::where('user_id', Auth::user()->id)
+                        ->where('id', $id)
+                        ->update(['sort_order' => $index + 1]);
+                }
+                return response()->json([
+                    'status' => 1,
+                    'message' => 'Order updated successfully!'
+                ]);
+            }
+        }
+        return response()->json(['status' => 0, 'message' => 'Invalid data'], 400);
     }
 
     public function integration_remove(Request $request){

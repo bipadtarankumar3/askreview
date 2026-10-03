@@ -414,9 +414,9 @@
         </div>
     </div>
 
-    <div class="modal fade bd-example-modal-lg" id="integration_remove_modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content integration_remove_modal_body">
+    <div class="modal fade" id="integration_remove_modal" tabindex="-1" role="dialog" aria-labelledby="integrationRemoveModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 720px;">
+            <div class="modal-content integration_remove_modal_body" style="border-radius: 18px; border: none; box-shadow: 0 20px 50px rgba(0,0,0,0.18); overflow: hidden;">
                 
             </div>
         </div>
@@ -504,6 +504,7 @@
 
     function save_google_status() {
         var form = $('#google_status_form')[0];
+        if (!form) return;
         var formData = new FormData(form);
         $.ajax({
             type: "POST",
@@ -512,19 +513,17 @@
             processData: false,
             contentType: false,
             success: function(data) {
-                $('#integration_remove_modal').modal('hide');
-                swal({
-                    title: "Success",
-                    text: "Google status updated successfully.",
-                    icon: "success",
-                    button: "Cool"
-                });
-                setTimeout(() => {
-                    location.reload(true);
-                }, 1000);
+                if (typeof toastr !== 'undefined') {
+                    toastr.success("Google status updated successfully.");
+                } else if (typeof swal !== 'undefined') {
+                    swal("Success", "Google status updated.", "success");
+                }
             },
             error: function(err) {
                 console.error(err);
+                if (typeof toastr !== 'undefined') {
+                    toastr.error("Failed to update status.");
+                }
             }
         });
     }
