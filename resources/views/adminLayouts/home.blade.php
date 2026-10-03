@@ -1351,18 +1351,24 @@
     </div>
 
     
-<div class="modal fade bd-example-modal-lg" id="add_support_modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-md">
-    <div class="modal-content">
-      <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Support</h5>
-          {{-- <button type="button" class="close btn btn-danger" data-dismiss="modal" aria-label="Close"  onclick="hide_modal()">
-            <span aria-hidden="true">&times;</span>
-          </button> --}}
+<div class="modal fade" id="add_support_modal" tabindex="-1" role="dialog" aria-labelledby="supportModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md" style="max-width: 520px;">
+    <div class="modal-content" style="border-radius: 20px; border: 1px solid #e2e8f0; box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25); overflow: hidden;">
+      <div class="modal-header" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 18px 24px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+        <div class="d-flex align-items-center gap-2">
+          <div style="width: 34px; height: 34px; border-radius: 10px; background: rgba(225, 29, 72, 0.15); border: 1px solid rgba(225, 29, 72, 0.3); display: flex; align-items: center; justify-content: center; color: #fb7185;">
+            <i class="ti ti-headset" style="font-size: 1.15rem;"></i>
+          </div>
+          <div>
+            <h5 class="modal-title mb-0" id="supportModalLabel" style="color: #ffffff; font-weight: 700; font-size: 1.05rem; letter-spacing: -0.01em;">Need Help? Contact Support</h5>
+            <div style="color: #94a3b8; font-size: 0.78rem;">We're here to assist you anytime</div>
+          </div>
         </div>
-        <div class="modal-body support_body">
-        
-        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" data-dismiss="modal" aria-label="Close" style="opacity: 0.8; font-size: 0.85rem; filter: invert(1); cursor: pointer;"></button>
+      </div>
+      <div class="modal-body support_body p-0">
+      
+      </div>
     </div>
   </div>
 </div>
