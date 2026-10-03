@@ -56,6 +56,29 @@ class FrontendController extends Controller
         ]);
     }
 
+    protected function setMailConfig()
+    {
+        $mail = DB::table('mail_configures')->first();
+        if ($mail) {
+            $port = (int)$mail->mail_port;
+            $encryption = $mail->mail_encryption ?: ($port == 465 ? 'ssl' : 'tls');
+
+            config([
+                'mail.default' => 'smtp',
+                'mail.mailers.smtp.transport' => 'smtp',
+                'mail.mailers.smtp.host' => $mail->mail_host,
+                'mail.mailers.smtp.port' => $port,
+                'mail.mailers.smtp.encryption' => $encryption,
+                'mail.mailers.smtp.username' => $mail->mail_username,
+                'mail.mailers.smtp.password' => $mail->mail_password,
+                'mail.from.address' => $mail->mail_from_address,
+                'mail.from.name' => $mail->mail_from_name,
+            ]);
+
+            app('mail.manager')->purge('smtp');
+        }
+    }
+
     public function index($user_name){
 
         $date = date('Y-m-d');
@@ -422,42 +445,35 @@ class FrontendController extends Controller
                 );
                 $notification = notification::create($notification_arr);
 
-                $mail=DB::table('mail_configures')->first();
-                $config = array(
-                    'driver' => 'smtp',
-                    'host' => $mail->mail_host,
-                    'port' => $mail->mail_port,
-                    'from' => array('address' => $mail->mail_from_address, 'name' => $mail->mail_from_name),
-                    'encryption' => $mail->mail_encryption,
-                    'username' => $mail->mail_username,
-                    'password' => $mail->mail_password,
-                    'sendmail' => '/usr/sbin/sendmail -bs',
-                    'pretend' => false,
-                    'stream' => [
-                        'ssl' => [
-                            'allow_self_signed' => true,
-                            'verify_peer' => false,
-                            'verify_peer_name' => false,
-                        ],
-                    ],
-                );
-                Config::set('mail',$config);
-                $type="ADMIN";
-                $subject="Review Form";
+                $this->setMailConfig();
+                $subject = "New Feedback from " . ($request->f_customer_name ?: 'Customer');
                 
                 $userDate = User::where('id',$user_id)->first();
                 if ($userDate) {
                     
                     $mail_arr = array(
-                        'name'=>$request->f_customer_name,
-                        'phone'=>$request->f_phone_number,
+                        'title' => 'New Customer Feedback Received',
+                        'name' => $request->f_customer_name,
+                        'phone' => $request->f_phone_number,
+                        'rating' => $request->rating_number,
+                        'message' => $request->f_comments,
+                        'admin_url' => url('admin/list_question_answers')
                     );
-                    // dd($mail);
 
-                    $admin= Mail::to($userDate->email)->send(new SpinnerFormMail($type,$mail_arr,$subject));
+                    if (!empty($userDate->email)) {
+                        try {
+                            Mail::to($userDate->email)->send(new SpinnerFormMail('ADMIN', $mail_arr, $subject));
+                        } catch (\Exception $e) {
+                            \Log::error('Review form admin email error: ' . $e->getMessage());
+                        }
+                    }
 
-                    if ($request->email !='') {
-                        $user= Mail::to($request->email)->send(new SpinnerFormMail('CUSTOMER',$mail_arr,$subject));
+                    if (!empty($request->email)) {
+                        try {
+                            Mail::to($request->email)->send(new SpinnerFormMail('CUSTOMER', $mail_arr, 'Thank you for your feedback'));
+                        } catch (\Exception $e) {
+                            \Log::error('Review form customer email error: ' . $e->getMessage());
+                        }
                     }
 
                     if(!empty($request->f_phone_number) && $userDate->wp_key !=''){
@@ -553,41 +569,35 @@ class FrontendController extends Controller
 
                 // $SpinnerUpdate = Spinner::where('id',decrypt($request->spinner_id))->update(['value'=>$Spinner->value-1]);
      
-                $mail=DB::table('mail_configures')->first();
-                $config = array(
-                    'driver' => 'smtp',
-                    'host' => $mail->mail_host,
-                    'port' => $mail->mail_port,
-                    'from' => array('address' => $mail->mail_from_address, 'name' => $mail->mail_from_name),
-                    'encryption' => $mail->mail_encryption,
-                    'username' => $mail->mail_username,
-                    'password' => $mail->mail_password,
-                    'sendmail' => '/usr/sbin/sendmail -bs',
-                    'pretend' => false,
-                    'stream' => [
-                        'ssl' => [
-                            'allow_self_signed' => true,
-                            'verify_peer' => false,
-                            'verify_peer_name' => false,
-                        ],
-                    ],
-                );
-                Config::set('mail',$config);
-                $type="ADMIN";
-                $subject="Review";
+                $this->setMailConfig();
+                $subject = "New Private Enquiry from " . ($request->customer_name ?: 'Customer');
                 
                 $userDate = User::where('id',$user_id)->first();
                 if ($userDate) {
                     
                     $mail_arr = array(
-                        'name'=>$request->name,
-                        'email'=>$request->customer_number
+                        'title' => 'New Private Enquiry Received',
+                        'name' => $request->customer_name,
+                        'email' => $request->customer_email,
+                        'phone' => $request->customer_number,
+                        'message' => $request->customer_message,
+                        'admin_url' => url('admin/private_review_list')
                     );
 
-                    $admin= Mail::to($userDate->email)->send(new SpinnerFormMail($type,$mail_arr,$subject));
+                    if (!empty($userDate->email)) {
+                        try {
+                            Mail::to($userDate->email)->send(new SpinnerFormMail('ADMIN', $mail_arr, $subject));
+                        } catch (\Exception $e) {
+                            \Log::error('Private feedback admin email error: ' . $e->getMessage());
+                        }
+                    }
 
-                    if ($request->email !='') {
-                        $user= Mail::to($request->email)->send(new SpinnerFormMail('CUSTOMER',$mail_arr,$subject));
+                    if (!empty($request->customer_email)) {
+                        try {
+                            Mail::to($request->customer_email)->send(new SpinnerFormMail('CUSTOMER', $mail_arr, 'Thank you for your enquiry'));
+                        } catch (\Exception $e) {
+                            \Log::error('Private feedback customer email error: ' . $e->getMessage());
+                        }
                     }
 
                     if(!empty($request->customer_number) && $userDate->wp_key !=''){
@@ -715,87 +725,50 @@ class FrontendController extends Controller
                 $video_testimonial = video_testimonial::create($arr);
 
 
-                // $notification_arr = array(
-                //     'type'=>'private',
-                //     'item_id'=>$privateReview->id,
-                //     'url'=>'admin/private_review_list',
-                //     'text'=>'Private Contact: '.$request->customer_name,
-                //     'user_id'=>$user_id,
-                // );
-                // $notification = notification::create($notification_arr);
+                $download_url = '';
+                if (!empty($video_testimonial->video)) {
+                    try {
+                        $cmd = $this->s3->getCommand('GetObject', [
+                            'Bucket' => env('AWS_BUCKET'),
+                            'Key' => 'transcoded/' . $video_testimonial->video
+                        ]);
+                        $s3Req = $this->s3->createPresignedRequest($cmd, '+7 days');
+                        $download_url = (string)$s3Req->getUri();
+                    } catch (\Exception $e) {
+                        $download_url = !empty($video_testimonial->video_url) ? $video_testimonial->video_url : url('admin/video_testimonial_details/' . $video_testimonial->id);
+                    }
+                } else {
+                    $download_url = !empty($video_testimonial->video_url) ? $video_testimonial->video_url : url('admin/video_testimonial_details/' . $video_testimonial->id);
+                }
 
-                // $mail=DB::table('mail_configures')->first();
-                // $config = array(
-                //     'driver' => 'smtp',
-                //     'host' => $mail->mail_host,
-                //     'port' => $mail->mail_port,
-                //     'from' => array('address' => $mail->mail_from_address, 'name' => $mail->mail_from_name),
-                //     'encryption' => $mail->mail_encryption,
-                //     'username' => $mail->mail_username,
-                //     'password' => $mail->mail_password,
-                //     'sendmail' => '/usr/sbin/sendmail -bs',
-                //     'pretend' => false,
-                //     'stream' => [
-                //         'ssl' => [
-                //             'allow_self_signed' => true,
-                //             'verify_peer' => false,
-                //             'verify_peer_name' => false,
-                //         ],
-                //     ],
-                // );
-                // Config::set('mail',$config);
-                // $type="ADMIN";
-                // $subject="Review";
+                $notification_arr = array(
+                    'type'=>'video',
+                    'item_id'=>$video_testimonial->id,
+                    'url'=>'admin/video_testimonial_details/'.$video_testimonial->id,
+                    'text'=>'Video Testimonial: '.($request->video_customer_name ?: 'New Customer'),
+                    'user_id'=>$user_id,
+                );
+                notification::create($notification_arr);
+
+                $this->setMailConfig();
+                $subject = "New Video Testimonial from " . ($request->video_customer_name ?: 'Customer');
+                $mail_arr = array(
+                    'title' => 'New Video Testimonial Received',
+                    'name' => $request->video_customer_name,
+                    'phone' => $request->video_customer_phone,
+                    'rating' => $rating_number,
+                    'video_url' => $download_url,
+                    'admin_url' => url('admin/video_testimonial_details/' . $video_testimonial->id)
+                );
                 
-                // $userDate = User::where('id',$user_id)->first();
-                // if ($userDate) {
-                    
-                //     $mail_arr = array(
-                //         'name'=>$request->name,
-                //         'email'=>$request->customer_number
-                //     );
-
-                //     $admin= Mail::to($userDate->email)->send(new SpinnerFormMail($type,$mail_arr,$subject));
-
-                //     if ($request->email !='') {
-                //         $user= Mail::to($request->email)->send(new SpinnerFormMail('CUSTOMER',$mail_arr,$subject));
-                //     }
-
-                //     if(!empty($request->customer_number) && $userDate->wp_key !=''){
-                //         $curl = curl_init();
-
-                //         // $string = 'Thank you for submit the form.';
-                //         $string = "प्रिय ग्राहक, धन्यवाद 1F44F हम अपने ग्राहकों से फीडबैक सुनना पसंद करते हैं। आपका फीडबैक हमे प्राप्त हो गया है,  ये फीडबैक ही हमे बेहतर को और बेहतर करने के लिए प्रेरित करता है।आपकी संतुष्टि ही हमारा लक्ष्य है जल्द ही हमारी टीम आपसे संपर्क करेगी |र्क करेगी |";
-                //         $replaced = str_replace(' ', '%20', $string);
-                //         $message = $replaced;
-                    
-                //         curl_setopt_array($curl, array(
-                //           CURLOPT_URL => 'http://api.vyyapar.com/wapp/api/send?apikey='.$userDate->wp_key.'&mobile='.$request->customer_number.'&msg='.$message,
-                //           CURLOPT_RETURNTRANSFER => true,
-                //           CURLOPT_ENCODING => '',
-                //           CURLOPT_MAXREDIRS => 10,
-                //           CURLOPT_TIMEOUT => 0,
-                //           CURLOPT_FOLLOWLOCATION => true,
-                //           CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                //           CURLOPT_CUSTOMREQUEST => 'GET',
-                //         ));
-                        
-                //         $response = curl_exec($curl);
-                        
-                //         curl_close($curl);
-
-                //         if($userDate->wp_count == ''){
-                //             $count =1;
-                //         }else{
-                //             $count = $userDate->wp_count+1;
-                //         }
-
-                //         $userDateUp = User::where('id',$userDate->id)->update(['wp_count'=>$count]);
-
-                //     }
-
-                    
-                // }
+                $userDate = User::where('id',$user_id)->first();
+                if ($userDate && !empty($userDate->email)) {
+                    try {
+                        Mail::to($userDate->email)->send(new SpinnerFormMail('ADMIN', $mail_arr, $subject));
+                    } catch (\Exception $e) {
+                        \Log::error('Video testimonial mail error: ' . $e->getMessage());
+                    }
+                }
                 
                 $data = array(
                     'message'=>'Video Submitted Successfully',

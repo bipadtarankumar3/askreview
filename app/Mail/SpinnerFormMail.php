@@ -36,7 +36,7 @@ class SpinnerFormMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Review Form',
+            subject: $this->getsubject ?: 'Review Notification',
         );
     }
 
