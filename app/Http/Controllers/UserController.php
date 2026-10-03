@@ -224,6 +224,10 @@ class UserController extends Controller
                 return redirect('/login')->with($notification);
             }
 
+            if (empty($user->phone)) {
+                Session::put('needs_google_onboarding', true);
+            }
+
             Auth::login($user, true);
             $notification = array(
                 'messege' => 'Welcome back, ' . $user->name . '!',
@@ -295,11 +299,70 @@ class UserController extends Controller
             // MyForm created if table available
         }
 
+        Session::put('needs_google_onboarding', true);
         Auth::login($newUser, true);
         $notification = array(
-            'messege' => 'Registration successful via Google! Welcome to AskReview.',
+            'messege' => 'Registration successful via Google! Please complete your business profile.',
             'alert-type' => 'success'
         );
+        return redirect('admin/dashboard')->with($notification);
+    }
+
+    public function complete_google_onboarding(Request $request)
+    {
+        if (!Auth::check()) {
+            return response()->json(['status' => false, 'message' => 'Unauthorized'], 401);
+        }
+
+        $request->validate([
+            'business_name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:25',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,webp,gif|max:5120'
+        ]);
+
+        $user = User::find(Auth::id());
+        $user->name = trim($request->business_name);
+        $user->email = trim($request->email);
+        $user->phone = trim($request->phone);
+
+        $nameUrl = strtolower(preg_replace('/[^a-zA-Z0-9]+/', '_', trim($request->business_name)));
+        if (!empty($nameUrl)) {
+            $existing = User::where('name_url', $nameUrl)->where('id', '!=', $user->id)->count();
+            if ($existing > 0) {
+                $nameUrl = $nameUrl . '_' . rand(100, 999);
+            }
+            $user->name_url = $nameUrl;
+        }
+
+        // Handle Optional Logo Upload
+        if ($request->hasFile('logo')) {
+            $file = $request->file('logo');
+            $fileName = 'logo_' . $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $destinationPath = public_path('upload/');
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0777, true);
+            }
+            $file->move($destinationPath, $fileName);
+            $user->logo = url('upload/' . $fileName);
+        }
+
+        $user->save();
+        Session::forget('needs_google_onboarding');
+
+        $notification = array(
+            'messege' => 'Business profile setup completed successfully! Welcome to your dashboard.',
+            'alert-type' => 'success'
+        );
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Profile updated successfully!',
+                'redirect' => url('admin/dashboard')
+            ]);
+        }
+
         return redirect('admin/dashboard')->with($notification);
     }
 

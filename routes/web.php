@@ -75,6 +75,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
     Route::get('dashboard', [UserController::class,'dashboard']);
     Route::get('profile', [UserController::class,'profile']);
     Route::post('profile_update', [UserController::class,'profile_update']);
+    Route::post('complete_google_onboarding', [UserController::class,'complete_google_onboarding'])->name('google.complete_onboarding');
     Route::get('logout', [UserController::class,'logout']);
     Route::any('sub_user_list', [UserController::class,'sub_user_list']);
     Route::get('add_sub_user_page', [UserController::class,'add_sub_user_page']);

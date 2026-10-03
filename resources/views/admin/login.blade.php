@@ -33,12 +33,8 @@
          ==================================================================== -->
     <div class="auth-hero-panel">
       
-      <!-- Top Brand Header -->
+      <!-- Top Brand Header (Pill Badge Only) -->
       <div class="hero-header">
-        <a href="{{ url('/') }}" class="hero-brand">
-          <img src="{{ asset('frontend/images/logo.jpg') }}" alt="AskReview Logo" class="hero-brand-logo-img">
-        </a>
-        
         <div class="hero-badge-pill">
           <span class="pulse-dot"></span>
           <span>All-In-One Review Platform</span>
