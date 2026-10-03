@@ -188,103 +188,159 @@ class FrontendController extends Controller
     }
 
 
-    //Sing up
-    public function site_singup($user_name){
-
-        $date = date('Y-m-d');
-        $user = User::where('name_url',$user_name)->first();
-
-        if ($user) {
-
-            // $userDate = User::whereDate('expiry_date','>=',$date)->where('id',$user->id)->where('status','active')->first();
-            // if ($userDate) {
-
-                $today = date('Y-m-d');
-              
-                $data['user'] = $user;
-                return view('frontend.signup',$data);
-
-            // } else {
-            //     $status= 'user_date_expired';
-            //     return view('frontend.404',compact('status'));
-            // }
-            
-        } else {
-            $status= 'no_user_available';
-            return view('frontend.404',compact('status'));
+    // Captcha generator helper
+    public function generateCaptcha()
+    {
+        $chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+        $code = '';
+        for ($i = 0; $i < 5; $i++) {
+            $code .= $chars[rand(0, strlen($chars) - 1)];
         }
-         
+        session(['signup_captcha' => $code]);
+        return $code;
     }
 
-    public function singup_post(Request $request){
+    public function refresh_captcha()
+    {
+        $code = $this->generateCaptcha();
+        return response()->json(['status' => true, 'code' => $code]);
+    }
 
- 
+    // Direct Sign up
+    public function site_signup_direct()
+    {
+        $user = User::where('type', 'super_admin')->first() ?? User::first();
+        if (!$user) {
+            $user = new User();
+            $user->id = 1;
+            $user->name = 'AskReview';
+        }
+        $captcha_code = $this->generateCaptcha();
+        return view('frontend.signup', [
+            'user' => $user,
+            'captcha_code' => $captcha_code
+        ]);
+    }
 
-            $name_url = str_replace(' ', '_',$request->name);
-            $nameurl = strtolower($name_url);
-            
-            $user = User::where('email',$request->email)->first();
-            $TemplateCategory = TemplateCategory::orderBy('id','desc')->first();
-
-            if ($user) {
-                $notification = array(
-                    'messege'=>'Please enter unique email',
-                    'alert-type'=>'error'
-                );
-                return back()->with($notification);
+    // User referral / affiliate Sign up
+    public function site_singup($user_name)
+    {
+        $user = User::where('name_url', $user_name)->first();
+        if (!$user) {
+            $user = User::where('type', 'super_admin')->first() ?? User::first();
+            if (!$user) {
+                $user = new User();
+                $user->id = 1;
+                $user->name = 'AskReview';
             }
+        }
+        $captcha_code = $this->generateCaptcha();
+        return view('frontend.signup', [
+            'user' => $user,
+            'captcha_code' => $captcha_code
+        ]);
+    }
 
-            $present_data = date('Y-m-d');
-            $future_date = date('Y-m-d', strtotime($present_data . ' + 7 days'));
-            $user_id = $request->user_id;
+    public function singup_post(Request $request)
+    {
+        // 1. Validate Captcha
+        $captcha = strtoupper(trim($request->input('captcha', '')));
+        $sessionCaptcha = strtoupper(trim(session('signup_captcha', '')));
 
-            $last_user = User::where('user_id',$user_id )->orderBy('id','desc')->first();
-
-            $formatted_number=000;
-            if ($last_user) {
-                $number = $last_user->user_unique_id+1; // Your initial number with leading zeros
-                $desired_length = 3; // Desired length of the formatted number
-
-                    // Format the number with leading zeros
-                    $formatted_number = sprintf('%0' . $desired_length . 'd', $number);
-
-
-            } else {
-                $formatted_number = '001';
-            }
-            
-
-            $user_create = User::create([
-                'user_unique_id' => $formatted_number,
-                'name' => $request->name,
-                'name_url' => $nameurl,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'phone' => $request->phone,
-                'type' => 'user',
-                'status' => 'active',
-                'expiry_date' => $future_date,
-                'seven_day_trial' => 'YES',
-                'user_create_limit' => 10,
-                'front_page_text' => '',
-                'default_background' => 'Yes',
-                'facebook_share' => 'Yes',
-                'wp_share' => 'Yes',
-                'template_category_id' => isset($TemplateCategory)?$TemplateCategory->id:'',
-                'user_create_type' => 'sign_up',
-                'private_page_text' => 'Leave us a review, it will help us grow and better serve our customers like you.',
-                'dynamic_page_text' => 'Leave us a review, it will help us grow and better serve our customers like you.',
-                'google_page_text' => 'We want our customers to be 100% satisfied. Please let us know why you had a bad experience, so we can improve our service. Leave your email to be contacted.',
-                'user_id' => $user_id 
-            ]);
-
+        if (empty($captcha) || empty($sessionCaptcha) || $captcha !== $sessionCaptcha) {
+            $this->generateCaptcha();
             $notification = array(
-                'messege'=>'You are register successfully. Please Login',
-                'alert-type'=>'success'
+                'messege' => 'Invalid Security Captcha code. Please try again.',
+                'alert-type' => 'error'
             );
-            return redirect('/')->with($notification);
+            return back()->withInput()->with($notification);
+        }
 
+        // 2. Validate Password match
+        if ($request->password !== $request->confirm_password) {
+            $notification = array(
+                'messege' => 'Passwords do not match.',
+                'alert-type' => 'error'
+            );
+            return back()->withInput()->with($notification);
+        }
+
+        // 3. Unique email check
+        $user = User::where('email', $request->email)->first();
+        if ($user) {
+            $notification = array(
+                'messege' => 'Email address is already registered. Please login or use another email.',
+                'alert-type' => 'error'
+            );
+            return back()->withInput()->with($notification);
+        }
+
+        $name_url = strtolower(preg_replace('/[^a-zA-Z0-9]+/', '_', trim($request->name)));
+        if (empty($name_url)) {
+            $name_url = 'user_' . rand(1000, 9999);
+        }
+        $count = User::where('name_url', $name_url)->count();
+        if ($count > 0) {
+            $name_url = $name_url . '_' . rand(100, 999);
+        }
+
+        $TemplateCategory = TemplateCategory::orderBy('id', 'desc')->first();
+        $present_data = date('Y-m-d');
+        $future_date = date('Y-m-d', strtotime($present_data . ' + 7 days'));
         
+        $superAdmin = User::where('type', 'super_admin')->first() ?? User::first();
+        $user_id = $request->user_id ?: ($superAdmin ? $superAdmin->id : 1);
+
+        $last_user = User::where('user_id', $user_id)->orderBy('id', 'desc')->first();
+        $formatted_number = '001';
+        if ($last_user && is_numeric($last_user->user_unique_id)) {
+            $formatted_number = sprintf('%03d', (int)$last_user->user_unique_id + 1);
+        }
+
+        $user_create = User::create([
+            'user_unique_id' => $formatted_number,
+            'name' => $request->name,
+            'name_url' => $name_url,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'phone' => $request->phone,
+            'type' => 'user',
+            'status' => 'active',
+            'expiry_date' => $future_date,
+            'seven_day_trial' => 'YES',
+            'user_create_limit' => 10,
+            'front_page_text' => '',
+            'default_background' => 'Yes',
+            'facebook_share' => 'Yes',
+            'wp_share' => 'Yes',
+            'template_category_id' => isset($TemplateCategory) ? $TemplateCategory->id : '',
+            'user_create_type' => 'sign_up',
+            'private_page_text' => 'Leave us a review, it will help us grow and better serve our customers like you.',
+            'dynamic_page_text' => 'Leave us a review, it will help us grow and better serve our customers like you.',
+            'google_page_text' => 'We want our customers to be 100% satisfied. Please let us know why you had a bad experience, so we can improve our service. Leave your email to be contacted.',
+            'user_id' => $user_id 
+        ]);
+
+        try {
+            MyForm::create([
+                'form_name' => 'Give Us Your Feedback',
+                'desc' => 'Your opinion is very important to us. We appreciate your feedback and will use it to serve you better and make improvements in our management.',
+                'customer_support' => 'How Was Your Experience?',
+                'rate_text' => 'Rate Our Staff Behaviour:',
+                'feedback_text' => 'Your Feedback',
+                'active_status' => 'active',
+                'user_id' => $user_create->id
+            ]);
+        } catch (\Exception $e) {
+        }
+
+        session()->forget('signup_captcha');
+
+        $notification = array(
+            'messege' => 'Registration successful! Please login with your credentials.',
+            'alert-type' => 'success'
+        );
+        return redirect('/login')->with($notification);
     }
 
 

@@ -33,8 +33,23 @@ use App\Http\Controllers\QrController;
 
 
 Route::get('/',[UserController::class,'login'])->name('login');
+Route::get('login',[UserController::class,'login']);
+Route::post('login_post',[UserController::class,'login_post']);
+Route::get('logout',[UserController::class,'logout']);
+
+// Google OAuth routes
+Route::get('auth/google', [UserController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('auth/google/callback', [UserController::class, 'handleGoogleCallback'])->name('auth.google.callback');
+Route::post('auth/google/one-tap', [UserController::class, 'handleGoogleOneTap'])->name('auth.google.onetap');
+
+// Signup & Captcha routes
+Route::get('site/signup', [FrontendController::class, 'site_signup_direct'])->name('site.signup');
+Route::get('signup', [FrontendController::class, 'site_signup_direct'])->name('signup');
+Route::get('refresh-captcha', [FrontendController::class, 'refresh_captcha'])->name('captcha.refresh');
 Route::get('/site/{user_name}',[FrontendController::class,'site_singup']);
 Route::post('singup_post',[FrontendController::class,'singup_post']);
+
+// Customer Review & Frontend Routes
 Route::get('/u/{user_name}',[FrontendController::class,'index']);
 Route::post('/u/review_form_submit',[FrontendController::class,'review_form_submit']);
 Route::post('/u/video_testimonial_form_submit',[FrontendController::class,'video_testimonial_form_submit']);
@@ -44,10 +59,6 @@ Route::post('/u/spinner_round_check',[FrontendController::class,'spinner_round_c
 Route::get('/u/success_submit/{user_name}',[FrontendController::class,'success_submit']);
 Route::get('/dummy',[FrontendController::class,'dummy']);
 Route::post('/review_links_analytics',[FrontendController::class,'review_links_analytics']);
-
-Route::get('login',[UserController::class,'login']);
-Route::post('login_post',[UserController::class,'login_post']);
-Route::get('logout',[UserController::class,'logout']);
 
 Route::any('otp_verify_page',[UserController::class,'otp_verify_page']);
 Route::any('otp_verify',[UserController::class,'otp_verify']);

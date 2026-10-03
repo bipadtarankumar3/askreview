@@ -44,15 +44,267 @@ class UserController extends Controller
         return view('admin.login');
     }
 
+    public function redirectToGoogle(Request $request)
+    {
+        $clientId = env('GOOGLE_CLIENT_ID');
+        $redirectUri = url('/auth/google/callback');
+        
+        if (empty($clientId)) {
+            $notification = array(
+                'messege' => 'Google Login is ready! To connect your live Google Cloud Console app, please add GOOGLE_CLIENT_ID & GOOGLE_CLIENT_SECRET to your .env configuration.',
+                'alert-type' => 'warning'
+            );
+            return redirect()->back()->with($notification);
+        }
+
+        $state = Str::random(40);
+        Session::put('oauth_state', $state);
+
+        $query = http_build_query([
+            'client_id' => $clientId,
+            'redirect_uri' => $redirectUri,
+            'response_type' => 'code',
+            'scope' => 'openid profile email',
+            'access_type' => 'offline',
+            'state' => $state,
+            'prompt' => 'select_account'
+        ]);
+
+        return redirect('https://accounts.google.com/o/oauth2/v2/auth?' . $query);
+    }
+
+    public function handleGoogleCallback(Request $request)
+    {
+        if ($request->has('error')) {
+            $notification = array(
+                'messege' => 'Google Sign In was cancelled or failed.',
+                'alert-type' => 'error'
+            );
+            return redirect('/login')->with($notification);
+        }
+
+        $code = $request->get('code');
+        if (empty($code)) {
+            $notification = array(
+                'messege' => 'Invalid authorization code from Google.',
+                'alert-type' => 'error'
+            );
+            return redirect('/login')->with($notification);
+        }
+
+        $clientId = env('GOOGLE_CLIENT_ID');
+        $clientSecret = env('GOOGLE_CLIENT_SECRET');
+        $redirectUri = url('/auth/google/callback');
+
+        try {
+            $response = Http::asForm()->post('https://oauth2.googleapis.com/token', [
+                'code' => $code,
+                'client_id' => $clientId,
+                'client_secret' => $clientSecret,
+                'redirect_uri' => $redirectUri,
+                'grant_type' => 'authorization_code',
+            ]);
+
+            if (!$response->successful()) {
+                $notification = array(
+                    'messege' => 'Google token exchange failed. Please verify your Google API Client credentials in .env.',
+                    'alert-type' => 'error'
+                );
+                return redirect('/login')->with($notification);
+            }
+
+            $tokenData = $response->json();
+            $accessToken = $tokenData['access_token'] ?? null;
+
+            if (!$accessToken) {
+                $notification = array(
+                    'messege' => 'No access token received from Google.',
+                    'alert-type' => 'error'
+                );
+                return redirect('/login')->with($notification);
+            }
+
+            $userResponse = Http::withToken($accessToken)->get('https://www.googleapis.com/oauth2/v3/userinfo');
+            if (!$userResponse->successful()) {
+                $notification = array(
+                    'messege' => 'Failed to fetch user profile from Google.',
+                    'alert-type' => 'error'
+                );
+                return redirect('/login')->with($notification);
+            }
+
+            $googleUser = $userResponse->json();
+            return $this->loginOrCreateGoogleUser($googleUser);
+
+        } catch (\Exception $e) {
+            $notification = array(
+                'messege' => 'Google Login Error: ' . $e->getMessage(),
+                'alert-type' => 'error'
+            );
+            return redirect('/login')->with($notification);
+        }
+    }
+
+    public function handleGoogleOneTap(Request $request)
+    {
+        $credential = $request->input('credential');
+        if (empty($credential)) {
+            $notification = array(
+                'messege' => 'Missing Google credential.',
+                'alert-type' => 'error'
+            );
+            return redirect('/login')->with($notification);
+        }
+
+        try {
+            $response = Http::get('https://oauth2.googleapis.com/tokeninfo', [
+                'id_token' => $credential
+            ]);
+
+            if ($response->successful()) {
+                $payload = $response->json();
+                $googleUser = [
+                    'sub' => $payload['sub'] ?? '',
+                    'email' => $payload['email'] ?? '',
+                    'name' => $payload['name'] ?? ($payload['email'] ?? 'Google User'),
+                    'picture' => $payload['picture'] ?? null,
+                ];
+
+                return $this->loginOrCreateGoogleUser($googleUser);
+            }
+
+            $notification = array(
+                'messege' => 'Invalid Google credential token.',
+                'alert-type' => 'error'
+            );
+            return redirect('/login')->with($notification);
+        } catch (\Exception $e) {
+            $notification = array(
+                'messege' => 'Google Authentication Error: ' . $e->getMessage(),
+                'alert-type' => 'error'
+            );
+            return redirect('/login')->with($notification);
+        }
+    }
+
+    public function loginOrCreateGoogleUser($googleUser)
+    {
+        $googleId = $googleUser['sub'] ?? '';
+        $email = $googleUser['email'] ?? '';
+        $name = $googleUser['name'] ?? 'Google User';
+        $avatar = $googleUser['picture'] ?? '';
+
+        if (empty($email)) {
+            $notification = array(
+                'messege' => 'Google email not found in profile response.',
+                'alert-type' => 'error'
+            );
+            return redirect('/login')->with($notification);
+        }
+
+        $user = User::where('email', $email)->first();
+        if (!$user && !empty($googleId)) {
+            $user = User::where('google_id', $googleId)->first();
+        }
+
+        if ($user) {
+            if (!empty($googleId) && empty($user->google_id)) {
+                $user->google_id = $googleId;
+            }
+            if (!empty($avatar) && empty($user->avatar)) {
+                $user->avatar = $avatar;
+            }
+            $user->save();
+
+            if ($user->status != 'active') {
+                $notification = array(
+                    'messege' => 'Your account is inactive. Please contact administrator.',
+                    'alert-type' => 'error'
+                );
+                return redirect('/login')->with($notification);
+            }
+
+            Auth::login($user, true);
+            $notification = array(
+                'messege' => 'Welcome back, ' . $user->name . '!',
+                'alert-type' => 'success'
+            );
+            return redirect('admin/dashboard')->with($notification);
+        }
+
+        // First time Google Sign in / Registration: USER TYPE MUST BE 'user'
+        $nameUrl = strtolower(preg_replace('/[^a-zA-Z0-9]+/', '_', trim($name)));
+        if (empty($nameUrl)) {
+            $nameUrl = 'user_' . rand(1000, 9999);
+        }
+        $count = User::where('name_url', $nameUrl)->count();
+        if ($count > 0) {
+            $nameUrl = $nameUrl . '_' . rand(100, 999);
+        }
+
+        $superAdmin = User::where('type', 'super_admin')->first() ?? User::first();
+        $parentUserId = $superAdmin ? $superAdmin->id : 1;
+
+        $lastUser = User::where('user_id', $parentUserId)->orderBy('id', 'desc')->first();
+        $formattedNumber = '001';
+        if ($lastUser && is_numeric($lastUser->user_unique_id)) {
+            $formattedNumber = sprintf('%03d', (int)$lastUser->user_unique_id + 1);
+        }
+
+        $TemplateCategory = TemplateCategory::orderBy('id', 'desc')->first();
+        $presentDate = date('Y-m-d');
+        $futureDate = date('Y-m-d', strtotime($presentDate . ' + 7 days'));
+
+        $newUser = User::create([
+            'user_unique_id' => $formattedNumber,
+            'name' => $name,
+            'name_url' => $nameUrl,
+            'email' => $email,
+            'google_id' => $googleId,
+            'avatar' => $avatar,
+            'password' => Hash::make(Str::random(24)),
+            'phone' => '',
+            'type' => 'user', // FIRST TIME LOGIN WITH GOOGLE USER TYPE WILL BE USER
+            'status' => 'active',
+            'expiry_date' => $futureDate,
+            'seven_day_trial' => 'YES',
+            'user_create_limit' => 10,
+            'front_page_text' => '',
+            'default_background' => 'Yes',
+            'facebook_share' => 'Yes',
+            'wp_share' => 'Yes',
+            'template_category_id' => $TemplateCategory ? $TemplateCategory->id : '',
+            'user_create_type' => 'google',
+            'private_page_text' => 'Leave us a review, it will help us grow and better serve our customers like you.',
+            'dynamic_page_text' => 'Leave us a review, it will help us grow and better serve our customers like you.',
+            'google_page_text' => 'We want our customers to be 100% satisfied. Please let us know why you had a bad experience, so we can improve our service. Leave your email to be contacted.',
+            'user_id' => $parentUserId
+        ]);
+
+        try {
+            MyForm::create([
+                'form_name' => 'Give Us Your Feedback',
+                'desc' => 'Your opinion is very important to us. We appreciate your feedback and will use it to serve you better and make improvements in our management.',
+                'customer_support' => 'How Was Your Experience?',
+                'rate_text' => 'Rate Our Staff Behaviour:',
+                'feedback_text' => 'Your Feedback',
+                'active_status' => 'active',
+                'user_id' => $newUser->id
+            ]);
+        } catch (\Exception $e) {
+            // MyForm created if table available
+        }
+
+        Auth::login($newUser, true);
+        $notification = array(
+            'messege' => 'Registration successful via Google! Welcome to AskReview.',
+            'alert-type' => 'success'
+        );
+        return redirect('admin/dashboard')->with($notification);
+    }
+
     public function login_post(Request $request)
     {
-
-        // User::create([
-        //     'name' => 'admin',
-        //     'email' => 'admin@gmail.com',
-        //     'password' => Hash::make(123456)
-        // ]);return;
-
         $request->validate([
             'email' => 'required',
             'password' => 'required',
@@ -66,30 +318,7 @@ class UserController extends Controller
             }
 
             if (Auth::user()->status == 'active') {
-
-
-                    $oldDate = Auth::user()->expiry_date; // Replace this with your actual old date
-
-                    $currentDate = date("Y-m-d");
-
-                    // Convert dates to timestamps
-                    $oldTimestamp = strtotime($oldDate);
-                    $currentTimestamp = strtotime($currentDate);
-
-                    // Compare timestamps
-                    // if ($currentTimestamp > $oldTimestamp) {
-                    //     $notification = array(
-                    //         'messege'=>'Your plan has expired please contact with admin.',
-                    //         'alert-type'=>'error'
-                    //     );
-                    //     return back()->with($notification);
-                    // }else{
-                    //     return redirect('admin/dashboard');
-                    // }
-                    return redirect('admin/dashboard');
-                
-
-                
+                return redirect('admin/dashboard');
             } else {
                 $notification = array(
                     'messege'=>'You are inactive please contact with admin.',
