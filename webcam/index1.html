@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebRTC Video Recording</title>
+</head>
+<body>
+    <video id="videoElement" autoplay></video>
+    <button id="startButton">Start Recording</button>
+    <button id="stopButton">Stop Recording</button>
+    <button id="uploadButton" style="display: none;">Upload Video</button>
+    
+    <script>
+        const videoElement = document.getElementById('videoElement');
+        const startButton = document.getElementById('startButton');
+        const stopButton = document.getElementById('stopButton');
+        const uploadButton = document.getElementById('uploadButton');
+        let mediaRecorder;
+        let recordedChunks = [];
+
+        startButton.addEventListener('click', async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                videoElement.srcObject = stream;
+                mediaRecorder = new MediaRecorder(stream);
+
+                mediaRecorder.ondataavailable = event => {
+                    if (event.data.size > 0) {
+                        recordedChunks.push(event.data);
+                    }
+                };
+
+                mediaRecorder.start();
+            } catch (error) {
+                console.error('Error accessing webcam:', error);
+            }
+        });
+
+        stopButton.addEventListener('click', () => {
+            mediaRecorder.stop();
+            uploadButton.style.display = 'inline'; // Show the upload button after recording stops
+        });
+
+        uploadButton.addEventListener('click', () => {
+            if (recordedChunks.length > 0) {
+                const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                const formData = new FormData();
+                formData.append('video', blob);
+
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', '/save-video', true);
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        console.log('Video uploaded successfully');
+                    } else {
+                        console.error('Error uploading video:', xhr.statusText);
+                    }
+                };
+                xhr.onerror = function() {
+                    console.error('Error uploading video:', xhr.statusText);
+                };
+                xhr.send(formData);
+            } else {
+                console.error('No video recorded');
+            }
+        });
+    </script>
+</body>
+</html>
