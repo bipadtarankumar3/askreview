@@ -7,9 +7,9 @@
 
     @if ($review_type != 'record')
     <div class="form-group row align-items-center mb-0">
-      <label for="anme" class="col-3 text-end control-label col-form-label"> Key</label>
+      <label for="anme" class="col-3 text-end control-label col-form-label">@if ($review_type == 'website') Website URL @else Key @endif</label>
       <div class="col-9 border-start pb-2 pt-2">
-        <input type="text" name="review_key"  @if (isset($Integration)) value="{{$Integration->review_links}}"  @endif class="form-control" id="review_key" placeholder="URL" @required(true)>
+        <input type="text" name="review_key"  @if (isset($Integration)) value="{{$Integration->review_links}}"  @endif class="form-control" id="review_key" placeholder="@if ($review_type == 'website') https://yourwebsite.com @else URL @endif" @required(true)>
       </div>
     </div>
     @endif
@@ -34,8 +34,8 @@
       <label for="note" class="col-3 text-end control-label col-form-label">Status</label>
       <div class="col-9 border-start pb-2 pt-2">
         <select name="status" id=""  class="col-3 control-label col-form-label form-control" required>
-          <option value="active" @if (isset($Integration)) @if($Integration->status =='active' ) selected @endif  @endif>Active</option>
-          <option value="inactive" @if (isset($Integration)) @if($Integration->status =='inactive' ) selected @endif  @endif>Inactive</option>
+          <option value="active" @if (!isset($Integration) || empty($Integration->status) || $Integration->status == 'active') selected @endif>Active</option>
+          <option value="inactive" @if (isset($Integration) && $Integration->status == 'inactive') selected @endif>Inactive</option>
         </select>
       </div>
     </div>

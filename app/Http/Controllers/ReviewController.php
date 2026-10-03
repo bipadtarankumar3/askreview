@@ -78,6 +78,31 @@ class ReviewController extends Controller
             ->get();
             //dd($Spinner);
 
+            // Ensure essential integrations exist if user already has integrations
+            $userIntegrations = Integration::where('user_id', Auth::user()->id)->get();
+            if ($userIntegrations->count() > 0) {
+                $existingTypes = $userIntegrations->pluck('type')->toArray();
+                if (!in_array('google', $existingTypes)) {
+                    Integration::create([
+                        'type' => 'google',
+                        'user_id' => Auth::user()->id,
+                        'button_icon' => URL::to('frontend/images/google.png'),
+                        'button_name' => 'Google',
+                        'button_order' => 1,
+                    ]);
+                }
+                if (!in_array('website', $existingTypes)) {
+                    $maxOrder = $userIntegrations->max('button_order') ?? 7;
+                    Integration::create([
+                        'type' => 'website',
+                        'user_id' => Auth::user()->id,
+                        'button_icon' => URL::to('frontend/images/website.png'),
+                        'button_name' => 'Website',
+                        'button_order' => $maxOrder + 1,
+                    ]);
+                }
+            }
+
             $array['integrationList'] = Integration::where('user_id',Auth::user()->id)->orderBy('button_order','asc')->get();
 
 
@@ -96,6 +121,9 @@ class ReviewController extends Controller
             ->first();
             $array['IntegrationWhatsApp'] = Integration::where('user_id',Auth::user()->id)
             ->where('type','whatsapp')
+            ->first();
+            $array['IntegrationWebsite'] = Integration::where('user_id',Auth::user()->id)
+            ->where('type','website')
             ->first();
 
             $array['IntegrationRecord'] = Integration::where('user_id',Auth::user()->id)
@@ -215,6 +243,13 @@ class ReviewController extends Controller
                     'button_name' => 'Private Enquiry',
                     'button_order' => 7
                 ],
+                [
+                    'type' => 'website',
+                    'user_id' => Auth::user()->id,
+                    'button_icon' => URL::to('frontend/images/website.png'),
+                    'button_name' => 'Website',
+                    'button_order' => 8
+                ],
             );
       
 
@@ -268,16 +303,31 @@ class ReviewController extends Controller
 
         if(Auth::check()){
             $data['type'] = $request->type;
-            $data['Integration'] = Integration::where('user_id',Auth::user()->id)
-            ->where('type',$request->type)
-            ->delete();
-            $data['SocialReview'] = SocialReview::where('user_id',Auth::user()->id)
-            ->delete();
+            Integration::where('user_id', Auth::user()->id)
+                ->where('type', $request->type)
+                ->update([
+                    'name' => null,
+                    'place_id' => null,
+                    'review_links' => null,
+                    'url' => null,
+                    'formatted_address' => null,
+                    'formatted_phone_number' => null,
+                    'profile_photo_url' => null,
+                    'rating' => null,
+                    'reference' => null,
+                    'user_ratings_total' => null,
+                    'website' => null,
+                    'status' => null
+                ]);
+
+            $data['SocialReview'] = SocialReview::where('user_id', Auth::user()->id)
+                ->where('type', $request->type)
+                ->delete();
+
             $notification = array(
-                'messege'=>'Key Updated successfully',
+                'messege'=>'Integration disconnected successfully',
                 'alert-type'=>'success'
             );
-            // return back()->with($notification);
             return Response::json($notification);
         }
     }
@@ -298,6 +348,10 @@ class ReviewController extends Controller
                         'type' => $request->review_type,
                         'review_links' =>  $base_url.'?sub_confirmation=1',
                         'user_id' => Auth::user()->id,
+                        'status' => $request->status
+                    ]);
+                } elseif ($request->review_type == 'google') {
+                    Integration::where('id', $request->id)->where('user_id', Auth::user()->id)->update([
                         'status' => $request->status
                     ]);
                 } else {

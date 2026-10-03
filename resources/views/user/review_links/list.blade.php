@@ -57,26 +57,51 @@
                    
                         @if (isset($integrationList[0]) && $integrationList[0]->button_order != null)
                             @foreach ($integrationList as $item)
+                                @php
+                                    $isConfigured = false;
+                                    if ($item->type == 'google') {
+                                        $isConfigured = (!empty($item->review_links) || !empty($item->place_id) || !empty($item->status));
+                                    } elseif ($item->type == 'record') {
+                                        $isConfigured = (!empty($item->status));
+                                    } elseif ($item->type == 'private') {
+                                        $isConfigured = false;
+                                    } else {
+                                        $isConfigured = (!empty($item->review_links) || !empty($item->status));
+                                    }
+                                @endphp
                                 <div class="col-md-3 mt-4 drag-item" id="dragbble_{{$item->id}}" data-order="{{$item->button_order}}">
                                     <div class="links_box">
                                         <br>
-                                        @if (isset($item)  && $item->status == 'active')
+                                        @if ($isConfigured)
                                             <div class="redirect_box">
-                                                <a href="{{$item->review_links}}" target="_blank" class="redirect_anchor">
-                                                    <i class="fa-solid fa-diamond-turn-right"></i>
-                                                </a>
+                                                @if (!empty($item->review_links))
+                                                    <a href="{{$item->review_links}}" target="_blank" class="redirect_anchor" title="Visit Link">
+                                                        <i class="fa-solid fa-diamond-turn-right"></i>
+                                                    </a>
+                                                @else
+                                                    <span class="redirect_anchor" style="visibility: hidden;">
+                                                        <i class="fa-solid fa-diamond-turn-right"></i>
+                                                    </span>
+                                                @endif
 
                                                 @if ($item->type == 'record')
                                                     @if (isset($admin_user) && $admin_user->video_access == 'YES' && $video_access_show == true)
-
-                                                        <span class="success_right">
-                                                            <i class="fa-solid fa-square-check"></i>
+                                                        <span class="success_right" title="{{ $item->status == 'inactive' ? 'Inactive' : 'Active' }}">
+                                                            @if ($item->status == 'inactive')
+                                                                <i class="fa-solid fa-square-xmark" style="color: #ef4444;"></i>
+                                                            @else
+                                                                <i class="fa-solid fa-square-check"></i>
+                                                            @endif
                                                         </span>
                                                     @endif
                                                 @else
-                                                <span class="success_right">
-                                                    <i class="fa-solid fa-square-check"></i>
-                                                </span>
+                                                    <span class="success_right" title="{{ $item->status == 'inactive' ? 'Inactive' : 'Active' }}">
+                                                        @if ($item->status == 'inactive')
+                                                            <i class="fa-solid fa-square-xmark" style="color: #ef4444;"></i>
+                                                        @else
+                                                            <i class="fa-solid fa-square-check"></i>
+                                                        @endif
+                                                    </span>
                                                 @endif
                                             </div>
                                         @endif
@@ -86,23 +111,22 @@
                                         </div>
                                         <div class="button_box">
                                             @if ($item->type == 'google')
-                                                @if (isset($item) && $item->status == 'active')
+                                                @if ($isConfigured)
                                                     <button class="btn btn-secondary edit" onclick="open_integration_remove_model('google')">Edit</button>
                                                 @else
                                                     <button class="btn btn-secondary integrate" onclick="open_integration_model('google')">Integrate</button>
                                                 @endif
                                             @elseif ($item->type == 'record')
                                                 @if (isset($admin_user) && $admin_user->video_access == 'YES' && $video_access_show == true)
-                                                    @if (isset($item) && $item->status == 'active')
-                                                        <button class="btn btn-secondary edit"  onclick="add_spinner_btn('record')">Edit</button>
+                                                    @if ($isConfigured)
+                                                        <button class="btn btn-secondary edit" onclick="add_spinner_btn('record')">Edit</button>
                                                     @else
                                                         <button class="btn btn-secondary integrate" onclick="add_spinner_btn('record')">Integrate</button>
-                                                                                        
                                                     @endif
                                                 @endif
                                             @elseif ($item->type == 'private')
                                             @else
-                                                @if (isset($item) && $item->status == 'active')
+                                                @if ($isConfigured)
                                                     <button class="btn btn-secondary edit" onclick="add_spinner_btn('{{$item->type}}')">Edit</button>
                                                 @else
                                                     <button class="btn btn-secondary integrate" onclick="add_spinner_btn('{{$item->type}}')">Integrate</button>
@@ -476,6 +500,33 @@
             } 
         });
         
+    }
+
+    function save_google_status() {
+        var form = $('#google_status_form')[0];
+        var formData = new FormData(form);
+        $.ajax({
+            type: "POST",
+            url: "{{URL::to('admin/add_review_links')}}",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                $('#integration_remove_modal').modal('hide');
+                swal({
+                    title: "Success",
+                    text: "Google status updated successfully.",
+                    icon: "success",
+                    button: "Cool"
+                });
+                setTimeout(() => {
+                    location.reload(true);
+                }, 1000);
+            },
+            error: function(err) {
+                console.error(err);
+            }
+        });
     }
 
     let selectedPlace;
