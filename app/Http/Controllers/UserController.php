@@ -421,7 +421,11 @@ class UserController extends Controller
             $data['active_resallers'] = User::where('type','admin')->where('user_id',Auth::user()->id)->where('status','active')->count();
             $data['inactive_resallers'] = User::where('type','admin')->where('user_id',Auth::user()->id)->where('status','inactive')->count();
             $data['expired_resallers'] = User::where('type','admin')->where('user_id',Auth::user()->id)->whereDate('expiry_date','<',$presend_day)->count();
-            
+
+            // Recent activity for richer dashboards
+            $data['recent_feedbacks'] = feedback_form_submit::where('user_id', Auth::user()->id)->orderBy('id', 'desc')->take(5)->get();
+            $data['recent_users'] = User::where('type', 'user')->where('user_id', Auth::user()->id)->orderBy('id', 'desc')->take(5)->get();
+            $data['recent_resellers'] = User::where('type', 'admin')->where('user_id', Auth::user()->id)->orderBy('id', 'desc')->take(5)->get();
 
             return view('admin.dashboard',$data);
         }

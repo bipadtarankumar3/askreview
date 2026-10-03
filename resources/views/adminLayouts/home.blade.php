@@ -21,26 +21,23 @@
   <meta name="keywords" content="Admin" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-  <meta name="theme-color" content="#6777ef"/>
-<link rel="apple-touch-icon" href="{{ asset('frontend/images/logo.jpg') }}">
-<link rel="manifest" href="{{ asset('/manifest.json') }}">
+  <meta name="theme-color" content="#e11d48"/>
+  <link rel="apple-touch-icon" href="{{ asset('frontend/images/logo.jpg') }}">
+  <link rel="manifest" href="{{ asset('/manifest.json') }}">
 
   <!-- Favicon -->
-
-  <link rel="shortcut icon" type="image/png" href="https://demos.adminmart.com/premium/bootstrap/modernize-bootstrap/package/dist/images/logos/favicon.ico" />
+  <link rel="shortcut icon" type="image/png" href="{{ asset('frontend/images/logo.jpg') }}" />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css" rel="stylesheet">
 
-
   <!-- Core Css -->
-
   <link rel="stylesheet" href="{{asset('adminAssets/libs/owl.carousel/dist/assets/owl.carousel.min.css')}}">
-
   <link rel="stylesheet" href="{{asset('adminAssets/css/style.min.css')}}" />
-  
-  
-  {{-- <link rel="stylesheet" href="{{asset('adminAssets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css')}}"> --}}
-  <link rel="stylesheet" href="{{asset('adminAssets/css/my-style.css')}}">
+  <link rel="stylesheet" href="{{asset('adminAssets/css/my-style.css')}}?v={{ time() }}">
   <link rel="stylesheet" href="{{asset('adminAssets/css/responsive.css')}}" />
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
@@ -49,601 +46,801 @@
   <!-- Include HTML2Canvas library -->
   <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
   <style>
-    /* Your regular styles go here */
+    body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .app-header {
+        width: 100% !important;
+    }
+    @media (min-width: 992px) {
+        #main-wrapper[data-layout="vertical"][data-header-position="fixed"] .app-header,
+        #main-wrapper[data-layout="vertical"][data-header-position="fixed"][data-sidebartype="mini-sidebar"] .app-header {
+            width: 100% !important;
+        }
+    }
+    /* BASE SIDEBAR LINKS & ICONS */
+    .sidebar-nav ul .sidebar-item .sidebar-link {
+        color: #475569 !important;
+        font-size: 0.88rem !important;
+        font-weight: 600 !important;
+        padding: 10px 14px !important;
+        border-radius: 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        text-decoration: none !important;
+    }
+    .sidebar-nav ul .sidebar-item .sidebar-link span:first-child {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 28px !important;
+        height: 28px !important;
+        flex-shrink: 0 !important;
+    }
+    .sidebar-nav ul .sidebar-item .sidebar-link i,
+    .sidebar-nav ul .sidebar-item .sidebar-link .ti {
+        font-size: 1.38rem !important;
+        width: 28px !important;
+        height: 28px !important;
+        line-height: 1 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
 
+    /* ========================================================= */
+    /* MINI-SIDEBAR (COLLAPSED): PERFECT CENTERING & NO ARROW    */
+    /* ========================================================= */
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .brand-logo,
+    #main-wrapper.mini-sidebar .left-sidebar .brand-logo,
+    .mini-sidebar .left-sidebar .brand-logo {
+        padding: 0 !important;
+        justify-content: center !important;
+        align-items: center !important;
+        text-align: center !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .brand-logo .logo-img,
+    #main-wrapper.mini-sidebar .left-sidebar .brand-logo .logo-img,
+    .mini-sidebar .left-sidebar .brand-logo .logo-img {
+        margin: 0 auto !important;
+        justify-content: center !important;
+        display: flex !important;
+        align-items: center !important;
+        width: auto !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .brand-logo img,
+    #main-wrapper.mini-sidebar .left-sidebar .brand-logo img,
+    .mini-sidebar .left-sidebar .brand-logo img {
+        margin: 0 auto !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .brand-logo #sidebarCollapse,
+    #main-wrapper.mini-sidebar .left-sidebar .brand-logo #sidebarCollapse {
+        display: none !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav,
+    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav,
+    .mini-sidebar .left-sidebar .sidebar-nav {
+        padding: 14px 0 30px 0 !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav ul#sidebarnav,
+    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav ul#sidebarnav,
+    .mini-sidebar .left-sidebar .sidebar-nav ul#sidebarnav {
+        padding: 0 !important;
+        margin: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav ul .sidebar-item,
+    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item,
+    .mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 100% !important;
+        margin: 0 0 6px 0 !important;
+        padding: 0 !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link,
+    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link,
+    .mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link {
+        width: 48px !important;
+        height: 48px !important;
+        padding: 0 !important;
+        margin: 0 auto !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 12px !important;
+        transform: none !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link span:first-child,
+    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link span:first-child,
+    .mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link span:first-child {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        height: 100% !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link i,
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link .ti,
+    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link i,
+    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link .ti,
+    .mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link i,
+    .mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link .ti {
+        font-size: 1.65rem !important;
+        width: 32px !important;
+        height: 32px !important;
+        margin: 0 auto !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav ul .sidebar-item.selected > .sidebar-link,
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link.active,
+    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item.selected > .sidebar-link,
+    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link.active,
+    .mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item.selected > .sidebar-link,
+    .mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link.active {
+        box-shadow: none !important;
+        border: 1.5px solid #fecdd3 !important;
+        background: #fff1f2 !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .nav-small-cap,
+    #main-wrapper.mini-sidebar .left-sidebar .nav-small-cap,
+    .mini-sidebar .left-sidebar .nav-small-cap {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 12px 0 6px 0 !important;
+        margin: 0 auto !important;
+        text-align: center !important;
+        width: 100% !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .nav-small-cap .nav-small-cap-icon,
+    #main-wrapper.mini-sidebar .left-sidebar .nav-small-cap .nav-small-cap-icon,
+    .mini-sidebar .left-sidebar .nav-small-cap .nav-small-cap-icon {
+        display: block !important;
+        margin: 0 auto !important;
+        color: #cbd5e1 !important;
+        text-align: center !important;
+    }
+    /* STRICTLY HIDE TEXT AND CHEVRON ARROW IN COLLAPSED MODE */
+    #main-wrapper[data-sidebartype="mini-sidebar"] .hide-menu,
+    #main-wrapper[data-sidebartype="mini-sidebar"] .ti-chevron-down,
+    #main-wrapper[data-sidebartype="mini-sidebar"] [class*="ti-chevron"],
+    #main-wrapper.mini-sidebar .hide-menu,
+    #main-wrapper.mini-sidebar .ti-chevron-down,
+    #main-wrapper.mini-sidebar [class*="ti-chevron"],
+    .mini-sidebar .hide-menu,
+    .mini-sidebar .ti-chevron-down,
+    .mini-sidebar [class*="ti-chevron"] {
+        display: none !important;
+    }
+
+    /* MINI-SIDEBAR: EXPANDED ON HOVER */
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover {
+        width: 270px !important;
+        box-shadow: 0 10px 40px -10px rgba(15, 23, 42, 0.15) !important;
+        z-index: 1000 !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .brand-logo {
+        padding: 16px 20px 14px 20px !important;
+        justify-content: space-between !important;
+        height: 70px !important;
+        text-align: left !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .brand-logo .logo-img {
+        width: auto !important;
+        margin: 0 !important;
+        display: flex !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .brand-logo img {
+        margin: 0 !important;
+        max-height: 40px !important;
+        max-width: 170px !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav {
+        padding: 12px 14px 30px 14px !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul#sidebarnav {
+        display: block !important;
+        width: 100% !important;
+        padding: 0 !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item {
+        display: block !important;
+        width: 100% !important;
+        margin-bottom: 4px !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item .sidebar-link {
+        width: 100% !important;
+        height: 44px !important;
+        padding: 10px 14px !important;
+        margin: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        gap: 12px !important;
+        border-radius: 12px !important;
+        border: none !important;
+        background: transparent;
+        color: #475569 !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item .sidebar-link:hover {
+        background-color: #f1f5f9 !important;
+        color: #0f172a !important;
+        transform: translateX(3px) !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item .sidebar-link span:first-child {
+        width: 28px !important;
+        height: 28px !important;
+        flex-shrink: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item .sidebar-link i,
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item .sidebar-link .ti {
+        font-size: 1.35rem !important;
+        width: 28px !important;
+        height: 28px !important;
+        color: #64748b !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item .sidebar-link:hover i,
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item .sidebar-link:hover .ti {
+        color: #e11d48 !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item .sidebar-link .hide-menu {
+        display: inline !important;
+        font-size: 0.88rem !important;
+        font-weight: 600 !important;
+        color: inherit !important;
+        white-space: nowrap !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav .ti-chevron-down {
+        display: inline-block !important;
+        font-size: 0.85rem !important;
+        margin-left: auto !important;
+        width: auto !important;
+        height: auto !important;
+        color: #94a3b8 !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .nav-small-cap {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        padding: 16px 14px 6px 14px !important;
+        text-align: left !important;
+        width: 100% !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .nav-small-cap .nav-small-cap-icon {
+        display: none !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .nav-small-cap .hide-menu {
+        display: block !important;
+        color: #94a3b8 !important;
+        font-size: 0.68rem !important;
+        font-weight: 800 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.08em !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item.selected > .sidebar-link,
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item .sidebar-link.active {
+        background: #fff1f2 !important;
+        color: #e11d48 !important;
+        font-weight: 700 !important;
+        box-shadow: inset 3px 0 0 #e11d48 !important;
+        border: none !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item.selected > .sidebar-link i,
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item .sidebar-link.active i,
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item.selected > .sidebar-link .ti,
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item .sidebar-link.active .ti {
+        color: #e11d48 !important;
+    }
     @media print {
         body {
-            -webkit-print-color-adjust: exact; /* For Webkit browsers like Chrome and Safari */
-            color-adjust: exact; /* Standard property */
+            -webkit-print-color-adjust: exact;
+            color-adjust: exact;
         }
         @page {
-                size: portrait; /* or specify the desired size */
-                margin: 10mm;
-            }
+            size: portrait;
+            margin: 10mm;
+        }
     }
-</style>
-<style>
-  .floating-button {
+    .floating-button {
         position: fixed;
         bottom: 30px;
         right: 30px;
-        background-color: #007bff;
+        background: linear-gradient(135deg, #e11d48 0%, #be123c 100%);
         color: #fff;
         padding: 10px;
-        border-radius: 50%; /* Make it circular */
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        border-radius: 50%;
+        box-shadow: 0 6px 20px rgba(225, 29, 72, 0.4);
         cursor: pointer;
-        text-align: center; /* Center text horizontally */
-        line-height: 1; /* Center text vertically */
-        width: 60px; /* Set width and height for a smaller button */
-        height: 60px;
-        /* display: flex;
-      align-items: center;
-      justify-content: center; */
+        text-align: center;
+        line-height: 1;
+        width: 54px;
+        height: 54px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+        transition: transform 0.2s ease;
     }
-  .floating-button i{
-        font-size: 30px;
-  }
-
-  /* Optional hover effect */
-  .floating-button:hover {
-      background-color: #0056b3;
-  }
-</style>
-
+    .floating-button:hover {
+        transform: scale(1.06);
+        background: #be123c;
+        color: #fff;
+    }
+    .floating-button i {
+        font-size: 24px;
+    }
+  </style>
 
 </head>
 
 <body>
 
-
   <!-- Body Wrapper -->
-
-  <div class="page-wrapper " id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
     data-sidebar-position="fixed" data-header-position="fixed">
 
     <div class="">
-    <!-- Sidebar Start -->
-
-    <aside class="left-sidebar">
+      <!-- Sidebar Start -->
+      <aside class="left-sidebar">
         <!-- Sidebar scroll-->
         <div>
+          <!-- Brand Logo Header -->
           <div class="brand-logo d-flex align-items-center justify-content-between">
             <a href="{{URL::to('admin/dashboard')}}" class="text-nowrap logo-img">
-              <img src="{{Auth::user()->logo}}" class="dark-logo" width="160" alt="" />
-              {{-- <img src="https://demos.adminmart.com/premium/bootstrap/modernize-bootstrap/package/dist/images/logos/light-logo.svg" class="light-logo"  width="180" alt="" /> --}}
+              <img src="{{ asset('frontend/images/logo.jpg') }}" alt="AskReview Logo" style="height: 38px; width: auto; object-fit: contain; border-radius: 6px;" />
             </a>
             <div class="close-btn d-lg-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
-              <i class="ti ti-x fs-8 text-muted"></i>
+              <i class="ti ti-x fs-6 text-muted"></i>
             </div>
           </div>
-          <!-- Sidebar navigation-->
+
+          <!-- Sidebar Navigation -->
           <nav class="sidebar-nav scroll-sidebar" data-simplebar>
             <ul id="sidebarnav">
-              <!-- ============================= -->
-              <!-- Home -->
-              <!-- ============================= -->
-              <li class="nav-small-cap">
-                <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                <span class="hide-menu">Home</span>
-              </li>
-              <!-- =================== -->
-              <!-- Dashboard -->
-              <!-- =================== -->
 
-              @if (Auth::user()->type  == 'super_admin')
+              {{-- ========================================================= --}}
+              {{-- 1. SUPER ADMIN MENU --}}
+              {{-- ========================================================= --}}
+              @if (Auth::user()->type == 'super_admin')
+                
+
+
                 <li class="sidebar-item">
                   <a class="sidebar-link" href="{{URL::to('admin/dashboard')}}" aria-expanded="false">
-                    <span>
-                      <i class="ti ti-aperture"></i>
-                    </span>
+                    <span><i class="ti ti-dashboard"></i></span>
                     <span class="hide-menu">Dashboard</span>
                   </a>
                 </li>
+
+                <li class="nav-small-cap">
+                  <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                  <span class="hide-menu">Platform Management</span>
+                </li>
+
                 <li class="sidebar-item">
                   <a class="sidebar-link" href="{{URL::to('admin/admin_list')}}" aria-expanded="false">
-                    <span>
-                      <i class="ti ti-user-circle text-white" style="font-size: 30px;"></i>
-                    </span>
-                    <span class="hide-menu">Reseller</span>
+                    <span><i class="ti ti-users-group"></i></span>
+                    <span class="hide-menu">Resellers</span>
                   </a>
                 </li>
                 <li class="sidebar-item">
                   <a class="sidebar-link" href="{{URL::to('admin/category')}}" aria-expanded="false">
-                    <span>
-                      <i class="ti ti-category-2 text-white" style="font-size: 30px;"></i>
-                    </span>
+                    <span><i class="ti ti-category-2"></i></span>
                     <span class="hide-menu">Category</span>
                   </a>
                 </li>
                 <li class="sidebar-item">
                   <a class="sidebar-link" href="{{URL::to('admin/template')}}" aria-expanded="false">
-                    <span>
-                      <i class="ti ti-user-circle text-white" style="font-size: 30px;"></i>
-                    </span>
-                    <span class="hide-menu">Template</span>
+                    <span><i class="ti ti-layout-grid"></i></span>
+                    <span class="hide-menu">Templates</span>
                   </a>
                 </li>
                 <li class="sidebar-item">
                   <a class="sidebar-link" href="{{URL::to('admin/wallets_list')}}" aria-expanded="false">
-                    <span>
-                      <i class="ti ti-user-circle text-white" style="font-size: 30px;"></i>
-                    </span>
+                    <span><i class="ti ti-wallet"></i></span>
                     <span class="hide-menu">Credit Manage</span>
                   </a>
                 </li>
+
+                <li class="nav-small-cap">
+                  <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                  <span class="hide-menu">Account</span>
+                </li>
+
                 <li class="sidebar-item">
                   <a class="sidebar-link" href="{{URL::to('admin/profile')}}" aria-expanded="false">
-                    <span>
-                       <i class="ti ti-user-circle text-white" style="font-size: 30px;"></i>
-                    </span>
-                    <span class="hide-menu">Setting</span>
+                    <span><i class="ti ti-settings"></i></span>
+                    <span class="hide-menu">Settings</span>
                   </a>
                 </li>
 
-              @elseif (Auth::user()->type  == 'admin')
+              {{-- ========================================================= --}}
+              {{-- 2. ADMIN (RESELLER / DISTRIBUTOR) MENU --}}
+              {{-- ========================================================= --}}
+              @elseif (Auth::user()->type == 'admin')
+
+
+
                 <li class="sidebar-item">
                   <a class="sidebar-link" href="{{URL::to('admin/dashboard')}}" aria-expanded="false">
-                    <span>
-                      <i class="ti ti-aperture"></i>
-                    </span>
+                    <span><i class="ti ti-dashboard"></i></span>
                     <span class="hide-menu">Dashboard</span>
                   </a>
                 </li>
-                <li class="sidebar-item">
-                  <a class="sidebar-link" href="{{URL::to('admin/sub_user_list')}}" aria-expanded="false">
-                    <span>
-                      <i class="ti ti-user-circle text-white" style="font-size: 30px;"></i>
-                    </span>
-                    <span class="hide-menu">User</span>
-                  </a>
+
+                <li class="nav-small-cap">
+                  <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                  <span class="hide-menu">Clients &amp; Billing</span>
                 </li>
 
                 <li class="sidebar-item">
+                  <a class="sidebar-link" href="{{URL::to('admin/sub_user_list')}}" aria-expanded="false">
+                    <span><i class="ti ti-users"></i></span>
+                    <span class="hide-menu">My Users</span>
+                  </a>
+                </li>
+                <li class="sidebar-item">
                   <a class="sidebar-link" href="{{URL::to('admin/my_wallets_list')}}" aria-expanded="false">
-                    <span>
-                      <i class="ti ti-user-circle text-white" style="font-size: 30px;"></i>
-                    </span>
-                    <span class="hide-menu">Credit Transaction</span>
+                    <span><i class="ti ti-receipt-2"></i></span>
+                    <span class="hide-menu">Credit Transactions</span>
                   </a>
                 </li>
                 <li class="sidebar-item">
                   <a class="sidebar-link" href="{{URL::to('admin/service')}}" aria-expanded="false">
-                    <span>
-                      <i class="fa-regular fa-star"  style="font-size: 30px;"></i>
-                    </span>
+                    <span><i class="ti ti-packages"></i></span>
                     <span class="hide-menu">Services</span>
                   </a>
                 </li>
-
                 <li class="sidebar-item">
                   <a class="sidebar-link" href="{{URL::to('admin/my_user_payment_list')}}" aria-expanded="false">
-                    <span>
-                      <i class="fa-regular fa-star"  style="font-size: 30px;"></i>
-                    </span>
+                    <span><i class="ti ti-credit-card"></i></span>
                     <span class="hide-menu">User Payments</span>
                   </a>
                 </li>
-
                 <li class="sidebar-item">
                   <a class="sidebar-link" href="{{URL::to('admin/admin_service_payments_list')}}" aria-expanded="false">
-                    <span>
-                      <i class="fa-regular fa-star"></i>
-                    </span>
+                    <span><i class="ti ti-file-dollar"></i></span>
                     <span class="hide-menu">Service Payments</span>
                   </a>
                 </li>
 
+                <li class="nav-small-cap">
+                  <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                  <span class="hide-menu">Account</span>
+                </li>
 
                 <li class="sidebar-item">
                   <a class="sidebar-link" href="{{URL::to('admin/profile')}}" aria-expanded="false">
-                    <span>
-                       <i class="ti ti-user-circle text-white" style="font-size: 30px;"></i>
-                    </span>
-                    <span class="hide-menu">Setting</span>
+                    <span><i class="ti ti-settings"></i></span>
+                    <span class="hide-menu">Settings</span>
                   </a>
                 </li>
-                    
-              @elseif (Auth::user()->type  == 'user')
-              <li class="sidebar-item">
-                <a class="sidebar-link" href="{{URL::to('admin/dashboard')}}" aria-expanded="false">
-                  <span>
-                    <i class="fa-solid fa-house"></i>
-                  </span>
-                  <span class="hide-menu">Dashboard</span>
-                </a>
-              </li>
-              
-              
-              
-              
-              
-                {{-- <li class="sidebar-item">
-                  <a class="sidebar-link" href="{{URL::to('admin/form_field')}}" aria-expanded="false">
-                    <span>
-                      <i class="ti ti-caravan"></i>
-                    </span>
-                    <span class="hide-menu">Form Fields</span>
+
+              {{-- ========================================================= --}}
+              {{-- 3. USER (STORE / BUSINESS OWNER) MENU --}}
+              {{-- ========================================================= --}}
+              @elseif (Auth::user()->type == 'user')
+
+
+
+                <li class="sidebar-item">
+                  <a class="sidebar-link" href="{{URL::to('admin/dashboard')}}" aria-expanded="false">
+                    <span><i class="ti ti-dashboard"></i></span>
+                    <span class="hide-menu">Dashboard</span>
                   </a>
-                </li> --}}
+                </li>
+
+                <li class="nav-small-cap">
+                  <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                  <span class="hide-menu">Reviews &amp; Feedback</span>
+                </li>
+
                 <li class="sidebar-item">
                   <a class="sidebar-link" href="{{URL::to('admin/questions')}}" aria-expanded="false">
-                    <span>
-                      <i class="fa-solid fa-comment"></i>
-                    </span>
-                    <span class="hide-menu">Create FeedBack Form</span>
+                    <span><i class="ti ti-forms"></i></span>
+                    <span class="hide-menu">Feedback Form</span>
                   </a>
                 </li>
                 <li class="sidebar-item">
                   <a class="sidebar-link" href="{{URL::to('admin/list_question_answers')}}" aria-expanded="false">
-                    <span>
-                      <i class="fa-solid fa-rss"></i>
-                    </span>
-                    <span class="hide-menu">FeedBack Data</span>
+                    <span><i class="ti ti-message-2-check"></i></span>
+                    <span class="hide-menu">Feedback Data</span>
                   </a>
                 </li>
-                {{-- <li class="sidebar-item">
-                  <a class="sidebar-link" href="{{URL::to('admin/review_list')}}" aria-expanded="false">
-                    <span>
-                      <i class="ti ti-circle-dotted"></i>
-                    </span>
-                    <span class="hide-menu">Review List</span>
-                  </a>
-                </li> --}}
                 <li class="sidebar-item">
                   <a class="sidebar-link" href="{{URL::to('admin/private_review_list')}}" aria-expanded="false">
-                    <span>
-                      <i class="fa-solid fa-address-book"></i>
-                    </span>
-                    <span class="hide-menu">Private Contact Data</span>
+                    <span><i class="ti ti-address-book"></i></span>
+                    <span class="hide-menu">Private Contacts</span>
                   </a>
                 </li>
-                
                 <li class="sidebar-item">
                   <a class="sidebar-link" href="{{URL::to('admin/social_review_list')}}" aria-expanded="false">
-                    <span>
-                      <i class="fa-regular fa-star"></i>
-                    </span>
-                    <span class="hide-menu">Reviews</span>
+                    <span><i class="ti ti-star"></i></span>
+                    <span class="hide-menu">Social Reviews</span>
                   </a>
                 </li>
                 <li class="sidebar-item">
                   <a class="sidebar-link" href="{{URL::to('admin/video_testimonial')}}" aria-expanded="false">
-                    <span>
-                      <i class="fa-solid fa-video"></i>
-                    </span>
-                    <span class="hide-menu">
-                      Video testimonial
-                      
-                    </span>
+                    <span><i class="ti ti-video"></i></span>
+                    <span class="hide-menu">Video Testimonials</span>
                   </a>
+                </li>
+
+                <li class="nav-small-cap">
+                  <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                  <span class="hide-menu">Growth &amp; Tools</span>
                 </li>
 
                 <li class="sidebar-item">
                   <a class="sidebar-link" href="{{URL::to('admin/user_payments_list')}}" aria-expanded="false">
-                    <span>
-                      <i class="fa-solid fa-user"></i>
-                    </span>
-                    <span class="hide-menu">Membership</span>
+                    <span><i class="ti ti-crown"></i></span>
+                    <span class="hide-menu">Membership &amp; Plans</span>
                   </a>
                 </li>
-
                 <li class="sidebar-item">
                   <a class="sidebar-link" href="{{URL::to('admin/review_links')}}" aria-expanded="false">
-                    <span>
-                      <i class="fa-solid fa-link"></i>
-                    </span>
-                    <span class="hide-menu">Integration</span>
+                    <span><i class="ti ti-plug"></i></span>
+                    <span class="hide-menu">Integrations</span>
                   </a>
                 </li>
 
                 <li class="sidebar-item">
                   <a class="sidebar-link" href="javascript:void(0)" aria-expanded="false" data-bs-toggle="collapse" data-bs-target="#analytics-submenu">
-                    <span>
-                      <i class="fa-solid fa-chart-pie"></i> <!-- Parent Menu Icon -->
-                    </span>
+                    <span><i class="ti ti-chart-pie"></i></span>
                     <span class="hide-menu">Analytics</span>
-                    <i class="fa-solid fa-chevron-down ms-auto"></i> <!-- Dropdown Icon -->
+                    <span class="hide-menu ms-auto"><i class="ti ti-chevron-down" style="font-size: 0.9rem;"></i></span>
                   </a>
                   <ul class="collapse first-level" id="analytics-submenu">
                     <li class="sidebar-item">
                       <a class="sidebar-link" href="{{URL::to('admin/qr_analytics')}}">
-                        <span>
-                          <i class="fa-solid fa-qrcode"></i> <!-- QR Analytics Icon -->
-                        </span>
+                        <span><i class="ti ti-qrcode"></i></span>
                         <span class="hide-menu">QR Analytics</span>
                       </a>
                     </li>
                     <li class="sidebar-item">
                       <a class="sidebar-link" href="{{URL::to('admin/links_analytics')}}">
-                        <span>
-                          <i class="fa-solid fa-link"></i> <!-- Links Analytics Icon -->
-                        </span>
+                        <span><i class="ti ti-chart-arrows"></i></span>
                         <span class="hide-menu">Links Analytics</span>
                       </a>
                     </li>
                   </ul>
                 </li>
 
-
-                <li class="sidebar-item">
-                  <a class="sidebar-link" href="{{URL::to('admin/profile')}}" aria-expanded="false">
-                    <span>
-                       <i class="ti ti-user-circle text-white" ></i>
-                    </span>
-                    <span class="hide-menu">Setting</span>
-                  </a>
+                <li class="nav-small-cap">
+                  <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                  <span class="hide-menu">Support &amp; Account</span>
                 </li>
 
                 <li class="sidebar-item">
-                  <a class="sidebar-link" href="#" onclick="get_support()" aria-expanded="false">
-                    <span>
-                       <i class="fa-solid fa-headset"></i>
-                    </span>
-                    <span class="hide-menu" >Need Support?</span>
+                  <a class="sidebar-link" href="{{URL::to('admin/profile')}}" aria-expanded="false">
+                    <span><i class="ti ti-settings"></i></span>
+                    <span class="hide-menu">Settings</span>
+                  </a>
+                </li>
+                <li class="sidebar-item">
+                  <a class="sidebar-link" href="javascript:void(0)" onclick="get_support()" aria-expanded="false">
+                    <span><i class="ti ti-headset"></i></span>
+                    <span class="hide-menu">Need Support?</span>
                   </a>
                 </li>
                 
               @endif
+
             </ul>
-            
           </nav>
-          <div class="fixed-profile p-3 bg-light-secondary rounded sidebar-ad mt-3">
-            <div class="hstack gap-3">
-              <div class="john-img">
-                <img src="../../dist/images/profile/user-1.jpg" class="rounded-circle" width="40" height="40" alt="">
-              </div>
-              <div class="john-title">
-                <h6 class="mb-0 fs-4 fw-semibold">Mathew</h6>
-                <span class="fs-2 text-dark">Designer</span>
-              </div>
-              <button class="border-0 bg-transparent text-primary ms-auto" tabindex="0" type="button" aria-label="logout" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="logout">
-                <i class="ti ti-power fs-6"></i>
-              </button>
-            </div>
-          </div>  
           <!-- End Sidebar navigation -->
         </div>
         <!-- End Sidebar scroll-->
       </aside>
+      <!-- Sidebar End -->
 
-    <!-- Sidebar End -->
-    <!-- Main wrapper -->
+      <!-- Main wrapper -->
+      <div class="body-wrapper d-flex flex-column min-vh-100">
 
-    <div class="body-wrapper">
+        <!-- Header Start -->
+        <header class="app-header" style="width: 100% !important; position: sticky; top: 0; z-index: 99; background: #ffffff; border-bottom: 1px solid #f1f5f9; box-shadow: 0 1px 4px rgba(0,0,0,0.04);">
+          <div class="d-flex align-items-center justify-content-between px-4" style="height: 64px; gap: 12px;">
 
-      <!-- Header Start -->
-
-      <header class="app-header">
-        <nav class="navbar navbar-expand-lg navbar-light">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link sidebartoggler nav-icon-hover ms-n3" id="headerCollapse" href="javascript:void(0)">
-                <i class="ti ti-menu-2"></i>
+            <!-- LEFT: Hamburger + Role Indicator -->
+            <div class="d-flex align-items-center gap-3 flex-shrink-0">
+              <!-- Sidebar Toggle -->
+              <a class="sidebartoggler d-flex align-items-center justify-content-center" id="headerCollapse" href="javascript:void(0)" style="width: 38px; height: 38px; border-radius: 10px; background: #f8fafc; border: 1px solid #e2e8f0; color: #475569; transition: all 0.2s ease; text-decoration: none;">
+                <i class="ti ti-menu-2" style="font-size: 1.1rem;"></i>
               </a>
-            </li>
-            
-            
-          </ul>
-         
-          <div class="d-block ">
-            @if (Auth::user()->type == 'admin')
-               <span style="color: red;"> User Balanced : {{Auth::user()->user_create_limit}} </span> 
-            @endif
 
-            
-            
-            {{-- <img src="https://demos.adminmart.com/premium/bootstrap/modernize-bootstrap/package/dist/images/logos/dark-logo.svg" width="180" alt="" /> --}}
-          </div>
-          <button class="navbar-toggler p-0 border-0" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="p-2">
-              <i class="ti ti-dots fs-7"></i>
-            </span>
-          </button>
-          <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <div class="d-flex align-items-center justify-content-between">
-              {{-- <a href="javascript:void(0)" class="nav-link d-flex d-lg-none align-items-center justify-content-center"
-                type="button" data-bs-toggle="offcanvas" data-bs-target="#mobilenavbar"
-                aria-controls="offcanvasWithBothOptions">
-                <i class="ti ti-align-justified fs-7"></i>
-              </a> --}}
-              <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-center">
-                
+              <!-- Role Indicator Pill -->
+              @if(Auth::user()->type == 'user')
+                <div class="d-none d-xl-flex align-items-center gap-2 px-3" style="height: 36px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 9999px; font-size: 0.82rem; white-space: nowrap;">
+                  <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 0 3px rgba(16,185,129,0.15); flex-shrink: 0;"></span>
+                  <span class="text-muted fw-500">Live:</span>
+                  <a href="{{ url('u/'.Auth::user()->name_url) }}" target="_blank" class="fw-bold text-dark text-decoration-none d-flex align-items-center gap-1">
+                    <span>{{ Auth::user()->name_url }}</span>
+                    <i class="ti ti-external-link" style="font-size: 0.8rem; color: #e11d48;"></i>
+                  </a>
+                </div>
+              @elseif(Auth::user()->type == 'admin')
+                <div class="d-none d-md-flex align-items-center gap-2 px-3" style="height: 36px; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 9999px; color: #e11d48; font-size: 0.82rem; font-weight: 700; white-space: nowrap;">
+                  <i class="ti ti-wallet" style="font-size: 0.95rem;"></i>
+                  <span>{{ Auth::user()->user_create_limit }} Credits</span>
+                </div>
+              @else
+                <div class="d-none d-md-flex align-items-center gap-2 px-3" style="height: 36px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 9999px; color: #475569; font-size: 0.82rem; font-weight: 700; white-space: nowrap;">
+                  <i class="ti ti-shield-check" style="font-size: 0.95rem; color: #6366f1;"></i>
+                  <span>Super Admin</span>
+                </div>
+              @endif
+            </div>
+
+            <!-- RIGHT: Actions bar -->
+            <div class="d-flex align-items-center flex-shrink-0" style="gap: 8px;">
+
+              @php
+                $noti_num = DB::table('notifications')->where('user_id', Auth::user()->id)->where('action_taken','!=','Y')->count();
+                $noti_list = DB::table('notifications')->where('user_id', Auth::user()->id)->where('action_taken','!=','Y')->get();
+              @endphp
+
+              @if(Auth::user()->type == 'user')
                 @php
-                  $noti_num = DB::table('notifications')->where('user_id',Auth::user()->id)->where('action_taken','!=','Y')->count();
-                    $noti_list = DB::table('notifications')->where('user_id',Auth::user()->id)->where('action_taken','!=','Y')->get();
+                  $expiry_timestamp = strtotime(Auth::user()->expiry_date);
+                  $days_difference = max(0, floor(($expiry_timestamp - time()) / 86400));
                 @endphp
 
-                @if (Auth::user()->type  == 'user')
-
-                  @php
-                  // Expiry date
-                  $expiry_date = Auth::user()->expiry_date;;
-    
-                  // Convert expiry date to timestamp
-                  $expiry_timestamp = strtotime($expiry_date);
-    
-                  // Get current timestamp
-                  $current_timestamp = time();
-    
-                  // Calculate difference in seconds between current time and expiry time
-                  $difference = $expiry_timestamp - $current_timestamp;
-    
-                  // Convert difference to days
-                  $days_difference = floor($difference / (60 * 60 * 24));
-    
-    
-                  // if ($difference <= 0) {
-                  //     echo "Alert: Your expiry date has already passed.";
-                  // } elseif ($days_difference <= 30) {
-                  //     if ($days_difference == 1) {
-                  //         echo "Alert: Your expiry date is approaching. You have $days_difference day left.";
-                  //     } else {
-                  //         echo "Alert: Your expiry date is approaching. You have $days_difference days left.";
-                  //     }
-                  // } else {
-                  //     echo "You have more than 30 days left until expiry.";
-                  // }
-    
-    
-                @endphp
-                  @if ($days_difference <= 30)
-                    <li class="nav-item dropdown">
-                      <a class=" btn btn-warning " title="Buy Plan" onclick="get_plans()" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown" aria-expanded="true">
-                        <i class="fa-solid fa-money-check-dollar"></i> &nbsp; Buy Plan 
-                      
-                      </a>
-                    </li>
-                  @endif
-
-                  @if (Auth::user()->seven_day_trial == 'YES' )
-                  <li>
-                    <li class="nav-item dropdown">
-                      <a class=" btn btn-danger " title="Buy Plan" onclick="get_plans()" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown" aria-expanded="true">
-                         7 Days Free Trial
-                      
-                      </a>
-                    </li>
-                  </li>
-                  @endif
-
-                  <li class="nav-item dropdown">
-                    <form action="{{URL::to('admin/star_page_status')}}" method="POST">
-                      @csrf
-                      <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" name="star_page" role="switch" id="star_page" @if(Auth::user()->star_page == 'YES')checked @endif  onchange="this.form.submit()">
-                        <label class="form-check-label" for="star_page">
-                          @if(Auth::user()->star_page == 'YES')
-                          <i class="fa-solid fa-star" style="color: gold"></i>  On 
-                          
-                          @else 
-                          <i class="fa-solid fa-star"></i> Off 
-                          @endif
-                        </label>
-                      </div>
-                    </form>
-                    
-                  </li>
-
+                <!-- Trial badge -->
+                @if(Auth::user()->seven_day_trial == 'YES')
+                  <div class="d-none d-md-flex align-items-center gap-1 px-2" style="height: 32px; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 9999px; color: #e11d48; font-size: 0.76rem; font-weight: 700; white-space: nowrap;">
+                    <span class="spinner-grow spinner-grow-sm" style="width: 5px; height: 5px; color: #e11d48; flex-shrink:0;"></span>
+                    <span>{{ $days_difference }}d left</span>
+                  </div>
                 @endif
 
-                <li class="nav-item dropdown">
-                  <a class="nav-link nav-icon-hover " href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown" aria-expanded="true">
-                    <i class="ti ti-bell-ringing"></i>
-                    @if ( $noti_num > 0 )
-                        <div class="notification bg-primary rounded-circle"></div>
+                <!-- Star Page Toggle -->
+                <form action="{{ URL::to('admin/star_page_status') }}" method="POST" class="mb-0">
+                  @csrf
+                  <div class="d-flex align-items-center gap-2 px-2" style="height: 32px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 9999px;">
+                    <input class="form-check-input" type="checkbox" name="star_page" role="switch" id="star_page"
+                      @if(Auth::user()->star_page == 'YES') checked @endif
+                      onchange="this.form.submit()"
+                      style="cursor: pointer; width: 28px; height: 15px; margin: 0; flex-shrink: 0;">
+                    <label for="star_page" class="mb-0" style="font-size: 0.76rem; font-weight: 700; cursor: pointer; white-space: nowrap; line-height: 1;">
+                      @if(Auth::user()->star_page == 'YES')
+                        <span style="color: #d97706;"><i class="fa-solid fa-star" style="font-size: 0.68rem;"></i> 5★</span>
+                      @else
+                        <span style="color: #94a3b8;"><i class="fa-regular fa-star" style="font-size: 0.68rem;"></i> Direct</span>
+                      @endif
+                    </label>
+                  </div>
+                </form>
+
+                <!-- Buy Plan Button -->
+                @if($days_difference <= 30)
+                  <button onclick="get_plans()" class="btn d-flex align-items-center gap-1" style="height: 32px; background: linear-gradient(135deg, #e11d48, #be123c); color: #fff; font-weight: 700; border-radius: 9999px; padding: 0 14px; border: none; box-shadow: 0 3px 10px rgba(225,29,72,0.25); font-size: 0.8rem; white-space: nowrap;">
+                    <i class="ti ti-crown" style="font-size: 0.85rem;"></i>
+                    <span>Buy Plan</span>
+                  </button>
+                @endif
+              @endif
+
+              <!-- Notification Bell -->
+              <div class="dropdown">
+                <a href="javascript:void(0)" id="dropNotification" data-bs-toggle="dropdown" aria-expanded="false" class="position-relative d-flex align-items-center justify-content-center" style="width: 34px; height: 34px; border-radius: 50%; background: #f8fafc; border: 1px solid #e2e8f0; color: #64748b; text-decoration: none; transition: all 0.2s ease;">
+                  <i class="ti ti-bell" style="font-size: 1.1rem;"></i>
+                  @if($noti_num > 0)
+                    <span class="position-absolute" style="top: 2px; right: 2px; width: 16px; height: 16px; border-radius: 50%; background: #e11d48; color: #fff; font-size: 0.6rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 2px solid #fff;">{{ $noti_num }}</span>
+                  @endif
+                </a>
+                <div class="dropdown-menu dropdown-menu-end" style="min-width: 320px; border-radius: 16px; border: 1px solid #f1f5f9; box-shadow: 0 12px 32px rgba(0,0,0,0.1); padding: 0; overflow: hidden;">
+                  <div class="d-flex align-items-center justify-content-between px-4 py-3 border-bottom">
+                    <h6 class="mb-0 fw-bold" style="color: #0f172a; font-size: 0.92rem;">Notifications</h6>
+                    <span class="badge rounded-pill" style="background: #fff1f2; color: #e11d48; font-weight: 700; font-size: 0.72rem;">{{ $noti_num }} new</span>
+                  </div>
+                  <div style="max-height: 280px; overflow-y: auto;">
+                    @forelse($noti_list as $item)
+                      <a href="{{ URL::to('admin/view_noti/'.$item->id) }}" class="d-flex align-items-center gap-3 px-4 py-3 border-bottom text-decoration-none" style="color: #334155; transition: background 0.15s ease;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+                        <div style="width: 34px; height: 34px; border-radius: 50%; background: #fff1f2; display: flex; align-items: center; justify-content: center; color: #e11d48; flex-shrink: 0; font-size: 0.9rem;">
+                          <i class="ti ti-bell"></i>
+                        </div>
+                        <span class="text-truncate fw-semibold" style="font-size: 0.84rem;">{{ $item->text }}</span>
+                      </a>
+                    @empty
+                      <div class="py-5 text-center text-muted" style="font-size: 0.84rem;">
+                        <i class="ti ti-bell-off d-block mb-2" style="font-size: 1.5rem; color: #cbd5e1;"></i>
+                        No new notifications
+                      </div>
+                    @endforelse
+                  </div>
+                </div>
+              </div>
+
+              <!-- User Profile Dropdown -->
+              <div class="dropdown">
+                <a href="javascript:void(0)" id="dropUserMenu" data-bs-toggle="dropdown" aria-expanded="false" class="d-flex align-items-center gap-2 text-decoration-none" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 9999px; height: 36px; padding: 0 12px 0 5px; transition: all 0.2s ease;">
+                  <div style="width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #e11d48, #be123c); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 0.78rem; flex-shrink: 0;">
+                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                  </div>
+                  <span class="fw-bold" style="color: #0f172a; font-size: 0.82rem; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ Auth::user()->name }}</span>
+                  <i class="ti ti-chevron-down text-muted" style="font-size: 0.72rem; flex-shrink: 0;"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end" style="min-width: 260px; border-radius: 16px; border: 1px solid #f1f5f9; box-shadow: 0 12px 32px rgba(0,0,0,0.1); padding: 0; overflow: hidden; margin-top: 8px;">
+                  <!-- User Info Card -->
+                  <div class="d-flex align-items-center gap-3 p-4 border-bottom" style="background: #f8fafc;">
+                    <div style="width: 44px; height: 44px; border-radius: 50%; background: #e11d48; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem; flex-shrink: 0;">
+                      {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                    </div>
+                    <div class="overflow-hidden">
+                      <div class="fw-bold text-truncate" style="color: #0f172a; font-size: 0.9rem;">{{ Auth::user()->name }}</div>
+                      <div class="text-truncate" style="color: #94a3b8; font-size: 0.76rem;">{{ Auth::user()->email }}</div>
+                      <span class="badge mt-1" style="background: #e2e8f0; color: #475569; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;">{{ str_replace('_', ' ', Auth::user()->type) }}</span>
+                    </div>
+                  </div>
+                  <!-- Menu Items -->
+                  <div class="p-3 d-flex flex-column gap-1">
+                    @if(Auth::user()->type == 'user')
+                      <a href="{{ URL::to('u/'.Auth::user()->name_url) }}" target="_blank" class="dropdown-item d-flex align-items-center gap-2 py-2 px-3 rounded-2 fw-600" style="color: #334155; font-size: 0.85rem; font-weight: 600;">
+                        <i class="ti ti-world" style="color: #10b981;"></i> View My Review Page
+                      </a>
+                      <a href="{{ URL::to('admin/view_qr') }}" class="dropdown-item d-flex align-items-center gap-2 py-2 px-3 rounded-2" style="color: #334155; font-size: 0.85rem; font-weight: 600;">
+                        <i class="ti ti-qrcode" style="color: #e11d48;"></i> Download QR Stand
+                      </a>
+                    @elseif(Auth::user()->type == 'admin')
+                      <a href="{{ URL::to('site/'.Auth::user()->name_url) }}" target="_blank" class="dropdown-item d-flex align-items-center gap-2 py-2 px-3 rounded-2" style="color: #334155; font-size: 0.85rem; font-weight: 600;">
+                        <i class="ti ti-link" style="color: #10b981;"></i> Client Signup Link
+                      </a>
                     @endif
-                    
-                  </a>
-                  <div class="dropdown-menu content-dd dropdown-menu-end dropdown-menu-animate-up " aria-labelledby="drop2" data-bs-popper="static">
-                    <div class="d-flex align-items-center justify-content-between py-3 px-7">
-                      <h5 class="mb-0 fs-5 fw-semibold">Notifications</h5>
-                      
-                      <span class="badge text-bg-primary rounded-4 px-3 py-1 lh-sm">{{$noti_num }} new</span>
-                    </div>
-                    <div class="message-body simplebar-scrollable-y" data-simplebar="init">
-                      <div class="simplebar-wrapper" style="margin: 0px;">
-                        <div class="simplebar-height-auto-observer-wrapper">
-                          <div class="simplebar-height-auto-observer"></div>
-                        </div>
-                        <div class="simplebar-mask">
-                          <div class="simplebar-offset" style="right: 0px; bottom: 0px;">
-                            <div class="simplebar-content-wrapper" tabindex="0" role="region" aria-label="scrollable content" style="height: auto; overflow: hidden scroll;">
-                              <div class="simplebar-content" style="padding: 0px;">
-
-                                @foreach ($noti_list as $item)
-                                    <a href="{{URL::to('admin/view_noti/'.$item->id)}}" class="py-6 px-7 d-flex align-items-center dropdown-item">
-                                      <span class="me-3">
-                                        <img src="{{asset('adminAssets/images/profile/user-1.jpg')}}" alt="user" class="rounded-circle" width="48" height="48">
-                                      </span>
-                                      <div class="w-75 d-inline-block v-middle">
-                                        <h6 class="mb-1 fw-semibold lh-base">{{$item->text}}</h6>
-                                        {{-- <span class="fs-2 d-block text-body-secondary">Congratulate him</span> --}}
-                                      </div>
-                                    </a>
-                                @endforeach
-                                
-                                
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="simplebar-placeholder" style="width: 360px; height: 432px;"></div>
-                      </div>
-                      <div class="simplebar-track simplebar-horizontal" style="visibility: hidden;">
-                        <div class="simplebar-scrollbar" style="width: 0px; display: none;"></div>
-                      </div>
-                      <div class="simplebar-track simplebar-vertical" style="visibility: visible;">
-                        <div class="simplebar-scrollbar" style="height: 300px; display: block; transform: translate3d(0px, 0px, 0px);"></div>
-                      </div>
-                    </div>
-                    {{-- <div class="py-6 px-7 mb-1">
-                      <button class="btn btn-outline-primary w-100">See All Notifications</button>
-                    </div> --}}
+                    <a href="{{ URL::to('admin/profile') }}" class="dropdown-item d-flex align-items-center gap-2 py-2 px-3 rounded-2" style="color: #334155; font-size: 0.85rem; font-weight: 600;">
+                      <i class="ti ti-settings" style="color: #6366f1;"></i> Account Settings
+                    </a>
+                    <hr class="my-1" style="border-color: #f1f5f9;">
+                    <a href="{{ URL::to('logout') }}" class="dropdown-item d-flex align-items-center gap-2 py-2 px-3 rounded-2" style="color: #ef4444; font-size: 0.85rem; font-weight: 700;">
+                      <i class="ti ti-logout"></i> Sign Out
+                    </a>
                   </div>
-                </li>
+                </div>
+              </div>
 
-                <li class="nav-item dropdown">
-                  <a class="nav-link pe-0" href="javascript:void(0)" id="drop1" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    <div class="d-flex align-items-center">
-                      <div class="user-profile-img">
-                        <img src="{{asset('adminAssets/images/profile/user-1.jpg')}}" class="rounded-circle" width="35" height="35"
-                          alt="" />
-                      </div>
-                    </div>
-                  </a>
-                  <div class="dropdown-menu content-dd dropdown-menu-end dropdown-menu-animate-up"
-                    aria-labelledby="drop1">
-                    <div class="profile-dropdown position-relative" data-simplebar>
-                      <div class="py-3 px-7 pb-0">
-                        <h5 class="mb-0 fs-5 fw-semibold">User Profile</h5>
-                      </div>
-                      <div class="d-flex align-items-center py-9 mx-7 border-bottom">
-                        <img src="{{asset('adminAssets/images/profile/user-1.jpg')}}" class="rounded-circle" width="80" height="80"
-                          alt="" />
-                        <div class="ms-3">
-                          <h5 class="mb-1 fs-3">{{Auth::user()->name}}</h5>
-                          {{-- <span class="mb-1 d-block text-dark">Designer</span> --}}
-                          <p class="mb-0 d-flex text-dark align-items-center gap-2">
-                            <i class="ti ti-mail fs-4"></i> {{Auth::user()->email}}
-                          </p>
-                        </div>
-                      </div>
-                      {{-- <div class="message-body">
-                        <a href="{{URL::to('admin/profile')}}" class="py-8 px-7 mt-8 d-flex align-items-center">
-                          <span class="d-flex align-items-center justify-content-center bg-light rounded-1 p-6">
-                            <img src="https://demos.adminmart.com/premium/bootstrap/modernize-bootstrap/package/dist/images/svgs/icon-account.svg" alt="" width="24" height="24">
-                          </span>
-                          <div class="w-75 d-inline-block v-middle ps-3">
-                            <h6 class="mb-1 bg-hover-primary fw-semibold"> Setting</h6>
-                          </div>
-                        </a>
-                      </div> --}}
-                      <div class="d-grid py-4 px-7 pt-8">
-                        @if (Auth::user()->type  == 'user')
-                          <a href="{{URL::to('admin/view_qr')}}" class="btn btn-outline-warning my-2">Download QR</a>
-                          <a href="{{URL::to('u/'.Auth::user()->name_url)}}" target="_blank" class="btn btn-outline-success my-2">Visit My Site</a>
-                        @elseif(Auth::user()->type  == 'admin')
-                          <a href="{{URL::to('site/'.Auth::user()->name_url)}}" target="_blank" class="btn btn-outline-success my-2">Signup Link</a>
-                        @endif
-                        <a href="{{URL::to('logout')}}" class="btn btn-outline-primary">Log Out</a>
-                      </div>
-                    </div>
-                  </div>
-                </li>
-              </ul>
             </div>
           </div>
-        </nav>
-      </header>
+        </header>
+        <!-- Header End -->
 
-      <!-- Header End -->
+        <!-- Main Content Area -->
+        <main class="flex-grow-1">
+          @yield('content')
+        </main>
 
-        @yield('content')
+
+        <!-- Modern Footer Start -->
+        <footer class="app-footer text-center">
+          <div class="container-fluid d-flex flex-column flex-sm-row align-items-center justify-content-between gap-2">
+            <div>
+              &copy; {{ date('Y') }} <strong style="color: #0f172a;">AskReview</strong>. All rights reserved.
+            </div>
+            <div class="d-flex align-items-center gap-3" style="font-size: 0.8rem;">
+              <a href="https://askreview.in" target="_blank">Home</a>
+              <span>•</span>
+              <a href="javascript:void(0)" onclick="get_support()">Support</a>
+              <span>•</span>
+              <a href="{{ URL::to('admin/profile') }}">Settings</a>
+            </div>
+          </div>
+        </footer>
+        <!-- Modern Footer End -->
       
-    </div>
+      </div>
     </div>
   </div>
 
