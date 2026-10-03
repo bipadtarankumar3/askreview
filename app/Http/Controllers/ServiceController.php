@@ -126,9 +126,19 @@ class ServiceController extends Controller
                 ->first();
 
                 if ($Service) {
-                    $exp_date = Auth::user()->expiry_date;
-                    $timestamp = strtotime($exp_date);
-                    $present_date = date('Y-m-d', $timestamp);
+                    $today = date('Y-m-d');
+                    $current_exp = Auth::user()->expiry_date;
+
+                    // If previous date is inactive or in the past, start from the buy date (today)
+                    // If currently active in the future, extend from the active expiry date
+                    if (!empty($current_exp) && strtotime($current_exp) > strtotime($today)) {
+                        $start_date = $current_exp;
+                    } else {
+                        $start_date = $today;
+                    }
+
+                    $years = (!empty($Service->subscription_date) && is_numeric($Service->subscription_date)) ? (int)$Service->subscription_date : 1;
+                    $to_date = date('Y-m-d', strtotime($start_date . ' +' . $years . ' year'));
 
                     Payment::create([
                         'user_id'=>Auth::user()->id,
@@ -143,23 +153,26 @@ class ServiceController extends Controller
                         'address' =>$request->address,
                         'payment_type' =>$response->method,
                         'gst_number' =>$request->gst_number,
-                        'payment_type' =>$response->method,
-                        'form_date' =>$present_date,
-                        'to_date' =>date('Y-m-d', strtotime($present_date.' +1 year')),
+                        'form_date' =>$start_date,
+                        'to_date' =>$to_date,
                     ]);
 
-                    $user = User::where('id',Auth::user()->id)->update([
-                        'expiry_date' =>date('Y-m-d', strtotime($present_date.' +1 year')),
-                        'seven_day_trial' =>null
-                        
+                    User::where('id',Auth::user()->id)->update([
+                        'expiry_date' =>$to_date,
+                        'seven_day_trial' =>null,
+                        'status' =>'active'
                     ]);
 
-                    $my_form = User::find(Auth::user()->user_id);
-                    $my_form->user_create_limit = $my_form->user_create_limit-1;
-                    $my_form->save();
+                    if (Auth::user()->user_id) {
+                        $my_form = User::find(Auth::user()->user_id);
+                        if ($my_form && $my_form->user_create_limit > 0) {
+                            $my_form->user_create_limit = $my_form->user_create_limit - 1;
+                            $my_form->save();
+                        }
+                    }
 
                     $notification = array(
-                        'messege'=>'Payment Successfull',
+                        'messege'=>'Payment Successful! Plan activated successfully.',
                         'alert-type'=>'success'
                     );
                     return redirect('admin/service_payment_success/'.$input['razorpay_payment_id'])->with($notification);

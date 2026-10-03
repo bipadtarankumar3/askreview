@@ -1260,90 +1260,241 @@
       </div>
 
 
-    <div class="modal fade" id="plan_list_modal"  data-bs-backdrop="static" tabindex="-1" aria-labelledby="plan_list_modalLabel" aria-hidden="true">
-      <div class="modal-dialog   modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h3 class="modal-title" id="plan_list_modalLabel">Upgrade to ask review plan</h3>
-            <button type="button" class="btn-close" onclick="close_expiry_modal()" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal fade" id="plan_list_modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="plan_list_modalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl" style="max-width: 1140px;">
+        <div class="modal-content" style="border-radius: 24px; border: 1px solid #e2e8f0; box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.25); overflow: hidden; background: #f8fafc;">
+          
+          <style>
+            .modern-pricing-card {
+              transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            }
+            .modern-pricing-card:hover {
+              transform: translateY(-8px) !important;
+              box-shadow: 0 24px 48px -12px rgba(15, 23, 42, 0.16) !important;
+            }
+          </style>
+
+          <!-- Modern Header -->
+          <div class="modal-header border-0 pb-0" style="padding: 28px 32px 12px; background: transparent;">
+            <div class="w-100 text-center position-relative">
+              <div style="display: inline-flex; align-items: center; gap: 8px; background: #fff1f2; border: 1px solid #fecdd3; color: #e11d48; font-weight: 700; font-size: 0.78rem; padding: 4px 14px; border-radius: 9999px; margin-bottom: 10px;">
+                <i class="ti ti-sparkles"></i>
+                <span>Choose Your Growth Plan</span>
+              </div>
+              <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; color: #0f172a; font-size: 1.65rem; margin-bottom: 6px; letter-spacing: -0.02em;">
+                Upgrade to AskReview Pro
+              </h2>
+              <p style="color: #64748b; font-size: 0.92rem; max-width: 580px; margin: 0 auto;">
+                Get more genuine reviews, video testimonials, and higher search rankings. Select the plan that fits your business.
+              </p>
+              <button type="button" class="btn-close position-absolute top-0 end-0" onclick="close_expiry_modal()" data-bs-dismiss="modal" aria-label="Close" style="opacity: 0.6;"></button>
+            </div>
           </div>
-          <div class="modal-body">
-              <div class="row">
 
+          <!-- Modal Body with Plans -->
+          <div class="modal-body" style="padding: 24px 32px 32px;">
+            @php
+                $Service = DB::table('services')->where('status','publish')->orderByRaw('CAST(price AS DECIMAL(10,2)) ASC')->get();
+                $count = count($Service);
+                if ($count == 1) {
+                    $colClass = 'col-lg-5 col-md-8 mx-auto';
+                } elseif ($count == 2) {
+                    $colClass = 'col-lg-6 col-md-6';
+                } elseif ($count == 3) {
+                    $colClass = 'col-lg-4 col-md-6';
+                } else {
+                    $colClass = 'col-lg-3 col-md-6';
+                }
+            @endphp
+
+            <div class="row g-4 justify-content-center align-items-stretch">
+              @foreach ($Service as $key => $item)
                 @php
-                    $Service = DB::table('services')->where('status','publish')->get();
+                    $isPopular = ($count >= 2 && $key == 1); // Middle card in 3-tier setup is Most Popular
+                    $isBestValue = ($count >= 3 && $key == 2); // 3rd card is Best Value
+                    $years = (!empty($item->subscription_date) && is_numeric($item->subscription_date)) ? (int)$item->subscription_date : 1;
+                    $durationText = $years > 1 ? $years . ' Years' : '1 Year';
                 @endphp
-                @foreach ($Service as $key=> $item)
-                <div class="col-lg-6 col-md-12 col">
-                  <div class="card card_box gold_box"  @if ($item->video_access ==  'Y') style="background: #c0ffc3;" @endif>
-                      <div class="header_box">
-                        <h2>
-                          {{$item->title}}
-                        </h2>
-                        
+                <div class="{{ $colClass }} d-flex">
+                  <div class="modern-pricing-card w-100 d-flex flex-column position-relative" 
+                       style="border-radius: 22px; padding: 32px 26px; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                              @if($isPopular)
+                                background: linear-gradient(180deg, #fff5f6 0%, #ffffff 24%);
+                                border: 2.5px solid #e11d48;
+                                box-shadow: 0 18px 40px -10px rgba(225, 29, 72, 0.22);
+                              @elseif($isBestValue)
+                                background: linear-gradient(180deg, #f5f3ff 0%, #ffffff 24%);
+                                border: 2px solid #a5b4fc;
+                                box-shadow: 0 12px 32px -8px rgba(79, 70, 229, 0.16);
+                              @else
+                                background: #ffffff;
+                                border: 1.5px solid #e2e8f0;
+                                box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
+                              @endif">
+                    
+                    @if($isPopular)
+                      <div class="position-absolute" style="top: -14px; left: 50%; transform: translateX(-50%); z-index: 2;">
+                        <span style="background: linear-gradient(135deg, #e11d48 0%, #be123c 100%); color: #ffffff; font-size: 0.74rem; font-weight: 800; padding: 5px 16px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.06em; box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35); display: inline-flex; align-items: center; gap: 4px;">
+                          🔥 Most Popular
+                        </span>
                       </div>
-                      <div class="card_body_box">
-                        <div class="price_box">
-                          <div class="price_sec">
-                            <h4>₹ {{$item->price}}/Yearly</h4>
-                          </div>
-                        </div>
-                          
-                          <div class="card_list_sec">
-                            <ul>
-                              <li>
-                                <span><i class="fa-solid fa-check" style="color: green"></i> <span>Link social media platform (facebook + instagram + youtube)</span></span>
-                                 
-                              </li>
-                              <li>
-                                <span><i class="fa-solid fa-check" style="color: green"></i> <span>Generate unlimited design qr code</span></span>
-                                 
-                              </li>
-                              <li>
-                                <span><i class="fa-solid fa-check" style="color: green"></i> <span> Automatic link qr code with google my business access</span></span>
-                                 
-                              </li>
-                              <li>
-                                <span><i class="fa-solid fa-check" style="color: green"></i> <span>1 year validity</span></span>
-                                 
-                              </li>
-                              <li>
-                                <span><i class="fa-solid fa-check" style="color: green"></i> <span>Customize feedback form</span></span>
-                                 
-                              </li>
-                              <li>
-                                <span><i class="fa-solid fa-check" style="color: green"></i> <span>Private  enquiry option</span></span>
-                                 
-                              </li>
-                              <li>
-                                <span><i class="fa-solid fa-check" style="color: green"></i> <span>Dashboard  notifications</span></span>
-                                 
-                              </li>
-                              <li>
-                                <span><i class="fa-solid fa-check" style="color: green"></i> <span>Scan qr code unlimited times</span></span>
-                                 
-                              </li>
-                              @if ($item->video_access ==  'Y')
-                                <li>
-                                  <span><i class="fa-solid fa-check" style="color: green"></i> <span>Video Access</span></span>
-                                  
-                                </li>
-                              @endif
-                          </ul>
-                          </div>
+                    @elseif($isBestValue)
+                      <div class="position-absolute" style="top: -14px; left: 50%; transform: translateX(-50%); z-index: 2;">
+                        <span style="background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%); color: #ffffff; font-size: 0.74rem; font-weight: 800; padding: 5px 16px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.06em; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35); display: inline-flex; align-items: center; gap: 4px;">
+                          👑 Best Value (Save More)
+                        </span>
+                      </div>
+                    @endif
 
-                          <div class="mamber_btn_box">
-                            <a href="{{URL::to('admin/user_service_payment_view/'.$item->id)}}">
-                              <button class="btn btn-info buy_now_btn">Buy Now</button>
-                            </a>
-                          </div>
+                    <!-- Card Header -->
+                    <div class="mb-3">
+                      <div class="d-flex align-items-center justify-content-between mb-2">
+                        <div class="d-flex align-items-center gap-2">
+                          @if($key == 0)
+                            <span style="width: 28px; height: 28px; border-radius: 8px; background: #f1f5f9; display: inline-flex; align-items: center; justify-content: center; color: #475569; font-size: 0.9rem;">
+                              <i class="ti ti-leaf"></i>
+                            </span>
+                          @elseif($isPopular)
+                            <span style="width: 28px; height: 28px; border-radius: 8px; background: #ffe4e6; display: inline-flex; align-items: center; justify-content: center; color: #e11d48; font-size: 0.95rem;">
+                              <i class="ti ti-flame"></i>
+                            </span>
+                          @else
+                            <span style="width: 28px; height: 28px; border-radius: 8px; background: #ede9fe; display: inline-flex; align-items: center; justify-content: center; color: #6366f1; font-size: 0.95rem;">
+                              <i class="ti ti-crown"></i>
+                            </span>
+                          @endif
+                          <h4 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 1.28rem; color: #0f172a; margin: 0;">
+                            {{ $item->title }}
+                          </h4>
+                        </div>
+                        <span class="badge" style="
+                          @if($isPopular) background: #ffe4e6; color: #be123c;
+                          @elseif($isBestValue) background: #ede9fe; color: #4338ca;
+                          @else background: #f1f5f9; color: #475569; @endif
+                          font-weight: 700; font-size: 0.72rem; padding: 5px 10px; border-radius: 8px;">
+                          {{ $durationText }}
+                        </span>
                       </div>
+                      
+                      <!-- Price Block -->
+                      <div class="d-flex align-items-baseline gap-1 my-3">
+                        <span style="font-size: 1.35rem; font-weight: 700; color: #0f172a;">₹</span>
+                        <span style="font-size: 2.35rem; font-weight: 800; color: #0f172a; letter-spacing: -0.02em; font-family: 'Plus Jakarta Sans', sans-serif;">
+                          {{ number_format($item->price) }}
+                        </span>
+                        <span style="color: #64748b; font-size: 0.85rem; font-weight: 600;">/ {{ $durationText }}</span>
+                      </div>
+                    </div>
+
+                    <!-- Divider -->
+                    <hr style="border-color: #f1f5f9; margin: 0 0 18px 0;">
+
+                    <!-- Feature List -->
+                    <div class="flex-grow-1 mb-4">
+                      <ul class="list-unstyled d-flex flex-column gap-2 mb-0" style="font-size: 0.86rem; color: #334155;">
+                        <li class="d-flex align-items-start gap-2">
+                          <span style="color: #10b981; font-size: 1rem; line-height: 1.2;"><i class="ti ti-circle-check-filled"></i></span>
+                          <span>Link Social Platforms (Facebook, Instagram, YouTube)</span>
+                        </li>
+                        <li class="d-flex align-items-start gap-2">
+                          <span style="color: #10b981; font-size: 1rem; line-height: 1.2;"><i class="ti ti-circle-check-filled"></i></span>
+                          <span>Generate Unlimited Design QR Codes</span>
+                        </li>
+                        <li class="d-flex align-items-start gap-2">
+                          <span style="color: #10b981; font-size: 1rem; line-height: 1.2;"><i class="ti ti-circle-check-filled"></i></span>
+                          <span>Direct Sync with Google Business Profile</span>
+                        </li>
+                        <li class="d-flex align-items-start gap-2">
+                          <span style="color: #10b981; font-size: 1rem; line-height: 1.2;"><i class="ti ti-circle-check-filled"></i></span>
+                          <span>Full <strong>{{ $durationText }}</strong> Validity</span>
+                        </li>
+                        <li class="d-flex align-items-start gap-2">
+                          <span style="color: #10b981; font-size: 1rem; line-height: 1.2;"><i class="ti ti-circle-check-filled"></i></span>
+                          <span>Customizable Feedback &amp; Review Forms</span>
+                        </li>
+                        <li class="d-flex align-items-start gap-2">
+                          <span style="color: #10b981; font-size: 1rem; line-height: 1.2;"><i class="ti ti-circle-check-filled"></i></span>
+                          <span>Private Negative Feedback &amp; Enquiry Filter</span>
+                        </li>
+                        <li class="d-flex align-items-start gap-2">
+                          <span style="color: #10b981; font-size: 1rem; line-height: 1.2;"><i class="ti ti-circle-check-filled"></i></span>
+                          <span>Instant Email &amp; Dashboard Notifications</span>
+                        </li>
+                        <li class="d-flex align-items-start gap-2">
+                          <span style="color: #10b981; font-size: 1rem; line-height: 1.2;"><i class="ti ti-circle-check-filled"></i></span>
+                          <span>Scan QR Codes Unlimited Times</span>
+                        </li>
+
+                        <!-- Video Access Feature -->
+                        <li class="d-flex align-items-start gap-2 mt-1">
+                          @if ($item->video_access == 'Y')
+                            <div class="w-100 d-flex align-items-center justify-content-between p-2 rounded-2" style="background: #f0fdf4; border: 1px solid #bbf7d0;">
+                              <div class="d-flex align-items-center gap-2">
+                                <span style="color: #16a34a; font-size: 1.05rem;"><i class="ti ti-video"></i></span>
+                                <span style="color: #15803d; font-weight: 700; font-size: 0.84rem;">
+                                  Video Testimonial Collection
+                                </span>
+                              </div>
+                              <span class="badge" style="background: #22c55e; color: #fff; font-size: 0.65rem; font-weight: 700; border-radius: 999px;">Included</span>
+                            </div>
+                          @else
+                            <div class="d-flex align-items-center gap-2" style="color: #94a3b8; font-size: 0.84rem;">
+                              <span style="color: #cbd5e1; font-size: 1rem;"><i class="ti ti-x"></i></span>
+                              <span style="text-decoration: line-through;">Video Testimonial Access</span>
+                            </div>
+                          @endif
+                        </li>
+                      </ul>
+                    </div>
+
+                    <!-- CTA Button -->
+                    <div class="mt-auto pt-2">
+                      <a href="{{ URL::to('admin/user_service_payment_view/' . $item->id) }}" class="text-decoration-none">
+                        @if($isPopular)
+                          <button class="btn w-100 d-flex align-items-center justify-content-center gap-2" 
+                                  style="background: linear-gradient(135deg, #e11d48 0%, #be123c 100%); color: #ffffff; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; height: 50px; font-size: 0.95rem; border-radius: 14px; border: none; box-shadow: 0 6px 20px rgba(225, 29, 72, 0.4); transition: all 0.2s ease;">
+                            <span>Upgrade to {{ $item->title }}</span>
+                            <i class="ti ti-arrow-right"></i>
+                          </button>
+                        @elseif($isBestValue)
+                          <button class="btn w-100 d-flex align-items-center justify-content-center gap-2" 
+                                  style="background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%); color: #ffffff; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; height: 50px; font-size: 0.95rem; border-radius: 14px; border: none; box-shadow: 0 6px 20px rgba(79, 70, 229, 0.35); transition: all 0.2s ease;">
+                            <span>Select {{ $item->title }}</span>
+                            <i class="ti ti-arrow-right"></i>
+                          </button>
+                        @else
+                          <button class="btn w-100 d-flex align-items-center justify-content-center gap-2" 
+                                  style="background: #0f172a; color: #ffffff; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; height: 48px; border-radius: 14px; border: none; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15); transition: all 0.2s ease;">
+                            <span>Select {{ $item->title }}</span>
+                            <i class="ti ti-arrow-right"></i>
+                          </button>
+                        @endif
+                      </a>
+                    </div>
+
                   </div>
                 </div>
-                @endforeach
+              @endforeach
+            </div>
 
-
+            <!-- Trust Badge Footer -->
+            <div class="mt-4 pt-3 text-center border-top" style="border-color: #e2e8f0 !important;">
+              <div class="d-flex flex-wrap align-items-center justify-content-center gap-4 text-muted" style="font-size: 0.8rem;">
+                <span class="d-flex align-items-center gap-1">
+                  <i class="ti ti-shield-lock" style="color: #10b981; font-size: 1rem;"></i>
+                  <span>100% Secure Razorpay Checkout</span>
+                </span>
+                <span class="d-flex align-items-center gap-1">
+                  <i class="ti ti-bolt" style="color: #f59e0b; font-size: 1rem;"></i>
+                  <span>Instant Account Activation</span>
+                </span>
+                <span class="d-flex align-items-center gap-1">
+                  <i class="ti ti-headset" style="color: #2563eb; font-size: 1rem;"></i>
+                  <span>Need Help? Call 90 87 86 85 84</span>
+                </span>
               </div>
+            </div>
+
           </div>
          
         </div>
