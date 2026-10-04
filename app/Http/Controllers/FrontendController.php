@@ -228,6 +228,27 @@ class FrontendController extends Controller
                     
                 }
 
+                if ($array['video_access_show']) {
+                    $recordIntegration = Integration::where('user_id', $userDate->id)->where('type', 'record')->first();
+                    if (!$recordIntegration) {
+                        $maxOrder = Integration::where('user_id', $userDate->id)->max('button_order') ?? 5;
+                        $recordIntegration = Integration::create([
+                            'type' => 'record',
+                            'user_id' => $userDate->id,
+                            'button_icon' => URL::to('frontend/images/record.png'),
+                            'button_name' => 'Video Testimonial',
+                            'button_order' => $maxOrder + 1,
+                            'status' => 'active'
+                        ]);
+                        $array['IntegrationRecord'] = $recordIntegration;
+                        $array['integrationList'] = Integration::where('user_id', $user->id)->orderBy('button_order', 'asc')->get();
+                    } elseif ($recordIntegration->status === null) {
+                        $recordIntegration->update(['status' => 'active']);
+                        $array['IntegrationRecord'] = $recordIntegration;
+                        $array['integrationList'] = Integration::where('user_id', $user->id)->orderBy('button_order', 'asc')->get();
+                    }
+                }
+
 
                 if (isset($_GET['from']) && $_GET['from'] == 'qr') {
                     $qr = QrTrack::where('ip_address', request()->ip())

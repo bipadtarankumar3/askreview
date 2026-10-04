@@ -22,6 +22,8 @@ use App\Models\feedback_form_submit;
 use App\Models\privateReview;
 use App\Models\TemplateCategory;
 use App\Models\video_testimonial;
+use App\Models\Integration;
+use Illuminate\Support\Facades\URL;
 
 use Illuminate\Support\Facades\Auth;
 use PDF;
@@ -622,6 +624,19 @@ class UserController extends Controller
 
                 if ($request->video_access != '') {
                     $user->video_access = $request->video_access;
+                    if ($request->video_access == 'YES') {
+                        Integration::updateOrCreate(
+                            ['user_id' => $user->id, 'type' => 'record'],
+                            [
+                                'button_icon' => URL::to('frontend/images/record.png'),
+                                'button_name' => 'Video Testimonial',
+                                'button_order' => 6,
+                                'status' => 'active'
+                            ]
+                        );
+                    } elseif ($request->video_access == 'NO') {
+                        Integration::where('user_id', $user->id)->where('type', 'record')->update(['status' => 'inactive']);
+                    }
                 }
                 
                 $user->save();
@@ -703,6 +718,18 @@ class UserController extends Controller
                     'google_page_text' => 'We want our customers to be 100% satisfied. Please let us know why you had a bad experience, so we can improve our service. Leave your email to be contacted.',
                     'logo' => $document_link
                 ]);
+
+                if ($user && $request->video_access == 'YES') {
+                    Integration::updateOrCreate(
+                        ['user_id' => $user->id, 'type' => 'record'],
+                        [
+                            'button_icon' => URL::to('frontend/images/record.png'),
+                            'button_name' => 'Video Testimonial',
+                            'button_order' => 6,
+                            'status' => 'active'
+                        ]
+                    );
+                }
 
                 $MyForm = MyForm::create([
                     'form_name'=>'Give Us Your Feedback',
@@ -930,6 +957,19 @@ class UserController extends Controller
 
                 if ($request->video_access != '') {
                     $user->video_access = $request->video_access;
+                    if ($request->video_access == 'YES') {
+                        Integration::updateOrCreate(
+                            ['user_id' => $user->id, 'type' => 'record'],
+                            [
+                                'button_icon' => URL::to('frontend/images/record.png'),
+                                'button_name' => 'Video Testimonial',
+                                'button_order' => 6,
+                                'status' => 'active'
+                            ]
+                        );
+                    } elseif ($request->video_access == 'NO') {
+                        Integration::where('user_id', $user->id)->where('type', 'record')->update(['status' => 'inactive']);
+                    }
                 }
                 
                 $user->save();
@@ -1524,6 +1564,19 @@ class UserController extends Controller
                 
                 if ($request->video_access != '') {
                     $user->video_access = $request->video_access;
+                    if ($request->video_access == 'YES') {
+                        Integration::updateOrCreate(
+                            ['user_id' => $user->id, 'type' => 'record'],
+                            [
+                                'button_icon' => URL::to('frontend/images/record.png'),
+                                'button_name' => 'Video Testimonial',
+                                'button_order' => 6,
+                                'status' => 'active'
+                            ]
+                        );
+                    } elseif ($request->video_access == 'NO') {
+                        Integration::where('user_id', $user->id)->where('type', 'record')->update(['status' => 'inactive']);
+                    }
                 }
 
                 if (isset($request->file) && !empty($request->file)) {
@@ -1619,6 +1672,18 @@ class UserController extends Controller
                     'user_id' => Auth::user()->id,
                     'logo' => $document_link
                 ]);
+
+                if ($user && $request->video_access == 'YES') {
+                    Integration::updateOrCreate(
+                        ['user_id' => $user->id, 'type' => 'record'],
+                        [
+                            'button_icon' => URL::to('frontend/images/record.png'),
+                            'button_name' => 'Video Testimonial',
+                            'button_order' => 6,
+                            'status' => 'active'
+                        ]
+                    );
+                }
 
                 
                 $notification = array(

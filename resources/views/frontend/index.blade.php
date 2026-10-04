@@ -1137,7 +1137,7 @@
                                         elseif (str_contains($platformSlug, 'youtube')) $platformClass = 'platform-youtube';
                                         elseif (str_contains($platformSlug, 'whatsapp')) $platformClass = 'platform-whatsapp';
                                     @endphp
-                                    @if ($item->type == 'record' && $item->status == 'active')
+                                    @if ($item->type == 'record' && ($item->status == 'active' || empty($item->status)))
                                         @if ($video_access_show == true)
                                             <div class="platform-btn-link video-record-btn" onclick="record_video()">
                                                 <div class="platform-icon-wrap">
@@ -1219,7 +1219,7 @@
                                 @endforeach
                             @else
                                 <!-- Fallback Loop -->
-                                @if (isset($IntegrationRecord) && $IntegrationRecord->status == 'active' && $video_access_show == true)
+                                @if (isset($IntegrationRecord) && ($IntegrationRecord->status == 'active' || empty($IntegrationRecord->status)) && $video_access_show == true)
                                     <div class="platform-btn-link video-record-btn" onclick="record_video()">
                                         <div class="platform-icon-wrap">
                                             <i class="fa-solid fa-video text-danger fa-lg"></i>
