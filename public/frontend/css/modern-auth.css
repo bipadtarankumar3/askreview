@@ -210,9 +210,9 @@ html, body.auth-body {
 /* Large Graphic Container */
 .slide-graphic-container {
   width: 100%;
-  max-width: 480px;
-  height: 250px;
-  margin-bottom: 1rem;
+  max-width: 490px;
+  height: 275px;
+  margin-bottom: 0.85rem;
   display: flex;
   align-items: center;
   justify-content: center;

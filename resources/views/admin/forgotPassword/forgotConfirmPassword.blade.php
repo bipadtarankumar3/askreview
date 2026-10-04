@@ -54,75 +54,151 @@
                 </div>
                 
                 <div class="slide-graphic-container">
-                  <svg class="slide-graphic-svg" viewBox="0 0 460 240" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <ellipse cx="230" cy="225" rx="170" ry="12" fill="rgba(15,23,42,0.06)"/>
-                    <rect x="120" y="10" width="220" height="216" rx="20" fill="#ffffff" stroke="#cbd5e1" stroke-width="2.5"/>
-                    <rect x="185" y="14" width="90" height="5" rx="2.5" fill="#e2e8f0"/>
+                  <!-- High-Fidelity Review Hub Showcase Matching Actual Client Screen -->
+                  <svg class="slide-graphic-svg" viewBox="0 0 460 276" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <linearGradient id="instaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#833ab4"/>
+                        <stop offset="50%" stop-color="#fd1d1d"/>
+                        <stop offset="100%" stop-color="#fcb045"/>
+                      </linearGradient>
+                      <filter id="floatShadow" x="-10%" y="-10%" width="125%" height="125%">
+                        <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="rgba(15,23,42,0.06)"/>
+                      </filter>
+                      <filter id="cardShadow" x="-10%" y="-10%" width="125%" height="125%">
+                        <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="rgba(15,23,42,0.08)"/>
+                      </filter>
+                    </defs>
+
+                    <!-- Desk Base Shadow -->
+                    <ellipse cx="230" cy="270" rx="175" ry="6" fill="rgba(15,23,42,0.05)"/>
                     
-                    <circle cx="230" cy="34" r="12" fill="#eff6ff" stroke="#bfdbfe"/>
-                    <text x="230" y="38" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="800" fill="#2563eb" text-anchor="middle">R</text>
-                    <text x="230" y="52" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a" text-anchor="middle">YOUR BUSINESS HUB</text>
+                    <!-- Main Smartphone Review Hub Card (Centered) -->
+                    <rect x="114" y="6" width="232" height="264" rx="20" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" filter="url(#cardShadow)"/>
                     
-                    <!-- 1. GOOGLE BUTTON -->
-                    <g transform="translate(136, 58)">
-                      <rect x="0" y="0" width="188" height="22" rx="11" fill="#ffffff" stroke="#0f172a" stroke-width="1.2"/>
-                      <circle cx="16" cy="11" r="6" fill="#ffffff"/>
-                      <text x="16" y="14.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="8" font-weight="800" fill="#4285f4" text-anchor="middle">G</text>
-                      <text x="100" y="14.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="8" font-weight="800" fill="#0f172a" text-anchor="middle">GOOGLE</text>
+                    <!-- Top Navigation: Back Button & Agency Header -->
+                    <g transform="translate(122, 12)">
+                      <circle cx="9" cy="9" r="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+                      <path d="M10.5 6.5 L7.5 9 L10.5 11.5" stroke="#475569" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
                     </g>
                     
-                    <!-- 2. FACEBOOK BUTTON -->
-                    <g transform="translate(136, 84)">
-                      <rect x="0" y="0" width="188" height="22" rx="11" fill="#ffffff" stroke="#0f172a" stroke-width="1.2"/>
-                      <circle cx="16" cy="11" r="6" fill="#1877f2"/>
-                      <text x="16" y="14.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="8" font-weight="800" fill="#ffffff" text-anchor="middle">f</text>
-                      <text x="100" y="14.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="8" font-weight="800" fill="#0f172a" text-anchor="middle">FACEBOOK</text>
+                    <!-- Business Logo Header Card (Center Top) -->
+                    <g transform="translate(204, 10)">
+                      <rect x="0" y="0" width="52" height="23" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+                      <circle cx="11" cy="11.5" r="6" fill="#eff6ff"/>
+                      <text x="11" y="14" font-family="'Plus Jakarta Sans', sans-serif" font-size="7" font-weight="900" fill="#2563eb" text-anchor="middle">R</text>
+                      <text x="31" y="10" font-family="'Plus Jakarta Sans', sans-serif" font-size="4.8" font-weight="800" fill="#0f172a" text-anchor="middle">AGENCY</text>
+                      <text x="31" y="15.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="3.2" font-weight="600" fill="#2563eb" text-anchor="middle">TRUE VALUE</text>
                     </g>
-                    
-                    <!-- 3. INSTAGRAM BUTTON -->
-                    <g transform="translate(136, 110)">
-                      <rect x="0" y="0" width="188" height="22" rx="11" fill="#ffffff" stroke="#0f172a" stroke-width="1.2"/>
-                      <circle cx="16" cy="11" r="6" fill="#e1306c"/>
-                      <text x="16" y="14.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="7" font-weight="800" fill="#ffffff" text-anchor="middle">📷</text>
-                      <text x="100" y="14.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="8" font-weight="800" fill="#0f172a" text-anchor="middle">INSTAGRAM</text>
+
+                    <!-- 5 Glowing Rating Stars -->
+                    <g transform="translate(187, 38)">
+                      <polygon points="4.5,0 5.8,3 9,3.5 6.7,5.6 7.3,8.7 4.5,7.2 1.7,8.7 2.3,5.6 0,3.5 3.2,3" fill="#f59e0b"/>
+                      <polygon points="4.5,0 5.8,3 9,3.5 6.7,5.6 7.3,8.7 4.5,7.2 1.7,8.7 2.3,5.6 0,3.5 3.2,3" fill="#f59e0b" transform="translate(18, 0)"/>
+                      <polygon points="4.5,0 5.8,3 9,3.5 6.7,5.6 7.3,8.7 4.5,7.2 1.7,8.7 2.3,5.6 0,3.5 3.2,3" fill="#f59e0b" transform="translate(36, 0)"/>
+                      <polygon points="4.5,0 5.8,3 9,3.5 6.7,5.6 7.3,8.7 4.5,7.2 1.7,8.7 2.3,5.6 0,3.5 3.2,3" fill="#f59e0b" transform="translate(54, 0)"/>
+                      <polygon points="4.5,0 5.8,3 9,3.5 6.7,5.6 7.3,8.7 4.5,7.2 1.7,8.7 2.3,5.6 0,3.5 3.2,3" fill="#f59e0b" transform="translate(72, 0)"/>
                     </g>
-                    
-                    <!-- 4. YOUTUBE BUTTON -->
-                    <g transform="translate(136, 136)">
-                      <rect x="0" y="0" width="188" height="22" rx="11" fill="#ffffff" stroke="#0f172a" stroke-width="1.2"/>
-                      <circle cx="16" cy="11" r="6" fill="#ff0000"/>
-                      <text x="16" y="14.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="7" font-weight="800" fill="#ffffff" text-anchor="middle">▶</text>
-                      <text x="100" y="14.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="8" font-weight="800" fill="#0f172a" text-anchor="middle">YOUTUBE</text>
+
+                    <!-- Friendly Header -->
+                    <text x="230" y="56" font-family="'Plus Jakarta Sans', sans-serif" font-size="10.5" font-weight="800" fill="#0f172a" text-anchor="middle">Thank You!</text>
+                    <text x="230" y="65" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b" text-anchor="middle">Select your preferred platform below to leave us a quick review.</text>
+
+                    <!-- 1. GOOGLE REVIEW CARD -->
+                    <g transform="translate(122, 72)">
+                      <rect x="0" y="0" width="216" height="23" rx="7" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+                      <circle cx="12" cy="11.5" r="7.5" fill="#f8fafc" stroke="#f1f5f9"/>
+                      <path d="M14.5 11.5 H12 V13 H13.6 C13.3 13.8 12.6 14.3 11.7 14.3 C10.4 14.3 9.4 13.2 9.4 11.8 C9.4 10.5 10.4 9.4 11.7 9.4 C12.3 9.4 12.9 9.6 13.3 10 L14.4 8.9 C13.7 8.2 12.7 7.8 11.7 7.8 C9.5 7.8 7.7 9.6 7.7 11.8 C7.7 14 9.5 15.8 11.7 15.8 C14 15.8 15.5 14.2 15.5 11.9 C15.5 11.6 15.4 11.3 15.4 11.1 L14.5 11.5 Z" fill="#4285F4"/>
+                      <text x="26" y="9.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Google</text>
+                      <text x="26" y="16.5" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b">Pick pre-written review &amp; paste</text>
+                      <circle cx="204" cy="11.5" r="5" fill="#f8fafc"/>
+                      <path d="M203 9.5 L205.5 11.5 L203 13.5" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
                     </g>
-                    
-                    <!-- 5. VIDEO TESTIMONIAL BUTTON (WITH NEW! BADGE) -->
-                    <g transform="translate(136, 162)">
-                      <rect x="0" y="0" width="188" height="22" rx="11" fill="#ffffff" stroke="#0f172a" stroke-width="1.4"/>
-                      <text x="16" y="15" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" fill="#0f172a" text-anchor="middle">📹</text>
-                      <text x="96" y="14.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="8" font-weight="800" fill="#0f172a" text-anchor="middle">VIDEO TESTIMONIAL</text>
-                      <polygon points="172,6 175,10 179,10 176,13 177,17 173,15 169,17 170,13 167,10 171,10" fill="#facc15"/>
-                      <text x="173" y="14" font-family="'Plus Jakarta Sans', sans-serif" font-size="5.5" font-weight="800" fill="#0f172a" text-anchor="middle">NEW!</text>
+
+                    <!-- 2. FACEBOOK REVIEW CARD -->
+                    <g transform="translate(122, 98)">
+                      <rect x="0" y="0" width="216" height="23" rx="7" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+                      <circle cx="12" cy="11.5" r="7.5" fill="#1877f2"/>
+                      <text x="12" y="14.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="800" fill="#ffffff" text-anchor="middle">f</text>
+                      <text x="26" y="9.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Facebook</text>
+                      <text x="26" y="16.5" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b">Review us on Facebook</text>
+                      <circle cx="204" cy="11.5" r="5" fill="#f8fafc"/>
+                      <path d="M203 9.5 L205.5 11.5 L203 13.5" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
                     </g>
-                    
-                    <!-- 6. PRIVATE ENQUIRY BUTTON (GOLD BORDER) -->
-                    <g transform="translate(136, 188)">
-                      <rect x="0" y="0" width="188" height="22" rx="11" fill="#ffffff" stroke="#f59e0b" stroke-width="1.4"/>
-                      <text x="16" y="15" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" fill="#f59e0b" text-anchor="middle">💬</text>
-                      <text x="100" y="14.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="8" font-weight="800" fill="#0f172a" text-anchor="middle">PRIVATE ENQUIRY</text>
+
+                    <!-- 3. INSTAGRAM REVIEW CARD -->
+                    <g transform="translate(122, 124)">
+                      <rect x="0" y="0" width="216" height="23" rx="7" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+                      <circle cx="12" cy="11.5" r="7.5" fill="url(#instaGradient)"/>
+                      <rect x="7.5" y="7.5" width="9" height="8" rx="2.2" fill="none" stroke="#ffffff" stroke-width="0.9"/>
+                      <circle cx="12" cy="11.5" r="2.2" fill="none" stroke="#ffffff" stroke-width="0.8"/>
+                      <circle cx="14.5" cy="9.2" r="0.5" fill="#ffffff"/>
+                      <text x="26" y="9.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Instagram</text>
+                      <text x="26" y="16.5" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b">Review us on Instagram</text>
+                      <circle cx="204" cy="11.5" r="5" fill="#f8fafc"/>
+                      <path d="M203 9.5 L205.5 11.5 L203 13.5" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
                     </g>
-                    
+
+                    <!-- 4. YOUTUBE REVIEW CARD -->
+                    <g transform="translate(122, 150)">
+                      <rect x="0" y="0" width="216" height="23" rx="7" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+                      <circle cx="12" cy="11.5" r="7.5" fill="#ff0000"/>
+                      <polygon points="10.5,8.5 15,11.5 10.5,14.5" fill="#ffffff"/>
+                      <text x="26" y="9.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Youtube</text>
+                      <text x="26" y="16.5" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b">Review us on Youtube</text>
+                      <circle cx="204" cy="11.5" r="5" fill="#f8fafc"/>
+                      <path d="M203 9.5 L205.5 11.5 L203 13.5" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
+                    </g>
+
+                    <!-- 5. VIDEO TESTIMONIAL CARD (HIGHLIGHTED IN SOFT PINK/ROSE) -->
+                    <g transform="translate(122, 176)">
+                      <rect x="0" y="0" width="216" height="23" rx="7" fill="#fff1f2" stroke="#fecdd3" stroke-width="1.2"/>
+                      <circle cx="12" cy="11.5" r="7.5" fill="#ffe4e6"/>
+                      <rect x="8.5" y="8" width="5.5" height="7" rx="1.2" fill="#e11d48"/>
+                      <polygon points="14,10 17,8.5 17,14.5 14,13" fill="#e11d48"/>
+                      <text x="26" y="9.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Video Testimonial</text>
+                      <circle cx="95" cy="7" r="2.2" fill="#e11d48"/>
+                      <text x="26" y="16.5" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#e11d48">Record a 60–sec video shoutout</text>
+                      <circle cx="204" cy="11.5" r="5" fill="#fff1f2"/>
+                      <path d="M203 9.5 L205.5 11.5 L203 13.5" stroke="#e11d48" stroke-width="1.2" stroke-linecap="round"/>
+                    </g>
+
+                    <!-- 6. PRIVATE ENQUIRY CARD (HIGHLIGHTED IN SOFT AMBER) -->
+                    <g transform="translate(122, 202)">
+                      <rect x="0" y="0" width="216" height="23" rx="7" fill="#fffdf0" stroke="#fde68a" stroke-width="1.2"/>
+                      <circle cx="12" cy="11.5" r="7.5" fill="#fef3c7"/>
+                      <rect x="8.5" y="8" width="7" height="5.5" rx="1.5" fill="#d97706"/>
+                      <polygon points="10,13.5 12,13.5 9,15.5" fill="#d97706"/>
+                      <text x="26" y="9.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Private Enquiry</text>
+                      <text x="26" y="16.5" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#b45309">Send a direct private message to us</text>
+                      <circle cx="204" cy="11.5" r="5" fill="#fffdf0"/>
+                      <path d="M203 9.5 L205.5 11.5 L203 13.5" stroke="#d97706" stroke-width="1.2" stroke-linecap="round"/>
+                    </g>
+
+                    <!-- 7. INSTALL APP PILL BUTTON -->
+                    <g transform="translate(166, 230)">
+                      <rect x="0" y="0" width="128" height="15" rx="7.5" fill="#ffffff" stroke="#bfdbfe" stroke-width="0.9"/>
+                      <path d="M8 4 H10.5 C10.8 4 11 4.2 11 4.5 V10.5 C11 10.8 10.8 11 10.5 11 H8 C7.7 11 7.5 10.8 7.5 10.5 V4.5 C7.5 4.2 7.7 4 8 4 Z" fill="none" stroke="#2563eb" stroke-width="0.8"/>
+                      <circle cx="9.25" cy="9.8" r="0.4" fill="#2563eb"/>
+                      <text x="68" y="10" font-family="'Plus Jakarta Sans', sans-serif" font-size="5.5" font-weight="700" fill="#2563eb" text-anchor="middle">Install App on Home Screen</text>
+                    </g>
+
                     <!-- Left Floating Feature Pill -->
-                    <g transform="translate(10, 80)">
-                      <rect x="0" y="0" width="96" height="46" rx="10" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
-                      <text x="48" y="18" font-family="'Plus Jakarta Sans', sans-serif" font-size="9.5" font-weight="800" fill="#e11d48" text-anchor="middle">1 QR Code</text>
-                      <text x="48" y="32" font-family="'Inter', sans-serif" font-size="7.5" font-weight="600" fill="#64748b" text-anchor="middle">All Review Links</text>
+                    <g transform="translate(6, 100)" filter="url(#floatShadow)">
+                      <rect x="0" y="0" width="98" height="46" rx="10" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.2"/>
+                      <circle cx="18" cy="23" r="8" fill="#fff1f2"/>
+                      <text x="18" y="26" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" font-weight="800" fill="#e11d48" text-anchor="middle">QR</text>
+                      <text x="32" y="18" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" font-weight="800" fill="#e11d48">1 QR Stand</text>
+                      <text x="32" y="30" font-family="'Inter', sans-serif" font-size="7" font-weight="600" fill="#64748b">All Review Links</text>
                     </g>
                     
                     <!-- Right Floating Feature Pill -->
-                    <g transform="translate(354, 110)">
-                      <rect x="0" y="0" width="96" height="46" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
-                      <text x="48" y="18" font-family="'Plus Jakarta Sans', sans-serif" font-size="9.5" font-weight="800" fill="#16a34a" text-anchor="middle">⚡ Instant Tap</text>
-                      <text x="48" y="32" font-family="'Inter', sans-serif" font-size="7.5" font-weight="600" fill="#64748b" text-anchor="middle">Google &amp; Socials</text>
+                    <g transform="translate(356, 114)" filter="url(#floatShadow)">
+                      <rect x="0" y="0" width="98" height="46" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
+                      <circle cx="18" cy="23" r="8" fill="#f0fdf4"/>
+                      <text x="18" y="26.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" fill="#16a34a" text-anchor="middle">⚡</text>
+                      <text x="32" y="18" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" font-weight="800" fill="#16a34a">Instant Tap</text>
+                      <text x="32" y="30" font-family="'Inter', sans-serif" font-size="7" font-weight="600" fill="#64748b">Google &amp; Socials</text>
                     </g>
                   </svg>
                 </div>
