@@ -65,7 +65,7 @@
             <div class="d-flex align-items-center justify-content-between mb-3">
               <span style="font-size: 0.85rem; font-weight: 700; color: #64748b;">Total Resellers</span>
               <div style="width: 44px; height: 44px; border-radius: 12px; background: #fff1f2; display: flex; align-items: center; justify-content: center; color: #e11d48; font-size: 1.3rem;">
-                <i class="ti ti-users-group"></i>
+                <i class="ti ti-users"></i>
               </div>
             </div>
             <div class="d-flex align-items-baseline justify-content-between">
@@ -131,7 +131,7 @@
     <!-- Recent Resellers Card -->
     <div class="card border-0 mb-4" style="border-radius: 20px; border: 1px solid #e2e8f0 !important;">
       <div class="card-header bg-white d-flex align-items-center justify-content-between p-4" style="border-bottom: 1px solid #f1f5f9; border-radius: 20px 20px 0 0;">
-        <h5 class="mb-0 fw-bold" style="color: #0f172a;"><i class="ti ti-users-group me-2 text-primary"></i>Recently Registered Resellers</h5>
+        <h5 class="mb-0 fw-bold" style="color: #0f172a;"><i class="ti ti-users me-2 text-primary"></i>Recently Registered Resellers</h5>
         <a href="{{ url('admin/admin_list') }}" class="btn btn-sm btn-outline-primary" style="border-radius: 10px; font-weight: 700;">View All</a>
       </div>
       <div class="card-body p-0">

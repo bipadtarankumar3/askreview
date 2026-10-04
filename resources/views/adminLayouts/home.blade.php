@@ -511,7 +511,7 @@
           <!-- Brand Logo Header -->
           <div class="brand-logo d-flex align-items-center justify-content-between">
             <a href="{{URL::to('admin/dashboard')}}" class="text-nowrap logo-img">
-              <img src="{{ asset('frontend/images/logo.jpg') }}" alt="AskReview Logo" style="height: 38px; width: auto; object-fit: contain; border-radius: 6px;" />
+              <img src="{{ asset('frontend/images/logo-brand.png') }}" alt="AskReview Logo" style="height: 42px; width: auto; max-width: 155px; object-fit: contain; border-radius: 6px;" />
             </a>
             <div class="close-btn d-lg-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
               <i class="ti ti-x fs-6 text-muted"></i>
@@ -543,7 +543,7 @@
 
                 <li class="sidebar-item">
                   <a class="sidebar-link" href="{{URL::to('admin/admin_list')}}" aria-expanded="false">
-                    <span><i class="ti ti-users-group"></i></span>
+                    <span><i class="ti ti-users"></i></span>
                     <span class="hide-menu">Resellers</span>
                   </a>
                 </li>
