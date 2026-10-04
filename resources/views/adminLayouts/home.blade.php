@@ -133,15 +133,89 @@
         flex-direction: column !important;
         align-items: center !important;
     }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar,
+    #main-wrapper.mini-sidebar .left-sidebar,
+    .mini-sidebar .left-sidebar {
+        width: 87px !important;
+        position: fixed !important;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1000 !important;
+        display: block !important;
+        background: #ffffff !important;
+        border-right: 1px solid #f1f5f9 !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .body-wrapper,
+    #main-wrapper.mini-sidebar .body-wrapper,
+    .mini-sidebar .body-wrapper {
+        margin-left: 87px !important;
+        min-height: 100vh;
+        position: relative;
+        z-index: 1;
+    }
     #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav ul .sidebar-item,
     #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item,
     .mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item {
         display: flex !important;
+        flex-direction: column !important;
         justify-content: center !important;
         align-items: center !important;
         width: 100% !important;
         margin: 0 0 6px 0 !important;
         padding: 0 !important;
+    }
+
+    /* Submenu inside collapsed mini-sidebar (stack vertically within 87px) */
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav .first-level,
+    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav .first-level,
+    .mini-sidebar .left-sidebar .sidebar-nav .first-level {
+        padding: 4px 0 0 0 !important;
+        margin: 0 !important;
+        border-left: none !important;
+        width: 100% !important;
+        display: none;
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav .first-level.show,
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav .first-level.in,
+    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav .first-level.show,
+    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav .first-level.in,
+    .mini-sidebar .left-sidebar .sidebar-nav .first-level.show,
+    .mini-sidebar .left-sidebar .sidebar-nav .first-level.in {
+        display: flex !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav .first-level .sidebar-item,
+    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav .first-level .sidebar-item,
+    .mini-sidebar .left-sidebar .sidebar-nav .first-level .sidebar-item {
+        width: 100% !important;
+        margin-bottom: 4px !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav .first-level .sidebar-item .sidebar-link,
+    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav .first-level .sidebar-item .sidebar-link,
+    .mini-sidebar .left-sidebar .sidebar-nav .first-level .sidebar-item .sidebar-link {
+        width: 42px !important;
+        height: 42px !important;
+        padding: 0 !important;
+        margin: 0 auto !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 10px !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav .first-level .sidebar-item .sidebar-link i,
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav .first-level .sidebar-item .sidebar-link .ti,
+    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav .first-level .sidebar-item .sidebar-link i,
+    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav .first-level .sidebar-item .sidebar-link .ti,
+    .mini-sidebar .left-sidebar .sidebar-nav .first-level .sidebar-item .sidebar-link i,
+    .mini-sidebar .left-sidebar .sidebar-nav .first-level .sidebar-item .sidebar-link .ti {
+        font-size: 1.35rem !important;
+        width: 26px !important;
+        height: 26px !important;
     }
     #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link,
     #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link,
@@ -312,6 +386,31 @@
         width: auto !important;
         height: auto !important;
         color: #94a3b8 !important;
+    }
+    #analytics-submenu.collapsing,
+    .sidebar-nav .first-level.collapsing {
+        transition: none !important;
+        -webkit-transition: none !important;
+        height: auto !important;
+        display: block !important;
+    }
+    .sidebar-nav .first-level.show,
+    .sidebar-nav .first-level.in {
+        display: block !important;
+    }
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav .first-level.show,
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav .first-level.in {
+        display: block !important;
+    }
+    .sidebar-link[aria-expanded="true"] .ti-chevron-down {
+        transform: rotate(180deg) !important;
+    }
+    .sidebar-link[aria-expanded="false"] .ti-chevron-down {
+        transform: rotate(0deg) !important;
+    }
+    .sidebar-link .ti-chevron-down {
+        transition: transform 0.12s ease !important;
+        display: inline-block !important;
     }
     #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .nav-small-cap {
         display: flex !important;
@@ -609,21 +708,24 @@
                   </a>
                 </li>
 
-                <li class="sidebar-item">
-                  <a class="sidebar-link" href="javascript:void(0)" aria-expanded="false" data-bs-toggle="collapse" data-bs-target="#analytics-submenu">
+                @php
+                  $isAnalyticsActive = Request::is('admin/qr_analytics*') || Request::is('admin/links_analytics*');
+                @endphp
+                <li class="sidebar-item {{ $isAnalyticsActive ? 'selected' : '' }}">
+                  <a class="sidebar-link {{ $isAnalyticsActive ? 'active' : '' }}" href="javascript:void(0)" aria-expanded="{{ $isAnalyticsActive ? 'true' : 'false' }}" data-bs-toggle="collapse" data-bs-target="#analytics-submenu">
                     <span><i class="ti ti-chart-pie"></i></span>
                     <span class="hide-menu">Analytics</span>
                     <span class="hide-menu ms-auto"><i class="ti ti-chevron-down" style="font-size: 0.9rem;"></i></span>
                   </a>
-                  <ul class="collapse first-level" id="analytics-submenu">
+                  <ul class="collapse first-level {{ $isAnalyticsActive ? 'show' : '' }}" id="analytics-submenu">
                     <li class="sidebar-item">
-                      <a class="sidebar-link" href="{{URL::to('admin/qr_analytics')}}">
+                      <a class="sidebar-link {{ Request::is('admin/qr_analytics*') ? 'active' : '' }}" href="{{URL::to('admin/qr_analytics')}}">
                         <span><i class="ti ti-qrcode"></i></span>
                         <span class="hide-menu">QR Analytics</span>
                       </a>
                     </li>
                     <li class="sidebar-item">
-                      <a class="sidebar-link" href="{{URL::to('admin/links_analytics')}}">
+                      <a class="sidebar-link {{ Request::is('admin/links_analytics*') ? 'active' : '' }}" href="{{URL::to('admin/links_analytics')}}">
                         <span><i class="ti ti-chart-arrows"></i></span>
                         <span class="hide-menu">Links Analytics</span>
                       </a>
