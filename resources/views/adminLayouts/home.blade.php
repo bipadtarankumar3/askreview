@@ -362,27 +362,37 @@
         right: 30px;
         background: linear-gradient(135deg, #e11d48 0%, #be123c 100%);
         color: #fff;
-        padding: 10px;
         border-radius: 50%;
         box-shadow: 0 6px 20px rgba(225, 29, 72, 0.4);
         cursor: pointer;
         text-align: center;
-        line-height: 1;
-        width: 54px;
-        height: 54px;
+        text-decoration: none !important;
+        width: 58px;
+        height: 58px;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
+        gap: 2px;
         z-index: 999;
-        transition: transform 0.2s ease;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     .floating-button:hover {
-        transform: scale(1.06);
-        background: #be123c;
+        transform: scale(1.08);
+        background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
         color: #fff;
+        box-shadow: 0 8px 24px rgba(225, 29, 72, 0.5);
     }
     .floating-button i {
-        font-size: 24px;
+        font-size: 19px;
+        line-height: 1;
+    }
+    .floating-button span {
+        font-size: 11px;
+        font-weight: 600;
+        line-height: 1;
+        letter-spacing: 0.3px;
+        color: #fff;
     }
   </style>
 
@@ -1524,7 +1534,7 @@
   </div>
 </div>
 
-<a href="http://m.me/147651825087840" target="_blank" class="floating-button"><i class="fa-regular fa-comment"></i> <br>Chat </a>
+<a href="http://m.me/147651825087840" target="_blank" class="floating-button"><i class="fa-regular fa-comment"></i><span>Chat</span></a>
 
   <!-- Customizer -->
   <!-- Import Js Files -->
