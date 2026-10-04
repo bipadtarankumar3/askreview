@@ -173,7 +173,7 @@
                 <span class="text-muted small fw-medium">| Live Business Analytics</span>
             </div>
             <h3 class="fw-bold text-dark mb-1" style="font-size: 1.55rem; letter-spacing: -0.02em;">My QR Analytics & Insights</h3>
-            <p class="text-muted small mb-0">Showing scans and customer visit trends recorded exclusively for your QR code stand.</p>
+            <p class="text-muted small mb-0">Showing scans and customer visit trends recorded exclusively for your QR code.</p>
         </div>
         @php
             $qrUrl = URL::to("u/".Auth::user()->name_url)."?from=qr";
@@ -181,7 +181,7 @@
         <div class="d-flex align-items-center flex-wrap gap-2 flex-shrink-0">
             <a href="{{ URL::to('admin/view_qr') }}" class="btn btn-sm d-inline-flex align-items-center gap-2" style="background: linear-gradient(135deg, #e11d48 0%, #be123c 100%); color: #ffffff; border-radius: 10px; font-weight: 700; padding: 8px 16px; border: none; box-shadow: 0 4px 12px rgba(225, 29, 72, 0.25); text-decoration: none;">
                 <i class="ti ti-qrcode fs-5"></i>
-                <span>Download QR Stand</span>
+                <span>Download QR</span>
             </a>
             <button type="button" class="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-2" style="border-radius: 10px; font-weight: 600; padding: 8px 14px;" onclick="copyQrLink('{{ $qrUrl }}')">
                 <i class="ti ti-copy fs-5"></i>
@@ -283,12 +283,12 @@
 
     <!-- Main Content Layout -->
     <div class="row">
-        <!-- Left Column: QR Stand Showcase & Analyzed Quick Metrics -->
+        <!-- Left Column: QR Code Showcase & Analyzed Quick Metrics -->
         <div class="col-lg-4 col-xl-3">
             <!-- QR Card -->
             <div class="chart-card card mb-4">
                 <div class="card-header">
-                    <h6 class="fw-bold text-dark mb-0"><i class="fa fa-qrcode text-primary me-2"></i>My QR Stand</h6>
+                    <h6 class="fw-bold text-dark mb-0"><i class="fa fa-qrcode text-primary me-2"></i>My QR Code</h6>
                     <span class="badge bg-success-subtle text-success small">Active</span>
                 </div>
                 <div class="card-body">
@@ -307,7 +307,7 @@
                     <div class="d-grid gap-2">
                         <a href="{{ URL::to('admin/view_qr') }}" class="btn btn-sm py-2 fw-bold text-white shadow-sm d-flex align-items-center justify-content-center gap-2" style="background: linear-gradient(135deg, #e11d48 0%, #be123c 100%); border-radius: 10px; border: none; box-shadow: 0 4px 12px rgba(225, 29, 72, 0.22); text-decoration: none;">
                             <i class="ti ti-qrcode fs-5"></i>
-                            <span>Download QR Stand</span>
+                            <span>Download QR</span>
                         </a>
                         <div class="row g-2">
                             <div class="col-6">

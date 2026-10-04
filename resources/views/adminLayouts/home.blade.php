@@ -1311,7 +1311,7 @@
                         <i class="ti ti-world" style="color: #10b981;"></i> View My Review Page
                       </a>
                       <a href="{{ URL::to('admin/view_qr') }}" class="dropdown-item d-flex align-items-center gap-2 py-2 px-3 rounded-2" style="color: #334155; font-size: 0.85rem; font-weight: 600;">
-                        <i class="ti ti-qrcode" style="color: #e11d48;"></i> Download QR Stand
+                        <i class="ti ti-qrcode" style="color: #e11d48;"></i> Download QR
                       </a>
                     @elseif(Auth::user()->type == 'admin')
                       <a href="{{ URL::to('site/'.Auth::user()->name_url) }}" target="_blank" class="dropdown-item d-flex align-items-center gap-2 py-2 px-3 rounded-2" style="color: #334155; font-size: 0.85rem; font-weight: 600;">
@@ -1670,7 +1670,7 @@
                   <i class="ti ti-alert-circle"></i> Service Paused
                 </div>
                 <p style="color: #64748b; font-size: 0.9rem; line-height: 1.55; margin-bottom: 22px;">
-                  Your review QR stands and customer feedback collection are temporarily locked. Renew your plan today to instantly restore uninterrupted services.
+                  Your review QR codes and customer feedback collection are temporarily locked. Renew your plan today to instantly restore uninterrupted services.
                 </p>
               @else
                 <h4 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; color: #0f172a; font-size: 1.35rem; margin-bottom: 8px;">
@@ -2320,7 +2320,7 @@
               <h5 class="modal-title" id="googleOnboardingModalTitle" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 1.15rem; color: #0f172a; margin: 0;">
                 Complete Business Profile
               </h5>
-              <p style="font-size: 0.8rem; color: #64748b; margin: 2px 0 0 0;">Please set up your store details to activate your review QR stands.</p>
+              <p style="font-size: 0.8rem; color: #64748b; margin: 2px 0 0 0;">Please set up your store details to activate your review QR codes.</p>
             </div>
           </div>
         </div>

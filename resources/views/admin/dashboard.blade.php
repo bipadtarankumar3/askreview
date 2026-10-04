@@ -20,7 +20,7 @@
           </div>
           <p class="text-muted mb-0" style="font-size: 0.88rem;">
             @if(Auth::user()->type == 'user')
-              Track your customer ratings, QR stand scans, and feedback growth in real time.
+              Track your customer ratings, QR scans, and feedback growth in real time.
             @elseif(Auth::user()->type == 'admin')
               Manage your active client stores, available credit balance, and user subscriptions.
             @else
@@ -38,7 +38,7 @@
             </a>
             <a href="{{ url('admin/view_qr') }}" class="btn btn-sm d-flex align-items-center gap-2" style="background: linear-gradient(135deg, #e11d48 0%, #be123c 100%); color: #ffffff; border-radius: 12px; font-weight: 700; padding: 9px 18px; border: none; box-shadow: 0 4px 14px rgba(225, 29, 72, 0.28); transition: transform 0.2s ease;">
               <i class="ti ti-qrcode"></i>
-              <span>QR Code Stand</span>
+              <span>Download QR</span>
             </a>
           @elseif(Auth::user()->type == 'admin')
             <a href="{{ url('admin/add_sub_user_page') }}" class="btn btn-sm d-flex align-items-center gap-2" style="background: linear-gradient(135deg, #e11d48 0%, #be123c 100%); color: #ffffff; border-radius: 12px; font-weight: 700; padding: 9px 18px; border: none; box-shadow: 0 4px 14px rgba(225, 29, 72, 0.28);">
@@ -470,7 +470,7 @@
                 </span>
               </div>
               <p class="text-muted mb-3" style="font-size: 0.88rem;">
-                When customers scan your QR stand or visit this portal, high ratings (4-5★) go straight to your Google profile, while constructive feedback stays private.
+                When customers scan your QR code or visit this portal, high ratings (4-5★) go straight to your Google profile, while constructive feedback stays private.
               </p>
 
               <!-- Link Copy Bar -->
@@ -505,7 +505,7 @@
                 <i class="ti ti-external-link"></i> Preview Portal
               </a>
               <a href="{{ url('admin/view_qr') }}" class="btn btn-sm d-flex align-items-center gap-1.5" style="background: #fff1f2; color: #e11d48; border: 1px solid #fecdd3; border-radius: 10px; font-weight: 700; padding: 6px 14px;">
-                <i class="ti ti-qrcode"></i> QR Stand Design
+                <i class="ti ti-qrcode"></i> QR Code Design
               </a>
               <a href="{{ url('admin/review_links') }}" class="btn btn-sm btn-light d-flex align-items-center gap-1.5" style="border-radius: 10px; font-weight: 700; color: #475569; padding: 6px 14px;">
                 <i class="ti ti-plug"></i> Google Reviews Link
@@ -540,7 +540,7 @@
 
               <h2 class="fw-bold text-white mb-2" style="font-size: 2rem;">{{ $days_difference }} Days Remaining</h2>
               <p style="color: #94a3b8; font-size: 0.86rem; line-height: 1.5;">
-                Keep your review booster running 24/7, shield against negative ratings, and generate unlimited QR stand prints.
+                Keep your review booster running 24/7, shield against negative ratings, and generate unlimited QR prints.
               </p>
             </div>
 
@@ -626,14 +626,14 @@
                     </div>
                     <h6 class="fw-bold text-dark mb-1">No Customer Feedback Yet</h6>
                     <p class="text-muted mb-3" style="max-width: 420px; margin: 0 auto; font-size: 0.85rem;">
-                      Your reviews will appear here once customers scan your QR stand or visit your review page.
+                      Your reviews will appear here once customers scan your QR code or visit your review page.
                     </p>
                     <div class="d-flex align-items-center justify-content-center gap-2">
                       <a href="{{ url('u/'.Auth::user()->name_url) }}" target="_blank" class="btn btn-sm btn-outline-dark" style="border-radius: 10px; font-weight: 700;">
                         <i class="ti ti-external-link me-1"></i>Test Review Page
                       </a>
                       <a href="{{ url('admin/view_qr') }}" class="btn btn-sm d-flex align-items-center gap-1.5" style="background: #e11d48; color: #fff; border-radius: 10px; font-weight: 700;">
-                        <i class="ti ti-qrcode"></i>Get QR Stand
+                        <i class="ti ti-qrcode"></i>Download QR
                       </a>
                     </div>
                   </td>
