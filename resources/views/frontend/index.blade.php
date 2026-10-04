@@ -65,9 +65,12 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 2.5rem 1.5rem;
+            padding: 3rem 1.5rem;
             position: relative;
-            background-color: #f8fafc;
+            background: 
+                radial-gradient(ellipse 90% 60% at 50% -10%, rgba(99, 102, 241, 0.07), transparent 70%),
+                radial-gradient(ellipse 70% 50% at 90% 90%, rgba(244, 63, 94, 0.04), transparent 60%),
+                #f8fafc;
         }
 
         .right-hero-col {
@@ -107,9 +110,9 @@
         /* Top Header Utilities */
         .top-nav-bar {
             position: absolute;
-            top: 1.25rem;
-            left: 1.5rem;
-            right: 1.5rem;
+            top: 1.5rem;
+            left: 1.75rem;
+            right: 1.75rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -119,15 +122,23 @@
         .top-brand-pill {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.35rem 0.85rem;
-            background: #ffffff;
-            border: 1px solid var(--border-color);
+            gap: 0.55rem;
+            padding: 0.45rem 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.85);
             border-radius: 9999px;
             font-size: 0.82rem;
             font-weight: 600;
-            color: var(--text-dark);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            color: #1e293b;
+            box-shadow: 0 4px 14px -2px rgba(15, 23, 42, 0.04);
+            letter-spacing: -0.01em;
+        }
+
+        .top-brand-pill i {
+            color: #10b981;
+            filter: drop-shadow(0 1px 3px rgba(16, 185, 129, 0.3));
         }
 
         .share-dropdown-wrapper {
@@ -137,23 +148,26 @@
         .share-btn-trigger {
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
-            background: #ffffff;
-            border: 1px solid var(--border-color);
-            padding: 0.45rem 0.95rem;
+            gap: 0.45rem;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.85);
+            padding: 0.45rem 1.05rem;
             border-radius: 9999px;
-            color: var(--text-dark);
-            font-size: 0.84rem;
+            color: #1e293b;
+            font-size: 0.82rem;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px -2px rgba(15, 23, 42, 0.04);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .share-btn-trigger:hover {
             border-color: #cbd5e1;
-            background: #f8fafc;
+            background: #ffffff;
             transform: translateY(-1px);
+            box-shadow: 0 8px 20px -2px rgba(15, 23, 42, 0.08);
         }
 
         .share-menu-card {
@@ -161,21 +175,27 @@
             right: 0;
             top: calc(100% + 8px);
             background: #ffffff;
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            border-radius: 16px;
             padding: 0.5rem;
-            min-width: 170px;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+            min-width: 175px;
+            box-shadow: 0 16px 36px -6px rgba(15, 23, 42, 0.14);
             z-index: 100;
             display: none;
+            animation: shareMenuPop 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes shareMenuPop {
+            from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .share-menu-card a {
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            padding: 0.5rem 0.75rem;
-            border-radius: 8px;
+            padding: 0.55rem 0.85rem;
+            border-radius: 10px;
             color: var(--text-dark);
             text-decoration: none;
             font-size: 0.88rem;
@@ -192,13 +212,16 @@
 
         /* Main Card Container */
         .portal-card {
-            background: var(--card-bg);
-            border: 1px solid rgba(226, 232, 240, 0.9);
-            border-radius: 28px;
+            background: #ffffff;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 32px;
             padding: 2.75rem 2.25rem;
             width: 100%;
-            max-width: 480px;
-            box-shadow: 0 20px 50px -10px rgba(15, 23, 42, 0.07);
+            max-width: 485px;
+            box-shadow: 
+                0 25px 60px -15px rgba(15, 23, 42, 0.08),
+                0 4px 16px -2px rgba(15, 23, 42, 0.03),
+                0 0 0 1px rgba(255, 255, 255, 0.9) inset;
             position: relative;
             text-align: center;
             transition: all 0.3s ease;
@@ -211,39 +234,56 @@
             justify-content: center;
             background: #ffffff;
             border: 1px solid #f1f5f9;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+            box-shadow: 
+                0 10px 25px -4px rgba(15, 23, 42, 0.06),
+                0 0 0 1px rgba(226, 232, 240, 0.7);
             border-radius: 22px;
-            padding: 10px;
-            margin-bottom: 1.5rem;
-            transition: transform 0.25s ease;
+            padding: 12px 20px;
+            margin-bottom: 1.25rem;
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
         }
 
         .brand-avatar-box:hover {
-            transform: scale(1.02);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 14px 30px -4px rgba(15, 23, 42, 0.1),
+                0 0 0 1px rgba(203, 213, 225, 0.8);
         }
 
         .brand-avatar-img {
-            max-height: 90px;
-            max-width: 160px;
+            max-height: 85px;
+            max-width: 165px;
             object-fit: contain;
-            border-radius: 12px;
+            border-radius: 10px;
+        }
+
+        /* Luminous Golden Stars */
+        .rating-stars-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #f59e0b;
+            font-size: 1.3rem;
+            filter: drop-shadow(0 2px 8px rgba(245, 158, 11, 0.38));
+            margin-bottom: 0.65rem;
         }
 
         /* Typography */
         .portal-title {
-            font-size: 1.45rem;
-            font-weight: 700;
-            color: var(--text-dark);
-            line-height: 1.35;
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.015em;
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.25;
+            margin-bottom: 0.55rem;
+            letter-spacing: -0.025em;
         }
 
         .portal-subtitle {
-            font-size: 0.92rem;
-            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 450;
+            color: #64748b;
             margin-bottom: 1.75rem;
-            line-height: 1.5;
+            line-height: 1.55;
         }
 
         /* Dynamic Star Rating Component */
@@ -259,7 +299,7 @@
             flex-direction: row-reverse;
             justify-content: center;
             gap: 10px;
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.85rem;
         }
 
         .rating-interactive-stars input[type="radio"] {
@@ -268,14 +308,14 @@
 
         .rating-interactive-stars label {
             cursor: pointer;
-            width: 46px;
-            height: 46px;
+            width: 48px;
+            height: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            color: #cbd5e1;
-            transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 2.2rem;
+            color: #e2e8f0;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .rating-interactive-stars label::before {
@@ -288,8 +328,8 @@
         .rating-interactive-stars label:hover ~ label,
         .rating-interactive-stars input[type="radio"]:checked ~ label {
             color: var(--star-gold);
-            transform: scale(1.15);
-            filter: drop-shadow(0 4px 10px rgba(245, 158, 11, 0.4));
+            transform: scale(1.18);
+            filter: drop-shadow(0 4px 12px rgba(245, 158, 11, 0.45));
         }
 
         .rating-interactive-stars label:active {
@@ -297,11 +337,11 @@
         }
 
         .rating-prompt-badge {
-            font-size: 0.85rem;
+            font-size: 0.84rem;
             font-weight: 600;
             color: var(--text-muted);
             background: #f1f5f9;
-            padding: 0.35rem 0.9rem;
+            padding: 0.4rem 1rem;
             border-radius: 9999px;
             transition: all 0.2s ease;
         }
@@ -313,38 +353,46 @@
             justify-content: space-between;
             width: 100%;
             background: #ffffff;
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
+            border: 1.5px solid #edf2f7;
+            border-radius: 18px;
             padding: 0.85rem 1.15rem;
             margin-bottom: 0.85rem;
             text-decoration: none;
-            color: var(--text-dark);
-            transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            color: #0f172a;
+            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.02);
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
 
         .platform-btn-link:hover {
-            border-color: #94a3b8;
-            box-shadow: 0 8px 20px -4px rgba(0,0,0,0.08);
             transform: translateY(-2px);
-            color: var(--text-dark);
+            color: #0f172a;
+            border-color: #cbd5e1;
+            box-shadow: 0 10px 24px -4px rgba(15, 23, 42, 0.08);
         }
 
         .platform-btn-link:active {
-            transform: scale(0.99);
+            transform: translateY(0) scale(0.99);
         }
 
         .platform-icon-wrap {
-            width: 42px;
-            height: 42px;
-            min-width: 42px;
-            border-radius: 12px;
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: #f8fafc;
             border: 1px solid #f1f5f9;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            transition: transform 0.22s ease;
+        }
+
+        .platform-btn-link:hover .platform-icon-wrap {
+            transform: scale(1.06);
         }
 
         .platform-icon-wrap img {
@@ -356,55 +404,148 @@
         .platform-info-text {
             flex-grow: 1;
             text-align: left;
-            margin-left: 1rem;
+            margin-left: 0.95rem;
         }
 
         .platform-info-text .platform-name {
             font-weight: 700;
             font-size: 0.96rem;
-            margin-bottom: 0.1rem;
-            color: var(--text-dark);
+            color: #0f172a;
+            margin-bottom: 0.15rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
         }
 
         .platform-info-text .platform-hint {
             font-size: 0.78rem;
-            color: var(--text-muted);
+            color: #64748b;
             margin: 0;
+            font-weight: 500;
         }
 
-        .platform-chevron {
+        .platform-chevron-wrap {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            border-radius: 50%;
+            background: #f8fafc;
+            border: 1px solid #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: #94a3b8;
-            font-size: 0.85rem;
-            transition: transform 0.2s ease;
+            font-size: 0.75rem;
+            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .platform-btn-link:hover .platform-chevron {
+        .platform-btn-link:hover .platform-chevron-wrap {
+            background: #0f172a;
+            border-color: #0f172a;
+            color: #ffffff;
             transform: translateX(3px);
-            color: var(--text-dark);
+        }
+
+        /* Platform-Specific Themes on Hover */
+        .platform-btn-link.platform-google:hover {
+            border-color: #93c5fd;
+            background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%);
+            box-shadow: 0 10px 24px -4px rgba(66, 133, 244, 0.16);
+        }
+        .platform-btn-link.platform-google:hover .platform-chevron-wrap {
+            background: #4285f4;
+            border-color: #4285f4;
+            color: #ffffff;
+        }
+
+        .platform-btn-link.platform-facebook:hover {
+            border-color: #bfdbfe;
+            background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%);
+            box-shadow: 0 10px 24px -4px rgba(24, 119, 242, 0.16);
+        }
+        .platform-btn-link.platform-facebook:hover .platform-chevron-wrap {
+            background: #1877f2;
+            border-color: #1877f2;
+            color: #ffffff;
+        }
+
+        .platform-btn-link.platform-instagram:hover {
+            border-color: #fbcfe8;
+            background: linear-gradient(135deg, #ffffff 0%, #fff1f2 100%);
+            box-shadow: 0 10px 24px -4px rgba(225, 48, 108, 0.16);
+        }
+        .platform-btn-link.platform-instagram:hover .platform-chevron-wrap {
+            background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af);
+            border-color: transparent;
+            color: #ffffff;
+        }
+
+        .platform-btn-link.platform-youtube:hover {
+            border-color: #fecaca;
+            background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
+            box-shadow: 0 10px 24px -4px rgba(239, 68, 68, 0.16);
+        }
+        .platform-btn-link.platform-youtube:hover .platform-chevron-wrap {
+            background: #ff0000;
+            border-color: #ff0000;
+            color: #ffffff;
+        }
+
+        .platform-btn-link.platform-whatsapp:hover {
+            border-color: #bbf7d0;
+            background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+            box-shadow: 0 10px 24px -4px rgba(34, 197, 94, 0.16);
+        }
+        .platform-btn-link.platform-whatsapp:hover .platform-chevron-wrap {
+            background: #25d366;
+            border-color: #25d366;
+            color: #ffffff;
         }
 
         /* Special Video & Private Buttons */
         .video-record-btn {
-            background: linear-gradient(135deg, #fdf2f8 0%, #fff1f2 100%);
+            background: linear-gradient(135deg, #fff1f2 0%, #fdf2f8 50%, #ffffff 100%);
+            border: 1.5px solid #fecdd3;
+        }
+        .video-record-btn .platform-icon-wrap {
+            background: linear-gradient(135deg, #ffe4e6 0%, #fce7f3 100%);
             border-color: #fbcfe8;
+            color: #e11d48;
         }
         .video-record-btn:hover {
-            border-color: #f472b6;
-            box-shadow: 0 8px 20px -4px rgba(244, 114, 182, 0.2);
+            border-color: #f43f5e;
+            box-shadow: 0 12px 28px -4px rgba(244, 63, 94, 0.22);
+            transform: translateY(-2px);
+        }
+        .video-record-btn:hover .platform-chevron-wrap {
+            background: #e11d48;
+            border-color: #e11d48;
+            color: #ffffff;
         }
 
         .private-enquiry-btn {
-            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
-            border-color: #fde68a;
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 45%, #ffffff 100%);
+            border: 1.5px solid #fde68a;
+        }
+        .private-enquiry-btn .platform-icon-wrap {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-color: #fcd34d;
+            color: #d97706;
         }
         .private-enquiry-btn:hover {
             border-color: #f59e0b;
-            box-shadow: 0 8px 20px -4px rgba(245, 158, 11, 0.2);
+            box-shadow: 0 12px 28px -4px rgba(245, 158, 11, 0.2);
+            transform: translateY(-2px);
+        }
+        .private-enquiry-btn:hover .platform-chevron-wrap {
+            background: #d97706;
+            border-color: #d97706;
+            color: #ffffff;
         }
 
         .pulsing-rec-dot {
-            width: 9px;
-            height: 9px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             background: #ef4444;
             display: inline-block;
@@ -414,7 +555,7 @@
 
         @keyframes pulse-dot {
             0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-            70% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+            70% { box-shadow: 0 0 0 7px rgba(239, 68, 68, 0); }
             100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
 
@@ -713,21 +854,26 @@
         .install-pwa-banner {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            background: #f1f5f9;
-            border: 1px solid var(--border-color);
+            gap: 0.6rem;
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
             border-radius: 9999px;
-            padding: 0.45rem 1rem;
-            font-size: 0.82rem;
+            padding: 0.55rem 1.35rem;
+            font-size: 0.84rem;
             font-weight: 600;
-            color: var(--text-dark);
+            color: #334155;
             cursor: pointer;
-            margin-top: 1rem;
-            transition: all 0.15s ease;
+            margin-top: 1.25rem;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .install-pwa-banner:hover {
-            background: #e2e8f0;
+            border-color: #6366f1;
+            color: #4f46e5;
+            background: #f8faff;
+            box-shadow: 0 6px 18px rgba(99, 102, 241, 0.12);
+            transform: translateY(-2px);
         }
 
         /* Mobile Adjustments */
@@ -764,7 +910,7 @@
             <!-- Top Navigation Bar -->
             <div class="top-nav-bar">
                 <div class="top-brand-pill">
-                    <i class="fa-solid fa-shield-halved text-primary"></i>
+                    <i class="fa-solid fa-circle-check"></i>
                     <span>Verified Review</span>
                 </div>
 
@@ -836,16 +982,22 @@
                         <i class="fa-solid fa-arrow-left"></i>
                     </button>
 
-                    <div class="brand-avatar-box" style="margin-top: 0.5rem; margin-bottom: 1rem;">
+                    <div class="brand-avatar-box">
                         <img src="{{$user->logo}}" alt="{{$user->name}}" class="brand-avatar-img">
                     </div>
 
-                    <div class="d-inline-flex align-items-center gap-1 text-warning mb-2" style="font-size: 1.25rem;">
-                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <div class="d-block text-center">
+                        <div class="rating-stars-badge">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
                     </div>
 
-                    <h2 class="portal-title mb-1">Thank You!</h2>
-                    <p class="portal-subtitle mb-4">
+                    <h2 class="portal-title">Thank You!</h2>
+                    <p class="portal-subtitle">
                         {{$user->google_page_text ?: 'Please take a moment to share your review on your preferred platform below:'}}
                     </p>
 
@@ -853,39 +1005,52 @@
                         @if (isset($integrationList) && count($integrationList) > 0)
                             @if (isset($integrationList[0]) && $integrationList[0]->button_order != '')
                                 @foreach ($integrationList as $item)
+                                    @php
+                                        $platformSlug = strtolower(trim($item->button_name ?? $item->type ?? ''));
+                                        $platformClass = '';
+                                        if (str_contains($platformSlug, 'google')) $platformClass = 'platform-google';
+                                        elseif (str_contains($platformSlug, 'facebook')) $platformClass = 'platform-facebook';
+                                        elseif (str_contains($platformSlug, 'instagram')) $platformClass = 'platform-instagram';
+                                        elseif (str_contains($platformSlug, 'youtube')) $platformClass = 'platform-youtube';
+                                        elseif (str_contains($platformSlug, 'whatsapp')) $platformClass = 'platform-whatsapp';
+                                    @endphp
                                     @if ($item->type == 'record' && $item->status == 'active')
                                         @if ($video_access_show == true)
                                             <div class="platform-btn-link video-record-btn" onclick="record_video()">
-                                                <div class="platform-icon-wrap" style="background: #fce7f3; border-color: #fbcfe8;">
+                                                <div class="platform-icon-wrap">
                                                     <i class="fa-solid fa-video text-danger fa-lg"></i>
                                                 </div>
                                                 <div class="platform-info-text">
-                                                    <div class="platform-name d-flex align-items-center gap-2">
+                                                    <div class="platform-name">
                                                         <span>{{$item->button_name}}</span>
                                                         <span class="pulsing-rec-dot"></span>
                                                     </div>
                                                     <p class="platform-hint">Record a 60-sec video shoutout</p>
                                                 </div>
-                                                <i class="fa-solid fa-chevron-right platform-chevron"></i>
+                                                <div class="platform-chevron-wrap">
+                                                    <i class="fa-solid fa-chevron-right"></i>
+                                                </div>
                                             </div>
                                         @endif
                                     @elseif($item->type == 'private')
                                         @if ($user->private_feedback == 'yes')
                                             <div class="platform-btn-link private-enquiry-btn" onclick="open_private_feedback()">
-                                                <div class="platform-icon-wrap" style="background: #fef3c7; border-color: #fde68a;">
-                                                    <i class="fa-regular fa-message text-warning fa-lg"></i>
+                                                <div class="platform-icon-wrap">
+                                                    <i class="fa-regular fa-message fa-lg"></i>
                                                 </div>
                                                 <div class="platform-info-text">
                                                     <div class="platform-name">Private Enquiry</div>
                                                     <p class="platform-hint">Send a direct private message to us</p>
                                                 </div>
-                                                <i class="fa-solid fa-chevron-right platform-chevron"></i>
+                                                <div class="platform-chevron-wrap">
+                                                    <i class="fa-solid fa-chevron-right"></i>
+                                                </div>
                                             </div>
                                         @endif
                                     @elseif ($item->type == 'google')
                                         @if ($item->status == 'active')
                                             @if (isset($googleFeedbackTemplates) && count($googleFeedbackTemplates) > 0)
-                                                <div class="platform-btn-link" onclick="open_google_reviews_popup('{{$item->review_links}}')">
+                                                <div class="platform-btn-link platform-google" onclick="open_google_reviews_popup('{{$item->review_links}}')">
                                                     <div class="platform-icon-wrap">
                                                         <img src="{{$item->button_icon}}" alt="Google">
                                                     </div>
@@ -893,10 +1058,12 @@
                                                         <div class="platform-name">{{$item->button_name}}</div>
                                                         <p class="platform-hint">Pick pre-written review & paste</p>
                                                     </div>
-                                                    <i class="fa-solid fa-chevron-right platform-chevron"></i>
+                                                    <div class="platform-chevron-wrap">
+                                                        <i class="fa-solid fa-chevron-right"></i>
+                                                    </div>
                                                 </div>
                                             @else
-                                                <a href="{{$item->review_links}}" onclick="review_links_analytics('{{$item->type}}')" target="_blank" class="platform-btn-link">
+                                                <a href="{{$item->review_links}}" onclick="review_links_analytics('{{$item->type}}')" target="_blank" class="platform-btn-link platform-google">
                                                     <div class="platform-icon-wrap">
                                                         <img src="{{$item->button_icon}}" alt="Google">
                                                     </div>
@@ -904,13 +1071,15 @@
                                                         <div class="platform-name">{{$item->button_name}}</div>
                                                         <p class="platform-hint">Review directly on Google</p>
                                                     </div>
-                                                    <i class="fa-solid fa-chevron-right platform-chevron"></i>
+                                                    <div class="platform-chevron-wrap">
+                                                        <i class="fa-solid fa-chevron-right"></i>
+                                                    </div>
                                                 </a>
                                             @endif
                                         @endif
                                     @else
                                         @if ($item->status == 'active')
-                                            <a href="{{$item->review_links}}" onclick="review_links_analytics('{{$item->type}}')" target="_blank" class="platform-btn-link">
+                                            <a href="{{$item->review_links}}" onclick="review_links_analytics('{{$item->type}}')" target="_blank" class="platform-btn-link {{ $platformClass }}">
                                                 <div class="platform-icon-wrap">
                                                     <img src="{{$item->button_icon}}" alt="{{$item->button_name}}">
                                                 </div>
@@ -918,7 +1087,9 @@
                                                     <div class="platform-name">{{$item->button_name}}</div>
                                                     <p class="platform-hint">Review us on {{$item->button_name}}</p>
                                                 </div>
-                                                <i class="fa-solid fa-chevron-right platform-chevron"></i>
+                                                <div class="platform-chevron-wrap">
+                                                    <i class="fa-solid fa-chevron-right"></i>
+                                                </div>
                                             </a>
                                         @endif
                                     @endif
@@ -927,22 +1098,24 @@
                                 <!-- Fallback Loop -->
                                 @if (isset($IntegrationRecord) && $IntegrationRecord->status == 'active' && $video_access_show == true)
                                     <div class="platform-btn-link video-record-btn" onclick="record_video()">
-                                        <div class="platform-icon-wrap" style="background: #fce7f3; border-color: #fbcfe8;">
+                                        <div class="platform-icon-wrap">
                                             <i class="fa-solid fa-video text-danger fa-lg"></i>
                                         </div>
                                         <div class="platform-info-text">
-                                            <div class="platform-name d-flex align-items-center gap-2">
+                                            <div class="platform-name">
                                                 <span>Video Testimonial</span>
                                                 <span class="pulsing-rec-dot"></span>
                                             </div>
                                             <p class="platform-hint">Record a 60-sec video shoutout</p>
                                         </div>
-                                        <i class="fa-solid fa-chevron-right platform-chevron"></i>
+                                        <div class="platform-chevron-wrap">
+                                            <i class="fa-solid fa-chevron-right"></i>
+                                        </div>
                                     </div>
                                 @endif
                                 @if (isset($IntegrationGoogle) && $IntegrationGoogle->status == 'active')
                                     @if (isset($googleFeedbackTemplates) && count($googleFeedbackTemplates) > 0)
-                                        <div class="platform-btn-link" onclick="open_google_reviews_popup('{{$IntegrationGoogle->review_links}}')">
+                                        <div class="platform-btn-link platform-google" onclick="open_google_reviews_popup('{{$IntegrationGoogle->review_links}}')">
                                             <div class="platform-icon-wrap">
                                                 <img src="{{asset('frontend/images/google.png')}}" alt="Google">
                                             </div>
@@ -950,10 +1123,12 @@
                                                 <div class="platform-name">Google</div>
                                                 <p class="platform-hint">Pick pre-written review & paste</p>
                                             </div>
-                                            <i class="fa-solid fa-chevron-right platform-chevron"></i>
+                                            <div class="platform-chevron-wrap">
+                                                <i class="fa-solid fa-chevron-right"></i>
+                                            </div>
                                         </div>
                                     @else
-                                        <a href="{{$IntegrationGoogle->review_links}}" onclick="review_links_analytics('google')" target="_blank" class="platform-btn-link">
+                                        <a href="{{$IntegrationGoogle->review_links}}" onclick="review_links_analytics('google')" target="_blank" class="platform-btn-link platform-google">
                                             <div class="platform-icon-wrap">
                                                 <img src="{{asset('frontend/images/google.png')}}" alt="Google">
                                             </div>
@@ -961,12 +1136,14 @@
                                                 <div class="platform-name">Google</div>
                                                 <p class="platform-hint">Review directly on Google</p>
                                             </div>
-                                            <i class="fa-solid fa-chevron-right platform-chevron"></i>
+                                            <div class="platform-chevron-wrap">
+                                                <i class="fa-solid fa-chevron-right"></i>
+                                            </div>
                                         </a>
                                     @endif
                                 @endif
                                 @if (isset($IntegrationFacebook) && $IntegrationFacebook->status == 'active')
-                                    <a href="{{$IntegrationFacebook->review_links}}" onclick="review_links_analytics('facebook')" target="_blank" class="platform-btn-link">
+                                    <a href="{{$IntegrationFacebook->review_links}}" onclick="review_links_analytics('facebook')" target="_blank" class="platform-btn-link platform-facebook">
                                         <div class="platform-icon-wrap">
                                             <img src="{{asset('frontend/images/facebook.png')}}" alt="Facebook">
                                         </div>
@@ -974,11 +1151,13 @@
                                             <div class="platform-name">Facebook</div>
                                             <p class="platform-hint">Recommend us on Facebook</p>
                                         </div>
-                                        <i class="fa-solid fa-chevron-right platform-chevron"></i>
+                                        <div class="platform-chevron-wrap">
+                                            <i class="fa-solid fa-chevron-right"></i>
+                                        </div>
                                     </a>
                                 @endif
                                 @if (isset($IntegrationYoutube) && $IntegrationYoutube->status == 'active')
-                                    <a href="{{$IntegrationYoutube->review_links}}" onclick="review_links_analytics('youtube')" target="_blank" class="platform-btn-link">
+                                    <a href="{{$IntegrationYoutube->review_links}}" onclick="review_links_analytics('youtube')" target="_blank" class="platform-btn-link platform-youtube">
                                         <div class="platform-icon-wrap">
                                             <img src="{{asset('frontend/images/youtube.png')}}" alt="Youtube">
                                         </div>
@@ -986,11 +1165,13 @@
                                             <div class="platform-name">Youtube</div>
                                             <p class="platform-hint">Subscribe & support us</p>
                                         </div>
-                                        <i class="fa-solid fa-chevron-right platform-chevron"></i>
+                                        <div class="platform-chevron-wrap">
+                                            <i class="fa-solid fa-chevron-right"></i>
+                                        </div>
                                     </a>
                                 @endif
                                 @if (isset($IntegrationInstagram) && $IntegrationInstagram->status == 'active')
-                                    <a href="{{$IntegrationInstagram->review_links}}" onclick="review_links_analytics('instagram')" target="_blank" class="platform-btn-link">
+                                    <a href="{{$IntegrationInstagram->review_links}}" onclick="review_links_analytics('instagram')" target="_blank" class="platform-btn-link platform-instagram">
                                         <div class="platform-icon-wrap">
                                             <img src="{{asset('frontend/images/instagram.png')}}" alt="Instagram">
                                         </div>
@@ -998,11 +1179,13 @@
                                             <div class="platform-name">Instagram</div>
                                             <p class="platform-hint">Follow us on Instagram</p>
                                         </div>
-                                        <i class="fa-solid fa-chevron-right platform-chevron"></i>
+                                        <div class="platform-chevron-wrap">
+                                            <i class="fa-solid fa-chevron-right"></i>
+                                        </div>
                                     </a>
                                 @endif
                                 @if (isset($IntegrationWhatsapp) && $IntegrationWhatsapp->status == 'active')
-                                    <a href="{{$IntegrationWhatsapp->review_links}}" onclick="review_links_analytics('whatsapp')" target="_blank" class="platform-btn-link">
+                                    <a href="{{$IntegrationWhatsapp->review_links}}" onclick="review_links_analytics('whatsapp')" target="_blank" class="platform-btn-link platform-whatsapp">
                                         <div class="platform-icon-wrap">
                                             <img src="{{asset('frontend/images/whatsapp.png')}}" alt="WhatsApp">
                                         </div>
@@ -1010,19 +1193,23 @@
                                             <div class="platform-name">WhatsApp</div>
                                             <p class="platform-hint">Chat directly with our team</p>
                                         </div>
-                                        <i class="fa-solid fa-chevron-right platform-chevron"></i>
+                                        <div class="platform-chevron-wrap">
+                                            <i class="fa-solid fa-chevron-right"></i>
+                                        </div>
                                     </a>
                                 @endif
                                 @if ($user->private_feedback == 'yes')
                                     <div class="platform-btn-link private-enquiry-btn" onclick="open_private_feedback()">
-                                        <div class="platform-icon-wrap" style="background: #fef3c7; border-color: #fde68a;">
-                                            <i class="fa-regular fa-message text-warning fa-lg"></i>
+                                        <div class="platform-icon-wrap">
+                                            <i class="fa-regular fa-message fa-lg"></i>
                                         </div>
                                         <div class="platform-info-text">
                                             <div class="platform-name">Private Enquiry</div>
                                             <p class="platform-hint">Send a direct private message to us</p>
                                         </div>
-                                        <i class="fa-solid fa-chevron-right platform-chevron"></i>
+                                        <div class="platform-chevron-wrap">
+                                            <i class="fa-solid fa-chevron-right"></i>
+                                        </div>
                                     </div>
                                 @endif
                             @endif
@@ -1031,7 +1218,7 @@
                         <!-- PWA Install Button -->
                         <div id="install_button" class="text-center">
                             <button type="button" id="installButton" class="install-pwa-banner" style="display: none;">
-                                <i class="fa-solid fa-arrow-down-to-bracket text-primary"></i>
+                                <i class="fa-solid fa-mobile-screen-button text-primary"></i>
                                 <span>Install App on Home Screen</span>
                             </button>
                         </div>
