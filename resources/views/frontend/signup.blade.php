@@ -33,15 +33,7 @@
          ==================================================================== -->
     <div class="auth-hero-panel">
       <!-- Top Brand Header -->
-      <div class="hero-header">
-        <a href="{{ url('/') }}" class="hero-brand">
-          <div style="display:flex;align-items:center;gap:10px;">
-            <div style="width:32px;height:32px;background:var(--brand-red);border-radius:8px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(225,29,72,0.3);">
-              <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:900;color:#fff;">A</span>
-            </div>
-            <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.05rem;font-weight:800;color:#0f172a;letter-spacing:-0.01em;">AskReview<span style="color:var(--brand-red);">.</span></span>
-          </div>
-        </a>
+      <div class="hero-header" style="justify-content: flex-end;">
         <div class="hero-badge-pill">
           <span class="pulse-dot"></span>
           <span>7-Day Free Trial</span>
@@ -722,17 +714,7 @@
             Trusted by <strong>5,000+ businesses</strong>
           </div>
         </div>
-        
-        <div class="hero-trust-item">
-          <div class="trust-rating-stars">
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-          </div>
-          <span class="trust-text"><strong>4.9 / 5.0</strong> rating</span>
-        </div>
+
       </div>
       
     </div>
@@ -748,16 +730,7 @@
       <div class="auth-bg-watermark wm-shield"><i class="bi bi-shield-check"></i></div>
       <div class="auth-bg-watermark wm-camera"><i class="bi bi-camera-video-fill"></i></div>
 
-      <!-- Floating Decorative Review Badges -->
-      <div class="auth-floating-badge badge-top-right">
-        <div class="badge-icon-box" style="background:#fffbeb;color:#f59e0b;">
-          <i class="bi bi-star-fill"></i>
-        </div>
-        <div>
-          <div class="badge-label">5.0 ★★★★★</div>
-          <div class="badge-sub">Google Verified</div>
-        </div>
-      </div>
+
 
       <div class="auth-floating-badge badge-bottom-right">
         <div class="badge-icon-box" style="background:#eff6ff;color:#2563eb;">
