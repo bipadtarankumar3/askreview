@@ -33,11 +33,19 @@
          ==================================================================== -->
     <div class="auth-hero-panel">
       
-      <!-- Top Brand Header (Pill Badge Only) -->
+      <!-- Top Brand Header -->
       <div class="hero-header">
+        <a href="{{ url('/') }}" class="hero-brand">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:32px;height:32px;background:var(--brand-red);border-radius:8px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(225,29,72,0.3);">
+              <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:900;color:#fff;">A</span>
+            </div>
+            <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.05rem;font-weight:800;color:#0f172a;letter-spacing:-0.01em;">AskReview<span style="color:var(--brand-red);">.</span></span>
+          </div>
+        </a>
         <div class="hero-badge-pill">
           <span class="pulse-dot"></span>
-          <span>7-Day Free Trial Available</span>
+          <span>7-Day Free Trial</span>
         </div>
       </div>
 
@@ -54,8 +62,8 @@
                 </div>
                 
                 <div class="slide-graphic-container">
-                  <!-- High-Fidelity Review Hub Showcase Matching Actual Client Screen -->
-                  <svg class="slide-graphic-svg" viewBox="0 0 460 276" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <!-- High-Fidelity Realistic Smartphone Review Hub Showcase -->
+                  <svg class="slide-graphic-svg" viewBox="0 0 460 415" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                       <linearGradient id="instaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" stop-color="#833ab4"/>
@@ -63,142 +71,176 @@
                         <stop offset="100%" stop-color="#fcb045"/>
                       </linearGradient>
                       <filter id="floatShadow" x="-10%" y="-10%" width="125%" height="125%">
-                        <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="rgba(15,23,42,0.06)"/>
+                        <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="rgba(15,23,42,0.08)"/>
                       </filter>
-                      <filter id="cardShadow" x="-10%" y="-10%" width="125%" height="125%">
-                        <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="rgba(15,23,42,0.08)"/>
+                      <filter id="phoneShadow" x="-15%" y="-10%" width="130%" height="125%">
+                        <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="rgba(15,23,42,0.16)"/>
                       </filter>
                     </defs>
 
                     <!-- Desk Base Shadow -->
-                    <ellipse cx="230" cy="270" rx="175" ry="6" fill="rgba(15,23,42,0.05)"/>
+                    <ellipse cx="230" cy="408" rx="130" ry="6" fill="rgba(15,23,42,0.08)"/>
                     
-                    <!-- Main Smartphone Review Hub Card (Centered) -->
-                    <rect x="114" y="6" width="232" height="264" rx="20" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" filter="url(#cardShadow)"/>
+                    <!-- Side Physical Buttons -->
+                    <!-- Volume Up -->
+                    <rect x="128" y="80" width="3" height="22" rx="1.5" fill="#475569"/>
+                    <!-- Volume Down -->
+                    <rect x="128" y="110" width="3" height="22" rx="1.5" fill="#475569"/>
+                    <!-- Power Button -->
+                    <rect x="329" y="90" width="3" height="30" rx="1.5" fill="#475569"/>
+
+                    <!-- Main Smartphone Outer Frame (Chassis / Bezel) -->
+                    <rect x="131" y="6" width="198" height="396" rx="38" fill="#0f172a" stroke="#334155" stroke-width="2" filter="url(#phoneShadow)"/>
                     
+                    <!-- Smartphone Inner Screen Display -->
+                    <rect x="135" y="10" width="190" height="388" rx="34" fill="#ffffff"/>
+
+                    <!-- Top Dynamic Island Pill -->
+                    <rect x="195" y="15" width="70" height="13" rx="6.5" fill="#000000"/>
+                    <circle cx="248" cy="21.5" r="2.8" fill="#1e293b"/>
+                    <circle cx="248.5" cy="21" r="1" fill="#2563eb" opacity="0.6"/>
+
+                    <!-- Status Bar: Time & Connectivity Icons -->
+                    <text x="152" y="25" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.2" font-weight="700" fill="#0f172a">9:41</text>
+                    <g transform="translate(288, 18)">
+                      <!-- Signal Bars -->
+                      <rect x="0" y="5" width="1.8" height="3" rx="0.5" fill="#0f172a"/>
+                      <rect x="2.8" y="3.5" width="1.8" height="4.5" rx="0.5" fill="#0f172a"/>
+                      <rect x="5.6" y="2" width="1.8" height="6" rx="0.5" fill="#0f172a"/>
+                      <rect x="8.4" y="0.5" width="1.8" height="7.5" rx="0.5" fill="#0f172a"/>
+                      <!-- Battery -->
+                      <rect x="14" y="1" width="15" height="7" rx="2" fill="none" stroke="#0f172a" stroke-width="0.8"/>
+                      <rect x="15.5" y="2.5" width="9.5" height="4" rx="1" fill="#16a34a"/>
+                      <path d="M29.5 3 V5.5" stroke="#0f172a" stroke-width="0.8" stroke-linecap="round"/>
+                    </g>
+                    
+                    <!-- Screen Content -->
                     <!-- Top Navigation: Back Button & Agency Header -->
-                    <g transform="translate(122, 12)">
-                      <circle cx="9" cy="9" r="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
-                      <path d="M10.5 6.5 L7.5 9 L10.5 11.5" stroke="#475569" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+                    <g transform="translate(143, 36)">
+                      <circle cx="7" cy="8" r="7" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+                      <path d="M8.5 6 L6 8 L8.5 10" stroke="#475569" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
                     </g>
                     
                     <!-- Business Logo Header Card (Center Top) -->
-                    <g transform="translate(204, 10)">
-                      <rect x="0" y="0" width="52" height="23" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
-                      <circle cx="11" cy="11.5" r="6" fill="#eff6ff"/>
-                      <text x="11" y="14" font-family="'Plus Jakarta Sans', sans-serif" font-size="7" font-weight="900" fill="#2563eb" text-anchor="middle">R</text>
-                      <text x="31" y="10" font-family="'Plus Jakarta Sans', sans-serif" font-size="4.8" font-weight="800" fill="#0f172a" text-anchor="middle">AGENCY</text>
-                      <text x="31" y="15.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="3.2" font-weight="600" fill="#2563eb" text-anchor="middle">TRUE VALUE</text>
+                    <g transform="translate(202, 32)">
+                      <rect x="0" y="0" width="56" height="23" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+                      <circle cx="12" cy="11.5" r="6" fill="#eff6ff"/>
+                      <text x="12" y="14" font-family="'Plus Jakarta Sans', sans-serif" font-size="7" font-weight="900" fill="#2563eb" text-anchor="middle">R</text>
+                      <text x="34" y="10" font-family="'Plus Jakarta Sans', sans-serif" font-size="4.8" font-weight="800" fill="#0f172a" text-anchor="middle">AGENCY</text>
+                      <text x="34" y="15.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="3.2" font-weight="600" fill="#2563eb" text-anchor="middle">TRUE VALUE</text>
                     </g>
 
                     <!-- 5 Glowing Rating Stars -->
-                    <g transform="translate(187, 38)">
+                    <g transform="translate(193, 62)">
                       <polygon points="4.5,0 5.8,3 9,3.5 6.7,5.6 7.3,8.7 4.5,7.2 1.7,8.7 2.3,5.6 0,3.5 3.2,3" fill="#f59e0b"/>
-                      <polygon points="4.5,0 5.8,3 9,3.5 6.7,5.6 7.3,8.7 4.5,7.2 1.7,8.7 2.3,5.6 0,3.5 3.2,3" fill="#f59e0b" transform="translate(18, 0)"/>
-                      <polygon points="4.5,0 5.8,3 9,3.5 6.7,5.6 7.3,8.7 4.5,7.2 1.7,8.7 2.3,5.6 0,3.5 3.2,3" fill="#f59e0b" transform="translate(36, 0)"/>
-                      <polygon points="4.5,0 5.8,3 9,3.5 6.7,5.6 7.3,8.7 4.5,7.2 1.7,8.7 2.3,5.6 0,3.5 3.2,3" fill="#f59e0b" transform="translate(54, 0)"/>
-                      <polygon points="4.5,0 5.8,3 9,3.5 6.7,5.6 7.3,8.7 4.5,7.2 1.7,8.7 2.3,5.6 0,3.5 3.2,3" fill="#f59e0b" transform="translate(72, 0)"/>
+                      <polygon points="4.5,0 5.8,3 9,3.5 6.7,5.6 7.3,8.7 4.5,7.2 1.7,8.7 2.3,5.6 0,3.5 3.2,3" fill="#f59e0b" transform="translate(16, 0)"/>
+                      <polygon points="4.5,0 5.8,3 9,3.5 6.7,5.6 7.3,8.7 4.5,7.2 1.7,8.7 2.3,5.6 0,3.5 3.2,3" fill="#f59e0b" transform="translate(32, 0)"/>
+                      <polygon points="4.5,0 5.8,3 9,3.5 6.7,5.6 7.3,8.7 4.5,7.2 1.7,8.7 2.3,5.6 0,3.5 3.2,3" fill="#f59e0b" transform="translate(48, 0)"/>
+                      <polygon points="4.5,0 5.8,3 9,3.5 6.7,5.6 7.3,8.7 4.5,7.2 1.7,8.7 2.3,5.6 0,3.5 3.2,3" fill="#f59e0b" transform="translate(64, 0)"/>
                     </g>
 
                     <!-- Friendly Header -->
-                    <text x="230" y="56" font-family="'Plus Jakarta Sans', sans-serif" font-size="10.5" font-weight="800" fill="#0f172a" text-anchor="middle">Thank You!</text>
-                    <text x="230" y="65" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b" text-anchor="middle">Select your preferred platform below to leave us a quick review.</text>
+                    <text x="230" y="80" font-family="'Plus Jakarta Sans', sans-serif" font-size="10.5" font-weight="800" fill="#0f172a" text-anchor="middle">Thank You!</text>
+                    <text x="230" y="89" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b" text-anchor="middle">Select your preferred platform below to leave us a quick review.</text>
 
                     <!-- 1. GOOGLE REVIEW CARD -->
-                    <g transform="translate(122, 72)">
-                      <rect x="0" y="0" width="216" height="23" rx="7" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
-                      <circle cx="12" cy="11.5" r="7.5" fill="#f8fafc" stroke="#f1f5f9"/>
-                      <path d="M14.5 11.5 H12 V13 H13.6 C13.3 13.8 12.6 14.3 11.7 14.3 C10.4 14.3 9.4 13.2 9.4 11.8 C9.4 10.5 10.4 9.4 11.7 9.4 C12.3 9.4 12.9 9.6 13.3 10 L14.4 8.9 C13.7 8.2 12.7 7.8 11.7 7.8 C9.5 7.8 7.7 9.6 7.7 11.8 C7.7 14 9.5 15.8 11.7 15.8 C14 15.8 15.5 14.2 15.5 11.9 C15.5 11.6 15.4 11.3 15.4 11.1 L14.5 11.5 Z" fill="#4285F4"/>
-                      <text x="26" y="9.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Google</text>
-                      <text x="26" y="16.5" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b">Pick pre-written review &amp; paste</text>
-                      <circle cx="204" cy="11.5" r="5" fill="#f8fafc"/>
-                      <path d="M203 9.5 L205.5 11.5 L203 13.5" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
+                    <g transform="translate(144, 98)">
+                      <rect x="0" y="0" width="172" height="26" rx="7" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+                      <circle cx="13" cy="13" r="8" fill="#f8fafc" stroke="#f1f5f9"/>
+                      <path d="M15.5 13 H13 V14.5 H14.6 C14.3 15.3 13.6 15.8 12.7 15.8 C11.4 15.8 10.4 14.7 10.4 13.3 C10.4 12 11.4 10.9 12.7 10.9 C13.3 10.9 13.9 11.1 14.3 11.5 L15.4 10.4 C14.7 9.7 13.7 9.3 12.7 9.3 C10.5 9.3 8.7 11.1 8.7 13.3 C8.7 15.5 10.5 17.3 12.7 17.3 C15 17.3 16.5 15.7 16.5 13.4 C16.5 13.1 16.4 12.8 16.4 12.6 L15.5 13 Z" fill="#4285F4"/>
+                      <text x="27" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Google</text>
+                      <text x="27" y="19" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b">Pick pre-written review &amp; paste</text>
+                      <circle cx="160" cy="13" r="5" fill="#f8fafc"/>
+                      <path d="M159 11 L161.5 13 L159 15" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
                     </g>
 
                     <!-- 2. FACEBOOK REVIEW CARD -->
-                    <g transform="translate(122, 98)">
-                      <rect x="0" y="0" width="216" height="23" rx="7" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
-                      <circle cx="12" cy="11.5" r="7.5" fill="#1877f2"/>
-                      <text x="12" y="14.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="800" fill="#ffffff" text-anchor="middle">f</text>
-                      <text x="26" y="9.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Facebook</text>
-                      <text x="26" y="16.5" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b">Review us on Facebook</text>
-                      <circle cx="204" cy="11.5" r="5" fill="#f8fafc"/>
-                      <path d="M203 9.5 L205.5 11.5 L203 13.5" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
+                    <g transform="translate(144, 130)">
+                      <rect x="0" y="0" width="172" height="26" rx="7" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+                      <circle cx="13" cy="13" r="8" fill="#1877f2"/>
+                      <text x="13" y="16.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="9.5" font-weight="800" fill="#ffffff" text-anchor="middle">f</text>
+                      <text x="27" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Facebook</text>
+                      <text x="27" y="19" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b">Review us on Facebook</text>
+                      <circle cx="160" cy="13" r="5" fill="#f8fafc"/>
+                      <path d="M159 11 L161.5 13 L159 15" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
                     </g>
 
                     <!-- 3. INSTAGRAM REVIEW CARD -->
-                    <g transform="translate(122, 124)">
-                      <rect x="0" y="0" width="216" height="23" rx="7" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
-                      <circle cx="12" cy="11.5" r="7.5" fill="url(#instaGradient)"/>
-                      <rect x="7.5" y="7.5" width="9" height="8" rx="2.2" fill="none" stroke="#ffffff" stroke-width="0.9"/>
-                      <circle cx="12" cy="11.5" r="2.2" fill="none" stroke="#ffffff" stroke-width="0.8"/>
-                      <circle cx="14.5" cy="9.2" r="0.5" fill="#ffffff"/>
-                      <text x="26" y="9.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Instagram</text>
-                      <text x="26" y="16.5" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b">Review us on Instagram</text>
-                      <circle cx="204" cy="11.5" r="5" fill="#f8fafc"/>
-                      <path d="M203 9.5 L205.5 11.5 L203 13.5" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
+                    <g transform="translate(144, 162)">
+                      <rect x="0" y="0" width="172" height="26" rx="7" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+                      <circle cx="13" cy="13" r="8" fill="url(#instaGradient)"/>
+                      <rect x="8.5" y="9" width="9" height="8" rx="2.2" fill="none" stroke="#ffffff" stroke-width="0.9"/>
+                      <circle cx="13" cy="13" r="2.2" fill="none" stroke="#ffffff" stroke-width="0.8"/>
+                      <circle cx="15.5" cy="10.7" r="0.5" fill="#ffffff"/>
+                      <text x="27" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Instagram</text>
+                      <text x="27" y="19" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b">Review us on Instagram</text>
+                      <circle cx="160" cy="13" r="5" fill="#f8fafc"/>
+                      <path d="M159 11 L161.5 13 L159 15" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
                     </g>
 
                     <!-- 4. YOUTUBE REVIEW CARD -->
-                    <g transform="translate(122, 150)">
-                      <rect x="0" y="0" width="216" height="23" rx="7" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
-                      <circle cx="12" cy="11.5" r="7.5" fill="#ff0000"/>
-                      <polygon points="10.5,8.5 15,11.5 10.5,14.5" fill="#ffffff"/>
-                      <text x="26" y="9.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Youtube</text>
-                      <text x="26" y="16.5" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b">Review us on Youtube</text>
-                      <circle cx="204" cy="11.5" r="5" fill="#f8fafc"/>
-                      <path d="M203 9.5 L205.5 11.5 L203 13.5" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
+                    <g transform="translate(144, 194)">
+                      <rect x="0" y="0" width="172" height="26" rx="7" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+                      <circle cx="13" cy="13" r="8" fill="#ff0000"/>
+                      <polygon points="11.5,10 16,13 11.5,16" fill="#ffffff"/>
+                      <text x="27" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Youtube</text>
+                      <text x="27" y="19" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b">Review us on Youtube</text>
+                      <circle cx="160" cy="13" r="5" fill="#f8fafc"/>
+                      <path d="M159 11 L161.5 13 L159 15" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
                     </g>
 
                     <!-- 5. VIDEO TESTIMONIAL CARD (HIGHLIGHTED IN SOFT PINK/ROSE) -->
-                    <g transform="translate(122, 176)">
-                      <rect x="0" y="0" width="216" height="23" rx="7" fill="#fff1f2" stroke="#fecdd3" stroke-width="1.2"/>
-                      <circle cx="12" cy="11.5" r="7.5" fill="#ffe4e6"/>
-                      <rect x="8.5" y="8" width="5.5" height="7" rx="1.2" fill="#e11d48"/>
-                      <polygon points="14,10 17,8.5 17,14.5 14,13" fill="#e11d48"/>
-                      <text x="26" y="9.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Video Testimonial</text>
-                      <circle cx="95" cy="7" r="2.2" fill="#e11d48"/>
-                      <text x="26" y="16.5" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#e11d48">Record a 60–sec video shoutout</text>
-                      <circle cx="204" cy="11.5" r="5" fill="#fff1f2"/>
-                      <path d="M203 9.5 L205.5 11.5 L203 13.5" stroke="#e11d48" stroke-width="1.2" stroke-linecap="round"/>
+                    <g transform="translate(144, 226)">
+                      <rect x="0" y="0" width="172" height="26" rx="7" fill="#fff1f2" stroke="#fecdd3" stroke-width="1.2"/>
+                      <circle cx="13" cy="13" r="8" fill="#ffe4e6"/>
+                      <rect x="9.5" y="9.5" width="5.5" height="7" rx="1.2" fill="#e11d48"/>
+                      <polygon points="15,11.5 18,10 18,16 15,14.5" fill="#e11d48"/>
+                      <text x="27" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Video Testimonial</text>
+                      <circle cx="97" cy="8.5" r="2.2" fill="#e11d48"/>
+                      <text x="27" y="19" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#e11d48">Record a 60–sec video shoutout</text>
+                      <circle cx="160" cy="13" r="5" fill="#fff1f2"/>
+                      <path d="M159 11 L161.5 13 L159 15" stroke="#e11d48" stroke-width="1.2" stroke-linecap="round"/>
                     </g>
 
                     <!-- 6. PRIVATE ENQUIRY CARD (HIGHLIGHTED IN SOFT AMBER) -->
-                    <g transform="translate(122, 202)">
-                      <rect x="0" y="0" width="216" height="23" rx="7" fill="#fffdf0" stroke="#fde68a" stroke-width="1.2"/>
-                      <circle cx="12" cy="11.5" r="7.5" fill="#fef3c7"/>
-                      <rect x="8.5" y="8" width="7" height="5.5" rx="1.5" fill="#d97706"/>
-                      <polygon points="10,13.5 12,13.5 9,15.5" fill="#d97706"/>
-                      <text x="26" y="9.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Private Enquiry</text>
-                      <text x="26" y="16.5" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#b45309">Send a direct private message to us</text>
-                      <circle cx="204" cy="11.5" r="5" fill="#fffdf0"/>
-                      <path d="M203 9.5 L205.5 11.5 L203 13.5" stroke="#d97706" stroke-width="1.2" stroke-linecap="round"/>
+                    <g transform="translate(144, 258)">
+                      <rect x="0" y="0" width="172" height="26" rx="7" fill="#fffdf0" stroke="#fde68a" stroke-width="1.2"/>
+                      <circle cx="13" cy="13" r="8" fill="#fef3c7"/>
+                      <rect x="9.5" y="9.5" width="7" height="5.5" rx="1.5" fill="#d97706"/>
+                      <polygon points="11,15 13,15 10,17" fill="#d97706"/>
+                      <text x="27" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Private Enquiry</text>
+                      <text x="27" y="19" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#b45309">Send a direct private message to us</text>
+                      <circle cx="160" cy="13" r="5" fill="#fffdf0"/>
+                      <path d="M159 11 L161.5 13 L159 15" stroke="#d97706" stroke-width="1.2" stroke-linecap="round"/>
                     </g>
 
                     <!-- 7. INSTALL APP PILL BUTTON -->
-                    <g transform="translate(166, 230)">
-                      <rect x="0" y="0" width="128" height="15" rx="7.5" fill="#ffffff" stroke="#bfdbfe" stroke-width="0.9"/>
-                      <path d="M8 4 H10.5 C10.8 4 11 4.2 11 4.5 V10.5 C11 10.8 10.8 11 10.5 11 H8 C7.7 11 7.5 10.8 7.5 10.5 V4.5 C7.5 4.2 7.7 4 8 4 Z" fill="none" stroke="#2563eb" stroke-width="0.8"/>
-                      <circle cx="9.25" cy="9.8" r="0.4" fill="#2563eb"/>
-                      <text x="68" y="10" font-family="'Plus Jakarta Sans', sans-serif" font-size="5.5" font-weight="700" fill="#2563eb" text-anchor="middle">Install App on Home Screen</text>
+                    <g transform="translate(164, 290)">
+                      <rect x="0" y="0" width="132" height="17" rx="8.5" fill="#ffffff" stroke="#bfdbfe" stroke-width="0.9"/>
+                      <path d="M8 4.5 H10.5 C10.8 4.5 11 4.7 11 5 V11 C11 11.3 10.8 11.5 10.5 11.5 H8 C7.7 11.5 7.5 11.3 7.5 11 V5 C7.5 4.7 7.7 4.5 8 4.5 Z" fill="none" stroke="#2563eb" stroke-width="0.8"/>
+                      <circle cx="9.25" cy="10.3" r="0.4" fill="#2563eb"/>
+                      <text x="70" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="5.5" font-weight="700" fill="#2563eb" text-anchor="middle">Install App on Home Screen</text>
                     </g>
 
+                    <!-- Bottom iOS Home Indicator -->
+                    <rect x="195" y="386" width="70" height="3.5" rx="1.75" fill="#0f172a"/>
+
                     <!-- Left Floating Feature Pill -->
-                    <g transform="translate(6, 100)" filter="url(#floatShadow)">
-                      <rect x="0" y="0" width="98" height="46" rx="10" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.2"/>
-                      <circle cx="18" cy="23" r="8" fill="#fff1f2"/>
-                      <text x="18" y="26" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" font-weight="800" fill="#e11d48" text-anchor="middle">QR</text>
-                      <text x="32" y="18" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" font-weight="800" fill="#e11d48">1 QR Stand</text>
-                      <text x="32" y="30" font-family="'Inter', sans-serif" font-size="7" font-weight="600" fill="#64748b">All Review Links</text>
+                    <g transform="translate(6, 170)" filter="url(#floatShadow)">
+                      <rect x="0" y="0" width="102" height="48" rx="10" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.2"/>
+                      <circle cx="18" cy="24" r="8.5" fill="#fff1f2"/>
+                      <text x="18" y="27.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" font-weight="800" fill="#e11d48" text-anchor="middle">QR</text>
+                      <text x="33" y="19" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" font-weight="800" fill="#e11d48">1 QR Stand</text>
+                      <text x="33" y="32" font-family="'Inter', sans-serif" font-size="7" font-weight="600" fill="#64748b">All Review Links</text>
                     </g>
                     
                     <!-- Right Floating Feature Pill -->
-                    <g transform="translate(356, 114)" filter="url(#floatShadow)">
-                      <rect x="0" y="0" width="98" height="46" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
-                      <circle cx="18" cy="23" r="8" fill="#f0fdf4"/>
-                      <text x="18" y="26.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" fill="#16a34a" text-anchor="middle">⚡</text>
-                      <text x="32" y="18" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" font-weight="800" fill="#16a34a">Instant Tap</text>
-                      <text x="32" y="30" font-family="'Inter', sans-serif" font-size="7" font-weight="600" fill="#64748b">Google &amp; Socials</text>
+                    <g transform="translate(352, 195)" filter="url(#floatShadow)">
+                      <rect x="0" y="0" width="102" height="48" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
+                      <circle cx="18" cy="24" r="8.5" fill="#f0fdf4"/>
+                      <text x="18" y="27.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" fill="#16a34a" text-anchor="middle">⚡</text>
+                      <text x="33" y="19" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" font-weight="800" fill="#16a34a">Instant Tap</text>
+                      <text x="33" y="32" font-family="'Inter', sans-serif" font-size="7" font-weight="600" fill="#64748b">Google &amp; Socials</text>
                     </g>
                   </svg>
                 </div>
@@ -497,13 +539,13 @@
       <div class="hero-footer">
         <div class="hero-trust-item">
           <div class="trust-avatar-stack">
-            <div class="trust-avatar" style="background:#e11d48;">AR</div>
-            <div class="trust-avatar" style="background:#2563eb;">BK</div>
-            <div class="trust-avatar" style="background:#16a34a;">RD</div>
-            <div class="trust-avatar" style="background:#f59e0b;">+5k</div>
+            <div class="trust-avatar" style="background:linear-gradient(135deg,#e11d48,#be123c);">AR</div>
+            <div class="trust-avatar" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);">BK</div>
+            <div class="trust-avatar" style="background:linear-gradient(135deg,#16a34a,#15803d);">RD</div>
+            <div class="trust-avatar" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);">+k</div>
           </div>
           <div class="trust-text">
-            <span>Trusted by <strong>5,000+ businesses</strong></span>
+            Trusted by <strong>5,000+ businesses</strong>
           </div>
         </div>
         
