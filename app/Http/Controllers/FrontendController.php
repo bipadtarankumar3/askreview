@@ -30,6 +30,7 @@ use App\Models\Payment;
 use App\Models\GoogleFeedbackTemplate;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Hash;
 
@@ -740,24 +741,39 @@ class FrontendController extends Controller
                 date_default_timezone_set("Asia/Calcutta"); 
                 $url='';
                 /*************document upload **********/
+                $fileName = null;
+                $result = null;
+                $outPutFile = null;
+
                 if($request->hasFile('video')) {
 
                     $file = $request->file('video');
                     // Generate a unique filename with milliseconds
                     $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
 
+                    $s3 = $this->getS3();
                     // Upload the video to S3
-                    $result = $this->s3->putObject([
-                        'Bucket' => env('AWS_BUCKET'),
-                        'Key' => 'uploads/' . $fileName,
-                        'SourceFile' => $file->getPathname()
-                    ]);
+                    if ($s3) {
+                        try {
+                            $result = $s3->putObject([
+                                'Bucket' => env('AWS_BUCKET'),
+                                'Key' => 'uploads/' . $fileName,
+                                'SourceFile' => $file->getPathname()
+                            ]);
+                        } catch (\Exception $e) {
+                            \Log::error('S3 video upload failed: ' . $e->getMessage());
+                        }
+                    }
 
                     $inputKey = 'uploads/' . $fileName;
                     $outputKey = 'transcoded/' . pathinfo($fileName, PATHINFO_FILENAME) . '_transcoded.mp4';
                     $presetId = '1351620000001-000020'; // Example preset ID for Generic 1080p
         
-                    $transcodeResult = $this->transcoder->createJob($inputKey, $outputKey, $presetId);
+                    try {
+                        $transcodeResult = $this->transcoder->createJob($inputKey, $outputKey, $presetId);
+                    } catch (\Exception $e) {
+                        \Log::warning('Transcoder job create failed: ' . $e->getMessage());
+                    }
                     
                     $outPutFile = pathinfo($fileName, PATHINFO_FILENAME) . '_transcoded.mp4';
 
@@ -781,22 +797,12 @@ class FrontendController extends Controller
                 );
                 $video_testimonial = video_testimonial::create($arr);
 
-
-                $download_url = '';
-                if (!empty($video_testimonial->video)) {
-                    try {
-                        $cmd = $this->s3->getCommand('GetObject', [
-                            'Bucket' => env('AWS_BUCKET'),
-                            'Key' => 'transcoded/' . $video_testimonial->video
-                        ]);
-                        $s3Req = $this->s3->createPresignedRequest($cmd, '+7 days');
-                        $download_url = (string)$s3Req->getUri();
-                    } catch (\Exception $e) {
-                        $download_url = !empty($video_testimonial->video_url) ? $video_testimonial->video_url : url('admin/video_testimonial_details/' . $video_testimonial->id);
-                    }
-                } else {
-                    $download_url = !empty($video_testimonial->video_url) ? $video_testimonial->video_url : url('admin/video_testimonial_details/' . $video_testimonial->id);
-                }
+                // Generate a secure video download link valid for 30 days
+                $download_url = URL::temporarySignedRoute(
+                    'video.download',
+                    now()->addDays(30),
+                    ['id' => $video_testimonial->id]
+                );
 
                 $notification_arr = array(
                     'type'=>'video',
@@ -979,7 +985,59 @@ class FrontendController extends Controller
         
 
 
-        
-        
+    }
+
+    /**
+     * Download or stream video testimonial via 30-day signed URL
+     */
+    public function downloadVideoTestimonial(Request $request, $id)
+    {
+        // Allow access if signed URL is valid within 30 days, or if user is logged in
+        if (!$request->hasValidSignature() && !Auth::check()) {
+            abort(403, 'This video download link has expired or is invalid.');
+        }
+
+        $video_testimonial = video_testimonial::where('id', $id)->firstOrFail();
+
+        $s3 = $this->getS3();
+        if (!$s3) {
+            abort(500, 'Storage service unavailable.');
+        }
+
+        $key = null;
+        // Check if transcoded file is available
+        if (!empty($video_testimonial->video)) {
+            $transcodedKey = 'transcoded/' . $video_testimonial->video;
+            try {
+                if ($s3->doesObjectExist(env('AWS_BUCKET'), $transcodedKey)) {
+                    $key = $transcodedKey;
+                }
+            } catch (\Exception $e) {
+                // fallback to raw upload
+            }
+        }
+
+        // If transcoded not yet available, fallback to raw uploaded file
+        if (!$key && !empty($video_testimonial->video_url)) {
+            $path = parse_url($video_testimonial->video_url, PHP_URL_PATH);
+            $rawKey = ltrim($path, '/');
+            if (!empty($rawKey)) {
+                $key = $rawKey;
+            }
+        }
+
+        if (!$key) {
+            abort(404, 'Video file not found.');
+        }
+
+        // Generate a dynamic 2-hour presigned URL for direct streaming/downloading
+        $cmd = $s3->getCommand('GetObject', [
+            'Bucket' => env('AWS_BUCKET'),
+            'Key' => $key,
+            'ResponseContentDisposition' => 'attachment; filename="' . basename($key) . '"'
+        ]);
+
+        $presignedUrl = (string)$s3->createPresignedRequest($cmd, '+2 hours')->getUri();
+        return redirect()->away($presignedUrl);
     }
 }

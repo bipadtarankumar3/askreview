@@ -53,6 +53,7 @@ Route::post('singup_post',[FrontendController::class,'singup_post']);
 Route::get('/u/{user_name}',[FrontendController::class,'index']);
 Route::post('/u/review_form_submit',[FrontendController::class,'review_form_submit']);
 Route::post('/u/video_testimonial_form_submit',[FrontendController::class,'video_testimonial_form_submit']);
+Route::get('/video-download/{id}',[FrontendController::class,'downloadVideoTestimonial'])->name('video.download');
 Route::post('/u/private_feedback',[FrontendController::class,'private_feedback']);
 Route::post('/u/spinner_form_check/post',[FrontendController::class,'spinner_form_check']);
 Route::post('/u/spinner_round_check',[FrontendController::class,'spinner_round_check']);
