@@ -47,14 +47,28 @@ class FrontendController extends Controller
     public function __construct(TranscoderService $transcoder)
     {
         $this->transcoder = $transcoder;
-        $this->s3 = new S3Client([
-            'version' => 'latest',
-            'region' => env('AWS_DEFAULT_REGION'),
-            'credentials' => [
-                'key' => env('AWS_ACCESS_KEY_ID'),
-                'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            ],
-        ]);
+        // S3Client is lazy-initialized via getS3() to avoid crashing
+        // all frontend routes when AWS credentials are missing/empty.
+    }
+
+    protected function getS3()
+    {
+        if (!$this->s3) {
+            try {
+                $this->s3 = new S3Client([
+                    'version'     => 'latest',
+                    'region'      => env('AWS_DEFAULT_REGION', 'us-east-1'),
+                    'credentials' => [
+                        'key'    => env('AWS_ACCESS_KEY_ID'),
+                        'secret' => env('AWS_SECRET_ACCESS_KEY'),
+                    ],
+                ]);
+            } catch (\Exception $e) {
+                \Log::warning('S3Client init failed: ' . $e->getMessage());
+                return null;
+            }
+        }
+        return $this->s3;
     }
 
     protected function setMailConfig()
@@ -72,6 +86,7 @@ class FrontendController extends Controller
                 'mail.mailers.smtp.encryption' => $encryption,
                 'mail.mailers.smtp.username' => $mail->mail_username,
                 'mail.mailers.smtp.password' => $mail->mail_password,
+                'mail.mailers.smtp.timeout' => 10,
                 'mail.from.address' => $mail->mail_from_address,
                 'mail.from.name' => $mail->mail_from_name,
             ]);
@@ -473,7 +488,7 @@ class FrontendController extends Controller
                     if (!empty($userDate->email)) {
                         try {
                             Mail::to($userDate->email)->send(new SpinnerFormMail('ADMIN', $mail_arr, $subject));
-                        } catch (\Exception $e) {
+                        } catch (\Throwable $e) {
                             \Log::error('Review form admin email error: ' . $e->getMessage());
                         }
                     }
@@ -481,41 +496,37 @@ class FrontendController extends Controller
                     if (!empty($request->email)) {
                         try {
                             Mail::to($request->email)->send(new SpinnerFormMail('CUSTOMER', $mail_arr, 'Thank you for your feedback'));
-                        } catch (\Exception $e) {
+                        } catch (\Throwable $e) {
                             \Log::error('Review form customer email error: ' . $e->getMessage());
                         }
                     }
 
-                    if(!empty($request->f_phone_number) && $userDate->wp_key !=''){
-                        $curl = curl_init();
-
-                        $string = 'Thank you for submit the form.';
-                        $replaced = str_replace(' ', '%20', $string);
-                        $message = $replaced;
-                    
-                        curl_setopt_array($curl, array(
-                          CURLOPT_URL => 'http://api.vyyapar.com/wapp/api/send?apikey='.$userDate->wp_key.'&mobile='.$request->f_phone_number.'&msg='.$message,
-                          CURLOPT_RETURNTRANSFER => true,
-                          CURLOPT_ENCODING => '',
-                          CURLOPT_MAXREDIRS => 10,
-                          CURLOPT_TIMEOUT => 0,
-                          CURLOPT_FOLLOWLOCATION => true,
-                          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                          CURLOPT_CUSTOMREQUEST => 'GET',
-                        ));
+                    if(!empty($request->f_phone_number) && !empty($userDate->wp_key)){
+                        try {
+                            $curl = curl_init();
+                            $string = 'Thank you for submit the form.';
+                            $message = urlencode($string);
                         
-                        $response = curl_exec($curl);
-                        
-                        curl_close($curl);
+                            curl_setopt_array($curl, array(
+                              CURLOPT_URL => 'http://api.vyyapar.com/wapp/api/send?apikey='.$userDate->wp_key.'&mobile='.$request->f_phone_number.'&msg='.$message,
+                              CURLOPT_RETURNTRANSFER => true,
+                              CURLOPT_ENCODING => '',
+                              CURLOPT_MAXREDIRS => 5,
+                              CURLOPT_TIMEOUT => 5,
+                              CURLOPT_CONNECTTIMEOUT => 5,
+                              CURLOPT_FOLLOWLOCATION => true,
+                              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                              CURLOPT_CUSTOMREQUEST => 'GET',
+                            ));
+                            
+                            $response = curl_exec($curl);
+                            curl_close($curl);
 
-                        if($userDate->wp_count == ''){
-                            $count =1;
-                        }else{
-                            $count = $userDate->wp_count+1;
+                            $count = empty($userDate->wp_count) ? 1 : ($userDate->wp_count + 1);
+                            User::where('id', $userDate->id)->update(['wp_count' => $count]);
+                        } catch (\Throwable $e) {
+                            \Log::error('Review form whatsapp error: ' . $e->getMessage());
                         }
-
-                        $userDateUp = User::where('id',$userDate->id)->update(['wp_count'=>$count]);
-
                     }
 
                     
@@ -550,9 +561,15 @@ class FrontendController extends Controller
 
     public function private_feedback(Request $request){
 
-        // try {
-            $user_id =decrypt($request->user_id); 
-            $User = User::where('id',$user_id)->first();
+        // dd($request->all());
+
+        try {
+            $user_id = decrypt($request->user_id);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => 'Invalid request.'], 400);
+        }
+
+        $User = User::where('id',$user_id)->first();
             $data = $request->all();
             //dd($data );
             if ($User) {
@@ -597,7 +614,7 @@ class FrontendController extends Controller
                     if (!empty($userDate->email)) {
                         try {
                             Mail::to($userDate->email)->send(new SpinnerFormMail('ADMIN', $mail_arr, $subject));
-                        } catch (\Exception $e) {
+                        } catch (\Throwable $e) {
                             \Log::error('Private feedback admin email error: ' . $e->getMessage());
                         }
                     }
@@ -605,42 +622,37 @@ class FrontendController extends Controller
                     if (!empty($request->customer_email)) {
                         try {
                             Mail::to($request->customer_email)->send(new SpinnerFormMail('CUSTOMER', $mail_arr, 'Thank you for your enquiry'));
-                        } catch (\Exception $e) {
+                        } catch (\Throwable $e) {
                             \Log::error('Private feedback customer email error: ' . $e->getMessage());
                         }
                     }
 
-                    if(!empty($request->customer_number) && $userDate->wp_key !=''){
-                        $curl = curl_init();
-
-                        // $string = 'Thank you for submit the form.';
-                        $string = "प्रिय ग्राहक, धन्यवाद 1F44F हम अपने ग्राहकों से फीडबैक सुनना पसंद करते हैं। आपका फीडबैक हमे प्राप्त हो गया है,  ये फीडबैक ही हमे बेहतर को और बेहतर करने के लिए प्रेरित करता है।आपकी संतुष्टि ही हमारा लक्ष्य है जल्द ही हमारी टीम आपसे संपर्क करेगी |र्क करेगी |";
-                        $replaced = str_replace(' ', '%20', $string);
-                        $message = $replaced;
-                    
-                        curl_setopt_array($curl, array(
-                          CURLOPT_URL => 'http://api.vyyapar.com/wapp/api/send?apikey='.$userDate->wp_key.'&mobile='.$request->customer_number.'&msg='.$message,
-                          CURLOPT_RETURNTRANSFER => true,
-                          CURLOPT_ENCODING => '',
-                          CURLOPT_MAXREDIRS => 10,
-                          CURLOPT_TIMEOUT => 0,
-                          CURLOPT_FOLLOWLOCATION => true,
-                          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                          CURLOPT_CUSTOMREQUEST => 'GET',
-                        ));
+                    if(!empty($request->customer_number) && !empty($userDate->wp_key)){
+                        try {
+                            $curl = curl_init();
+                            $string = "प्रिय ग्राहक, धन्यवाद 🙏 हम अपने ग्राहकों से फीडबैक सुनना पसंद करते हैं। आपका फीडबैक हमे प्राप्त हो गया है, ये फीडबैक ही हमे बेहतर को और बेहतर करने के लिए प्रेरित करता है। आपकी संतुष्टि ही हमारा लक्ष्य है जल्द ही हमारी टीम आपसे संपर्क करेगी |";
+                            $message = urlencode($string);
                         
-                        $response = curl_exec($curl);
-                        
-                        curl_close($curl);
+                            curl_setopt_array($curl, array(
+                              CURLOPT_URL => 'http://api.vyyapar.com/wapp/api/send?apikey='.$userDate->wp_key.'&mobile='.$request->customer_number.'&msg='.$message,
+                              CURLOPT_RETURNTRANSFER => true,
+                              CURLOPT_ENCODING => '',
+                              CURLOPT_MAXREDIRS => 5,
+                              CURLOPT_TIMEOUT => 5,
+                              CURLOPT_CONNECTTIMEOUT => 5,
+                              CURLOPT_FOLLOWLOCATION => true,
+                              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                              CURLOPT_CUSTOMREQUEST => 'GET',
+                            ));
+                            
+                            $response = curl_exec($curl);
+                            curl_close($curl);
 
-                        if($userDate->wp_count == ''){
-                            $count =1;
-                        }else{
-                            $count = $userDate->wp_count+1;
+                            $count = empty($userDate->wp_count) ? 1 : ($userDate->wp_count + 1);
+                            User::where('id', $userDate->id)->update(['wp_count' => $count]);
+                        } catch (\Throwable $e) {
+                            \Log::error('Private feedback whatsapp error: ' . $e->getMessage());
                         }
-
-                        $userDateUp = User::where('id',$userDate->id)->update(['wp_count'=>$count]);
-
                     }
 
                     
@@ -775,7 +787,7 @@ class FrontendController extends Controller
                 if ($userDate && !empty($userDate->email)) {
                     try {
                         Mail::to($userDate->email)->send(new SpinnerFormMail('ADMIN', $mail_arr, $subject));
-                    } catch (\Exception $e) {
+                    } catch (\Throwable $e) {
                         \Log::error('Video testimonial mail error: ' . $e->getMessage());
                     }
                 }

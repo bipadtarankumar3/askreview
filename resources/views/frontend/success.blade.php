@@ -86,16 +86,17 @@
     switch (type) {
         case 'info':
             toastr.info("{{Session::get('messege')}}");
-            bresk;
+            break;
         case 'success':
             toastr.success("{{Session::get('messege')}}");
-            bresk;
+            break;
+        case 'warning':
         case 'worning':
-            toastr.worning("{{Session::get('messege')}}");
-            bresk;
+            toastr.warning("{{Session::get('messege')}}");
+            break;
         case 'error':
             toastr.error("{{Session::get('messege')}}");
-            bresk;
+            break;
     }
     @endif
 
