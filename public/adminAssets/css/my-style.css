@@ -1184,3 +1184,31 @@ body {
     opacity: 1 !important;
   }
   
+
+/* ============================================================
+   MODAL STACKING FIX — Bootstrap 5 with mini-sidebar layout
+   The .body-wrapper z-index:1 creates a stacking context that
+   traps modals. This fix ensures modals always render on top.
+   ============================================================ */
+
+/* Ensure modals always escape stacking contexts */
+.modal { z-index: 1055 !important; }
+.modal-backdrop { z-index: 1050 !important; }
+.modal-dialog { z-index: 1056 !important; }
+
+/* Bootstrap 5 uses body.modal-open, ensure overflow is visible so modal shows */
+body.modal-open { overflow: hidden; }
+
+/* Blurred backdrop for Bootstrap 5 modal (uses .show class, not .modal-open) */
+.modal-backdrop.show {
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 1 !important;
+}
+
+/* Fix: body-wrapper must NOT create a stacking context when modals are open */
+body.modal-open .body-wrapper,
+body.modal-open #main-wrapper {
+    z-index: auto !important;
+}

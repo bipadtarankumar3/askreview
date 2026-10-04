@@ -451,16 +451,27 @@
 
 
     function hide_modal() {
-        
-        $('#integration_add_modal').modal('hide');
-
+        var el = document.getElementById('integration_add_modal');
+        var m = bootstrap.Modal.getInstance(el) || new bootstrap.Modal(el);
+        m.hide();
     }
 
+    var _autocompleteInitialized = false;
     function open_integration_model() {
-        
-        initAutocomplete() ;
-        $('#integration_add_modal').modal('show');
-
+        // Show modal FIRST so a Maps API error doesn't block the modal
+        var el = document.getElementById('integration_add_modal');
+        if (!el) { console.error('integration_add_modal element not found'); return; }
+        var m = bootstrap.Modal.getInstance(el) || new bootstrap.Modal(el);
+        m.show();
+        // Init autocomplete safely after modal is visible
+        try {
+            if (!_autocompleteInitialized && typeof google !== 'undefined' && google.maps) {
+                initAutocomplete();
+                _autocompleteInitialized = true;
+            }
+        } catch(e) {
+            console.warn('Autocomplete init failed:', e);
+        }
     }
 
     function open_integration_remove_model(type) {
@@ -477,7 +488,9 @@
             },
             success: function(data) {
                 $('.integration_remove_modal_body').html(data);
-                $('#integration_remove_modal').modal('show');
+                var el = document.getElementById('integration_remove_modal');
+                var m = bootstrap.Modal.getInstance(el) || new bootstrap.Modal(el);
+                m.show();
             } 
         });
         
@@ -620,7 +633,9 @@
             },
             success: function(data) {
                 $('.spinner_body').html(data);
-                $('#add_spinner_modal').modal('show');
+                var el = document.getElementById('add_spinner_modal');
+                var m = bootstrap.Modal.getInstance(el) || new bootstrap.Modal(el);
+                m.show();
             } 
         });
 
@@ -696,9 +711,34 @@
 
 
     function hide_modal(params) {
-        $('#add_spinner_modal').modal('hide');
+        var spinEl = document.getElementById('add_spinner_modal');
+        var spinM = bootstrap.Modal.getInstance(spinEl);
+        if (spinM) spinM.hide();
+        var addEl = document.getElementById('integration_add_modal');
+        var addM = bootstrap.Modal.getInstance(addEl);
+        if (addM) addM.hide();
+        var rmEl = document.getElementById('integration_remove_modal');
+        var rmM = bootstrap.Modal.getInstance(rmEl);
+        if (rmM) rmM.hide();
     }
 
+    // ── Modal stacking-context escape fix ──────────────────────────────────
+    // Bootstrap 5 modals need to live directly under <body> to avoid being
+    // trapped by any ancestor with a z-index / transform stacking context.
+    document.addEventListener('DOMContentLoaded', function () {
+        ['integration_add_modal', 'integration_remove_modal', 'add_spinner_modal'].forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el && el.parentElement !== document.body) {
+                document.body.appendChild(el);
+            }
+        });
+
+        if (typeof bootstrap === 'undefined') {
+            console.error('Bootstrap JS not loaded — modals will not work!');
+        } else {
+            console.log('Bootstrap', typeof bootstrap.Modal, '— modals ready.');
+        }
+    });
     </script>
 
 
