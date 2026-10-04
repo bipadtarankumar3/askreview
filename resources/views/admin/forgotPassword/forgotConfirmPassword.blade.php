@@ -32,7 +32,6 @@
          LEFT PANEL: 5-Slide Multi-Channel Review Hub Carousel (Light Theme)
          ==================================================================== -->
     <div class="auth-hero-panel">
-      
       <!-- Top Brand Header -->
       <div class="hero-header">
         <a href="{{ url('/') }}" class="hero-brand">
@@ -727,6 +726,34 @@
          RIGHT PANEL: Confirm Password Form Card
          ==================================================================== -->
     <div class="auth-form-panel">
+      <!-- Ambient Background Watermark Icons -->
+      <div class="auth-bg-watermark wm-google"><i class="bi bi-google"></i></div>
+      <div class="auth-bg-watermark wm-star"><i class="bi bi-star-fill"></i></div>
+      <div class="auth-bg-watermark wm-heart"><i class="bi bi-chat-heart-fill"></i></div>
+      <div class="auth-bg-watermark wm-shield"><i class="bi bi-shield-check"></i></div>
+      <div class="auth-bg-watermark wm-camera"><i class="bi bi-camera-video-fill"></i></div>
+
+      <!-- Floating Decorative Review Badges -->
+      <div class="auth-floating-badge badge-top-right">
+        <div class="badge-icon-box" style="background:#fffbeb;color:#f59e0b;">
+          <i class="bi bi-star-fill"></i>
+        </div>
+        <div>
+          <div class="badge-label">5.0 ★★★★★</div>
+          <div class="badge-sub">Google Verified</div>
+        </div>
+      </div>
+
+      <div class="auth-floating-badge badge-bottom-right">
+        <div class="badge-icon-box" style="background:#eff6ff;color:#2563eb;">
+          <i class="bi bi-lightning-charge-fill"></i>
+        </div>
+        <div>
+          <div class="badge-label">Smart NFC &amp; QR</div>
+          <div class="badge-sub">Instant Feedback</div>
+        </div>
+      </div>
+
       <div class="auth-form-container">
         
         <!-- Right Panel Brand Logo Header -->
