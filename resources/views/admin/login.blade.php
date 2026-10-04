@@ -42,10 +42,6 @@
             <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.05rem;font-weight:800;color:#0f172a;letter-spacing:-0.01em;">AskReview<span style="color:var(--brand-red);">.</span></span>
           </div>
         </a>
-        <div class="hero-badge-pill">
-          <span class="pulse-dot"></span>
-          <span>Live Platform</span>
-        </div>
       </div>
 
       <!-- Centered 5-Slide QR & Multi-Review Carousel -->
