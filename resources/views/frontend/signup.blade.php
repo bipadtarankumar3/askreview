@@ -144,30 +144,30 @@
                     <text x="230" y="89" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b" text-anchor="middle">Select your preferred platform below to leave us a quick review.</text>
 
                     <!-- 1. GOOGLE REVIEW CARD -->
-                    <g transform="translate(144, 98)">
-                      <rect x="0" y="0" width="172" height="26" rx="7" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+                    <g class="hub-review-row" data-platform="Google" transform="translate(144, 98)">
+                      <rect class="hub-card-bg" x="0" y="0" width="172" height="26" rx="7" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
                       <circle cx="13" cy="13" r="8" fill="#f8fafc" stroke="#f1f5f9"/>
                       <path d="M15.5 13 H13 V14.5 H14.6 C14.3 15.3 13.6 15.8 12.7 15.8 C11.4 15.8 10.4 14.7 10.4 13.3 C10.4 12 11.4 10.9 12.7 10.9 C13.3 10.9 13.9 11.1 14.3 11.5 L15.4 10.4 C14.7 9.7 13.7 9.3 12.7 9.3 C10.5 9.3 8.7 11.1 8.7 13.3 C8.7 15.5 10.5 17.3 12.7 17.3 C15 17.3 16.5 15.7 16.5 13.4 C16.5 13.1 16.4 12.8 16.4 12.6 L15.5 13 Z" fill="#4285F4"/>
                       <text x="27" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Google</text>
                       <text x="27" y="19" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b">Pick pre-written review &amp; paste</text>
                       <circle cx="160" cy="13" r="5" fill="#f8fafc"/>
-                      <path d="M159 11 L161.5 13 L159 15" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
+                      <path class="row-arrow" d="M159 11 L161.5 13 L159 15" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
                     </g>
 
                     <!-- 2. FACEBOOK REVIEW CARD -->
-                    <g transform="translate(144, 130)">
-                      <rect x="0" y="0" width="172" height="26" rx="7" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+                    <g class="hub-review-row" data-platform="Facebook" transform="translate(144, 130)">
+                      <rect class="hub-card-bg" x="0" y="0" width="172" height="26" rx="7" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
                       <circle cx="13" cy="13" r="8" fill="#1877f2"/>
                       <text x="13" y="16.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="9.5" font-weight="800" fill="#ffffff" text-anchor="middle">f</text>
                       <text x="27" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Facebook</text>
                       <text x="27" y="19" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b">Review us on Facebook</text>
                       <circle cx="160" cy="13" r="5" fill="#f8fafc"/>
-                      <path d="M159 11 L161.5 13 L159 15" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
+                      <path class="row-arrow" d="M159 11 L161.5 13 L159 15" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
                     </g>
 
                     <!-- 3. INSTAGRAM REVIEW CARD -->
-                    <g transform="translate(144, 162)">
-                      <rect x="0" y="0" width="172" height="26" rx="7" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+                    <g class="hub-review-row" data-platform="Instagram" transform="translate(144, 162)">
+                      <rect class="hub-card-bg" x="0" y="0" width="172" height="26" rx="7" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
                       <circle cx="13" cy="13" r="8" fill="url(#instaGradient)"/>
                       <rect x="8.5" y="9" width="9" height="8" rx="2.2" fill="none" stroke="#ffffff" stroke-width="0.9"/>
                       <circle cx="13" cy="13" r="2.2" fill="none" stroke="#ffffff" stroke-width="0.8"/>
@@ -175,51 +175,59 @@
                       <text x="27" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Instagram</text>
                       <text x="27" y="19" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b">Review us on Instagram</text>
                       <circle cx="160" cy="13" r="5" fill="#f8fafc"/>
-                      <path d="M159 11 L161.5 13 L159 15" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
+                      <path class="row-arrow" d="M159 11 L161.5 13 L159 15" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
                     </g>
 
                     <!-- 4. YOUTUBE REVIEW CARD -->
-                    <g transform="translate(144, 194)">
-                      <rect x="0" y="0" width="172" height="26" rx="7" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+                    <g class="hub-review-row" data-platform="YouTube" transform="translate(144, 194)">
+                      <rect class="hub-card-bg" x="0" y="0" width="172" height="26" rx="7" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
                       <circle cx="13" cy="13" r="8" fill="#ff0000"/>
                       <polygon points="11.5,10 16,13 11.5,16" fill="#ffffff"/>
                       <text x="27" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Youtube</text>
                       <text x="27" y="19" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b">Review us on Youtube</text>
                       <circle cx="160" cy="13" r="5" fill="#f8fafc"/>
-                      <path d="M159 11 L161.5 13 L159 15" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
+                      <path class="row-arrow" d="M159 11 L161.5 13 L159 15" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
                     </g>
 
                     <!-- 5. VIDEO TESTIMONIAL CARD (HIGHLIGHTED IN SOFT PINK/ROSE) -->
-                    <g transform="translate(144, 226)">
-                      <rect x="0" y="0" width="172" height="26" rx="7" fill="#fff1f2" stroke="#fecdd3" stroke-width="1.2"/>
+                    <g class="hub-review-row" data-platform="Video Testimonial" transform="translate(144, 226)">
+                      <rect class="hub-card-bg" x="0" y="0" width="172" height="26" rx="7" fill="#fff1f2" stroke="#fecdd3" stroke-width="1.2"/>
                       <circle cx="13" cy="13" r="8" fill="#ffe4e6"/>
                       <rect x="9.5" y="9.5" width="5.5" height="7" rx="1.2" fill="#e11d48"/>
                       <polygon points="15,11.5 18,10 18,16 15,14.5" fill="#e11d48"/>
                       <text x="27" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Video Testimonial</text>
-                      <circle cx="97" cy="8.5" r="2.2" fill="#e11d48"/>
+                      <circle cx="97" cy="8.5" r="2.2" fill="#e11d48" class="rec-dot-animated"/>
                       <text x="27" y="19" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#e11d48">Record a 60–sec video shoutout</text>
                       <circle cx="160" cy="13" r="5" fill="#fff1f2"/>
-                      <path d="M159 11 L161.5 13 L159 15" stroke="#e11d48" stroke-width="1.2" stroke-linecap="round"/>
+                      <path class="row-arrow" d="M159 11 L161.5 13 L159 15" stroke="#e11d48" stroke-width="1.2" stroke-linecap="round"/>
                     </g>
 
                     <!-- 6. PRIVATE ENQUIRY CARD (HIGHLIGHTED IN SOFT AMBER) -->
-                    <g transform="translate(144, 258)">
-                      <rect x="0" y="0" width="172" height="26" rx="7" fill="#fffdf0" stroke="#fde68a" stroke-width="1.2"/>
+                    <g class="hub-review-row" data-platform="Private Enquiry" transform="translate(144, 258)">
+                      <rect class="hub-card-bg" x="0" y="0" width="172" height="26" rx="7" fill="#fffdf0" stroke="#fde68a" stroke-width="1.2"/>
                       <circle cx="13" cy="13" r="8" fill="#fef3c7"/>
                       <rect x="9.5" y="9.5" width="7" height="5.5" rx="1.5" fill="#d97706"/>
                       <polygon points="11,15 13,15 10,17" fill="#d97706"/>
                       <text x="27" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Private Enquiry</text>
                       <text x="27" y="19" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#b45309">Send a direct private message to us</text>
                       <circle cx="160" cy="13" r="5" fill="#fffdf0"/>
-                      <path d="M159 11 L161.5 13 L159 15" stroke="#d97706" stroke-width="1.2" stroke-linecap="round"/>
+                      <path class="row-arrow" d="M159 11 L161.5 13 L159 15" stroke="#d97706" stroke-width="1.2" stroke-linecap="round"/>
                     </g>
 
                     <!-- 7. INSTALL APP PILL BUTTON -->
-                    <g transform="translate(164, 290)">
-                      <rect x="0" y="0" width="132" height="17" rx="8.5" fill="#ffffff" stroke="#bfdbfe" stroke-width="0.9"/>
+                    <g class="hub-review-row" data-platform="App Install" transform="translate(164, 290)">
+                      <rect class="hub-card-bg" x="0" y="0" width="132" height="17" rx="8.5" fill="#ffffff" stroke="#bfdbfe" stroke-width="0.9"/>
                       <path d="M8 4.5 H10.5 C10.8 4.5 11 4.7 11 5 V11 C11 11.3 10.8 11.5 10.5 11.5 H8 C7.7 11.5 7.5 11.3 7.5 11 V5 C7.5 4.7 7.7 4.5 8 4.5 Z" fill="none" stroke="#2563eb" stroke-width="0.8"/>
                       <circle cx="9.25" cy="10.3" r="0.4" fill="#2563eb"/>
                       <text x="70" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="5.5" font-weight="700" fill="#2563eb" text-anchor="middle">Install App on Home Screen</text>
+                    </g>
+
+                    <!-- Interactive Notification Toast Inside Smartphone Screen -->
+                    <g id="hubToastMessage" opacity="0" transform="translate(148, 335)" style="transition: all 0.3s cubic-bezier(0.34, 1.4, 0.64, 1); pointer-events: none;">
+                      <rect width="164" height="26" rx="13" fill="#0f172a" filter="url(#floatShadow)"/>
+                      <circle cx="15" cy="13" r="6" fill="#16a34a"/>
+                      <path d="M12.5 13 L14.5 15 L17.5 11" stroke="#ffffff" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+                      <text id="hubToastText" x="27" y="16" font-family="'Plus Jakarta Sans', sans-serif" font-size="6.8" font-weight="700" fill="#ffffff">Google Reviews Selected</text>
                     </g>
 
                     <!-- Bottom iOS Home Indicator -->
@@ -258,55 +266,222 @@
               </div>
             </div>
 
-            <!-- SLIDE 2: Video Testimonials (Direct Smartphone Selfie Reviews) -->
+            <!-- SLIDE 2: Video Testimonials (Realistic Smartphone Live Recording Showcase) -->
             <div class="carousel-slide" data-index="1">
               <div class="slide-visual-card">
                 <div class="slide-badge-top">
-                  <i class="bi bi-camera-video-fill"></i> Video Testimonials
+                  <i class="bi bi-camera-video-fill"></i> Live Video Testimonials
                 </div>
                 
                 <div class="slide-graphic-container">
-                  <svg class="slide-graphic-svg" viewBox="0 0 460 240" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <ellipse cx="230" cy="225" rx="170" ry="12" fill="rgba(15,23,42,0.06)"/>
+                  <!-- Tall Realistic Smartphone With Live Recording Activity -->
+                  <svg class="slide-graphic-svg" viewBox="0 0 460 415" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <linearGradient id="camBgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#1e293b"/>
+                        <stop offset="50%" stop-color="#0f172a"/>
+                        <stop offset="100%" stop-color="#090d16"/>
+                      </linearGradient>
+                      <linearGradient id="userFaceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#fed7aa"/>
+                        <stop offset="100%" stop-color="#fba86b"/>
+                      </linearGradient>
+                      <linearGradient id="userShirtGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#2563eb"/>
+                        <stop offset="100%" stop-color="#1d4ed8"/>
+                      </linearGradient>
+                      <linearGradient id="recAuraGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#ef4444" stop-opacity="0.8"/>
+                        <stop offset="100%" stop-color="#dc2626" stop-opacity="0.2"/>
+                      </linearGradient>
+                      <filter id="phoneShadow2" x="-15%" y="-10%" width="130%" height="125%">
+                        <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="rgba(15,23,42,0.22)"/>
+                      </filter>
+                      <filter id="floatShadow2" x="-10%" y="-10%" width="125%" height="125%">
+                        <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="rgba(15,23,42,0.08)"/>
+                      </filter>
+                      <filter id="glowRed" x="-20%" y="-20%" width="140%" height="140%">
+                        <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="rgba(239,68,68,0.7)"/>
+                      </filter>
+                    </defs>
+
+                    <!-- Desk Base Shadow -->
+                    <ellipse cx="230" cy="408" rx="130" ry="6" fill="rgba(15,23,42,0.08)"/>
                     
-                    <!-- Recording Phone Frame -->
-                    <rect x="135" y="12" width="190" height="212" rx="18" fill="#0f172a" stroke="#334155" stroke-width="2.5"/>
-                    <rect x="190" y="16" width="80" height="5" rx="2.5" fill="#475569"/>
+                    <!-- Side Buttons -->
+                    <rect x="128" y="80" width="3" height="22" rx="1.5" fill="#475569"/>
+                    <rect x="128" y="110" width="3" height="22" rx="1.5" fill="#475569"/>
+                    <rect x="329" y="90" width="3" height="30" rx="1.5" fill="#475569"/>
+
+                    <!-- Main Smartphone Outer Chassis (Midnight Titanium) -->
+                    <rect x="131" y="6" width="198" height="396" rx="38" fill="#0f172a" stroke="#334155" stroke-width="2" filter="url(#phoneShadow2)"/>
                     
-                    <!-- Live Camera Feed Preview -->
-                    <rect x="143" y="28" width="174" height="152" rx="8" fill="#1e293b"/>
-                    
-                    <!-- Customer Silhouette / Avatar in Camera -->
-                    <circle cx="230" cy="82" r="26" fill="#3b82f6"/>
-                    <path d="M200 135 C200 110, 260 110, 260 135 Z" fill="#3b82f6"/>
-                    
-                    <!-- Recording Indicator Top Right -->
-                    <rect x="152" y="38" width="56" height="16" rx="8" fill="rgba(0,0,0,0.6)"/>
-                    <circle cx="160" cy="46" r="4" fill="#ef4444"/>
-                    <text x="180" y="49" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="800" fill="#ffffff">REC 0:18</text>
-                    
-                    <!-- 5-Star Overlay Badge inside Video -->
-                    <g transform="translate(170, 115)">
-                      <rect x="0" y="0" width="120" height="26" rx="6" fill="rgba(0,0,0,0.75)" stroke="rgba(255,255,255,0.2)"/>
-                      <text x="60" y="17" font-family="'Plus Jakarta Sans', sans-serif" font-size="10.5" font-weight="800" fill="#f59e0b" text-anchor="middle">★★★★★</text>
+                    <!-- Full-Screen Camera Viewfinder Screen -->
+                    <rect x="135" y="10" width="190" height="388" rx="34" fill="url(#camBgGrad)"/>
+
+                    <!-- Camera Viewfinder Grid (Subtle Rule of Thirds) -->
+                    <line x1="198" y1="10" x2="198" y2="398" stroke="rgba(255,255,255,0.06)" stroke-width="0.8" stroke-dasharray="3 3"/>
+                    <line x1="262" y1="10" x2="262" y2="398" stroke="rgba(255,255,255,0.06)" stroke-width="0.8" stroke-dasharray="3 3"/>
+                    <line x1="135" y1="140" x2="325" y2="140" stroke="rgba(255,255,255,0.06)" stroke-width="0.8" stroke-dasharray="3 3"/>
+                    <line x1="135" y1="265" x2="325" y2="265" stroke="rgba(255,255,255,0.06)" stroke-width="0.8" stroke-dasharray="3 3"/>
+
+                    <!-- Realistic Customer Portrait (Selfie Camera Feed) -->
+                    <g id="cameraUserFeed" transform="translate(160, 92)" style="transition: transform 0.4s ease; transform-origin: 70px 85px;">
+                      <!-- Ambient Glow Behind User -->
+                      <circle cx="70" cy="65" r="58" fill="#3b82f6" opacity="0.12"/>
+                      
+                      <!-- Shoulders & Torso -->
+                      <path d="M12 155 C15 110, 40 100, 70 100 C100 100, 125 110, 128 155 Z" fill="url(#userShirtGrad)"/>
+                      <!-- Shirt Collar V -->
+                      <polygon points="70,118 60,100 80,100" fill="#ffffff" opacity="0.9"/>
+                      
+                      <!-- Neck -->
+                      <rect x="61" y="78" width="18" height="24" rx="4" fill="#fba86b"/>
+                      
+                      <!-- Head / Face -->
+                      <ellipse cx="70" cy="58" rx="27" ry="32" fill="url(#userFaceGrad)"/>
+                      
+                      <!-- Stylish Modern Haircut -->
+                      <path d="M40 50 C40 26, 56 18, 70 18 C84 18, 100 26, 100 50 C95 44, 88 40, 70 40 C52 40, 45 44, 40 50 Z" fill="#1e293b"/>
+                      
+                      <!-- Friendly Facial Features: Eyes & Smile -->
+                      <!-- Left Eye -->
+                      <ellipse cx="60" cy="54" rx="3.5" ry="2.5" fill="#1e293b"/>
+                      <circle cx="61" cy="53" r="1" fill="#ffffff"/>
+                      <!-- Right Eye -->
+                      <ellipse cx="80" cy="54" rx="3.5" ry="2.5" fill="#1e293b"/>
+                      <circle cx="81" cy="53" r="1" fill="#ffffff"/>
+                      <!-- Smile -->
+                      <path d="M59 68 Q70 79 81 68" stroke="#7c2d12" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                      <path d="M62 69 Q70 77 78 69" fill="#ffffff"/>
+                      <!-- Cheerful Cheeks -->
+                      <circle cx="53" cy="64" r="5" fill="#f43f5e" opacity="0.25"/>
+                      <circle cx="87" cy="64" r="5" fill="#f43f5e" opacity="0.25"/>
+                    </g>
+
+                    <!-- Camera Autofocus Face Reticle Brackets (Pulsing) -->
+                    <g class="camera-focus-reticle" transform="translate(230, 150)">
+                      <!-- Top-Left Corner -->
+                      <path d="M-36 -30 H-44 V-22" stroke="#38bdf8" stroke-width="1.8" stroke-linecap="round"/>
+                      <!-- Top-Right Corner -->
+                      <path d="M36 -30 H44 V-22" stroke="#38bdf8" stroke-width="1.8" stroke-linecap="round"/>
+                      <!-- Bottom-Left Corner -->
+                      <path d="M-36 30 H-44 V22" stroke="#38bdf8" stroke-width="1.8" stroke-linecap="round"/>
+                      <!-- Bottom-Right Corner -->
+                      <path d="M36 30 H44 V22" stroke="#38bdf8" stroke-width="1.8" stroke-linecap="round"/>
+                      <!-- Small Center Crosshair -->
+                      <path d="M-3 0 H3 M0 -3 V3" stroke="#38bdf8" stroke-width="1.2"/>
+                      <!-- Face Detection Label -->
+                      <rect x="-24" y="-38" width="48" height="11" rx="4" fill="rgba(14,165,233,0.85)"/>
+                      <text x="0" y="-30" font-family="'Plus Jakarta Sans', sans-serif" font-size="5.8" font-weight="700" fill="#ffffff" text-anchor="middle">FACE 4K</text>
+                    </g>
+
+                    <!-- Top Dynamic Island Pill -->
+                    <rect x="195" y="15" width="70" height="13" rx="6.5" fill="#000000"/>
+                    <circle cx="248" cy="21.5" r="2.8" fill="#1e293b"/>
+                    <circle cx="248.5" cy="21" r="1" fill="#2563eb" opacity="0.6"/>
+
+                    <!-- iOS Status Bar (White on Dark Camera) -->
+                    <text x="152" y="25" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.2" font-weight="700" fill="#ffffff">9:41</text>
+                    <g transform="translate(288, 18)">
+                      <!-- Signal Bars -->
+                      <rect x="0" y="5" width="1.8" height="3" rx="0.5" fill="#ffffff"/>
+                      <rect x="2.8" y="3.5" width="1.8" height="4.5" rx="0.5" fill="#ffffff"/>
+                      <rect x="5.6" y="2" width="1.8" height="6" rx="0.5" fill="#ffffff"/>
+                      <rect x="8.4" y="0.5" width="1.8" height="7.5" rx="0.5" fill="#ffffff"/>
+                      <!-- Battery -->
+                      <rect x="14" y="1" width="15" height="7" rx="2" fill="none" stroke="#ffffff" stroke-width="0.8"/>
+                      <rect x="15.5" y="2.5" width="9.5" height="4" rx="1" fill="#16a34a"/>
+                      <path d="M29.5 3 V5.5" stroke="#ffffff" stroke-width="0.8" stroke-linecap="round"/>
+                    </g>
+
+                    <!-- Top Recording Control Bar -->
+                    <!-- Live Pulsating Red REC Pill -->
+                    <g transform="translate(144, 34)">
+                      <rect x="0" y="0" width="76" height="20" rx="10" fill="rgba(15,23,42,0.8)" stroke="rgba(239,68,68,0.4)" stroke-width="1"/>
+                      <circle id="recIndicatorDot" cx="11" cy="10" r="4.5" fill="#ef4444" class="rec-dot-animated" filter="url(#glowRed)"/>
+                      <text id="liveRecLabel" x="22" y="13.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="6.8" font-weight="800" fill="#ef4444">REC</text>
+                      <text id="liveTimerText" x="43" y="13.5" font-family="'JetBrains Mono', monospace, sans-serif" font-size="7.5" font-weight="800" fill="#ffffff">00:18</text>
+                    </g>
+                    <!-- Quality Badge Right -->
+                    <g transform="translate(254, 34)">
+                      <rect x="0" y="0" width="62" height="20" rx="10" fill="rgba(15,23,42,0.8)" stroke="rgba(255,255,255,0.15)" stroke-width="0.8"/>
+                      <circle cx="10" cy="10" r="3" fill="#22c55e"/>
+                      <text x="36" y="13.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="6.5" font-weight="700" fill="#f8fafc" text-anchor="middle">4K • 60fps</text>
+                    </g>
+
+                    <!-- Live Audio Soundwave Visualizer Bars Above Controls -->
+                    <g id="soundwaveContainer" transform="translate(195, 275)">
+                      <rect class="wave-bar-1" x="0" y="304" width="3.5" height="6" rx="1.5" fill="#38bdf8"/>
+                      <rect class="wave-bar-2" x="8" y="304" width="3.5" height="12" rx="1.5" fill="#38bdf8"/>
+                      <rect class="wave-bar-3" x="16" y="304" width="3.5" height="16" rx="1.5" fill="#22c55e"/>
+                      <rect class="wave-bar-4" x="24" y="304" width="3.5" height="9" rx="1.5" fill="#22c55e"/>
+                      <rect class="wave-bar-5" x="32" y="304" width="3.5" height="18" rx="1.5" fill="#ef4444"/>
+                      <rect class="wave-bar-6" x="40" y="304" width="3.5" height="11" rx="1.5" fill="#22c55e"/>
+                      <rect class="wave-bar-7" x="48" y="304" width="3.5" height="15" rx="1.5" fill="#22c55e"/>
+                      <rect class="wave-bar-8" x="56" y="304" width="3.5" height="8" rx="1.5" fill="#38bdf8"/>
+                      <rect class="wave-bar-9" x="64" y="304" width="3.5" height="14" rx="1.5" fill="#38bdf8"/>
+                    </g>
+
+                    <!-- Frosted Glass Customer Testimonial Overlay Card Inside Video -->
+                    <g transform="translate(144, 252)">
+                      <rect width="172" height="34" rx="8" fill="rgba(15,23,42,0.82)" stroke="rgba(255,255,255,0.18)" stroke-width="0.8"/>
+                      <text x="10" y="14" fill="#f59e0b" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" font-weight="800">★★★★★</text>
+                      <text x="62" y="13.5" fill="#ffffff" font-family="'Plus Jakarta Sans', sans-serif" font-size="6.8" font-weight="700">"Super easy video review!"</text>
+                      <text x="10" y="26" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="5.8" font-weight="500">Sarah Jenkins • Verified Client</text>
+                      <circle cx="158" cy="17" r="4" fill="#16a34a"/>
+                      <path d="M156 17 L157.5 18.5 L160 15.5" stroke="#ffffff" stroke-width="0.9" stroke-linecap="round"/>
+                    </g>
+
+                    <!-- Camera Shutter Flash Overlay -->
+                    <rect id="cameraFlashOverlay" x="135" y="10" width="190" height="388" rx="34" fill="#ffffff" opacity="0" pointer-events="none"/>
+
+                    <!-- Camera Control Bottom Deck -->
+                    <!-- Flip Camera Button (Clickable Activity) -->
+                    <g id="flipCameraBtn" class="camera-tool-btn" transform="translate(160, 336)">
+                      <circle cx="12" cy="12" r="14" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.25)" stroke-width="0.8"/>
+                      <path d="M8 12 A5 5 0 0 1 16 8 L17 6.5 M16 12 A5 5 0 0 1 8 16 L7 17.5" stroke="#ffffff" stroke-width="1.3" stroke-linecap="round"/>
+                      <polygon points="17,8 14,8 17,5" fill="#ffffff"/>
+                      <polygon points="7,16 10,16 7,19" fill="#ffffff"/>
+                    </g>
+
+                    <!-- Big Interactive Red Record Button (Clickable Activity) -->
+                    <g id="cameraRecordBtn" class="camera-record-btn" transform="translate(230, 348)">
+                      <!-- Pulsing Outer Aura Ring -->
+                      <circle id="recAuraCircle" cx="0" cy="0" r="18" fill="url(#recAuraGrad)" class="record-aura-ring"/>
+                      <!-- Outer White Camera Ring -->
+                      <circle cx="0" cy="0" r="16" fill="none" stroke="#ffffff" stroke-width="2.5"/>
+                      <!-- Inner Red Recording Core -->
+                      <rect id="recCenterShape" x="-9" y="-9" width="18" height="18" rx="9" fill="#ef4444" style="transition: all 0.25s ease;"/>
+                    </g>
+
+                    <!-- Mic Status Button (Clickable Activity) -->
+                    <g id="micToggleBtn" class="camera-tool-btn" transform="translate(276, 336)">
+                      <circle cx="12" cy="12" r="14" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.25)" stroke-width="0.8"/>
+                      <rect id="micIconBody" x="10" y="6.5" width="4" height="8" rx="2" fill="#22c55e" style="transition: fill 0.2s ease;"/>
+                      <path id="micIconArc" d="M7.5 11 A4.5 4.5 0 0 0 16.5 11" stroke="#22c55e" stroke-width="1.2" fill="none" style="transition: stroke 0.2s ease;"/>
+                      <line id="micIconStem" x1="12" y1="15.5" x2="12" y2="18" stroke="#22c55e" stroke-width="1.2" style="transition: stroke 0.2s ease;"/>
+                    </g>
+
+                    <!-- Bottom iOS Home Indicator (White on Camera Feed) -->
+                    <rect x="195" y="386" width="70" height="3.5" rx="1.75" fill="#ffffff"/>
+
+                    <!-- Left Floating Feature Pill -->
+                    <g transform="translate(6, 170)" filter="url(#floatShadow2)">
+                      <rect x="0" y="0" width="102" height="48" rx="10" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.2"/>
+                      <circle cx="18" cy="24" r="8.5" fill="#fff1f2"/>
+                      <text x="18" y="27.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" font-weight="800" fill="#e11d48" text-anchor="middle">📹</text>
+                      <text x="33" y="19" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" font-weight="800" fill="#e11d48">Selfie Video</text>
+                      <text x="33" y="32" font-family="'Inter', sans-serif" font-size="7" font-weight="600" fill="#64748b">100% Authentic</text>
                     </g>
                     
-                    <!-- Record / Stop Button -->
-                    <circle cx="230" cy="198" r="11" fill="#ffffff"/>
-                    <circle cx="230" cy="198" r="8" fill="#ef4444"/>
-                    
-                    <!-- Left Pill -->
-                    <g transform="translate(20, 90)">
-                      <rect x="0" y="0" width="100" height="50" rx="10" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
-                      <text x="50" y="20" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="800" fill="#e11d48" text-anchor="middle">📹 Selfie Video</text>
-                      <text x="50" y="36" font-family="'Inter', sans-serif" font-size="8" font-weight="600" fill="#64748b" text-anchor="middle">100% Authentic</text>
-                    </g>
-                    
-                    <!-- Right Pill -->
-                    <g transform="translate(340, 105)">
-                      <rect x="0" y="0" width="100" height="50" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
-                      <text x="50" y="20" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="800" fill="#16a34a" text-anchor="middle">⚡ Zero App</text>
-                      <text x="50" y="36" font-family="'Inter', sans-serif" font-size="8" font-weight="600" fill="#64748b" text-anchor="middle">Direct Upload</text>
+                    <!-- Right Floating Feature Pill -->
+                    <g transform="translate(352, 195)" filter="url(#floatShadow2)">
+                      <rect x="0" y="0" width="102" height="48" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
+                      <circle cx="18" cy="24" r="8.5" fill="#f0fdf4"/>
+                      <text x="18" y="27.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" fill="#16a34a" text-anchor="middle">⚡</text>
+                      <text x="33" y="19" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" font-weight="800" fill="#16a34a">Zero App</text>
+                      <text x="33" y="32" font-family="'Inter', sans-serif" font-size="7" font-weight="600" fill="#64748b">Direct Upload</text>
                     </g>
                   </svg>
                 </div>
@@ -572,7 +747,7 @@
         <!-- Right Panel Brand Logo Header -->
         <div class="auth-brand-top">
           <a href="{{ url('/') }}" class="auth-brand-link">
-            <img src="{{ asset('frontend/images/logo.jpg') }}" alt="AskReview Logo" class="auth-brand-logo-img">
+            <img src="{{ asset('frontend/images/logo-brand.png') }}" alt="AskReview Logo" class="auth-brand-logo-img">
           </a>
         </div>
 
@@ -998,6 +1173,180 @@
       if (carouselEl) {
         carouselEl.addEventListener('mouseenter', stopAutoPlay);
         carouselEl.addEventListener('mouseleave', startAutoPlay);
+      }
+
+      // Slide 1: Review Hub Row Click & Hover Interactions
+      const hubRows = document.querySelectorAll('.hub-review-row');
+      const hubToast = document.getElementById('hubToastMessage');
+      const hubToastText = document.getElementById('hubToastText');
+      let toastHideTimeout = null;
+
+      hubRows.forEach((row) => {
+        row.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const platform = row.getAttribute('data-platform') || 'Platform';
+          
+          // Toggle active styling
+          hubRows.forEach(r => r.classList.remove('active'));
+          row.classList.add('active');
+
+          // Trigger toast message inside phone
+          if (hubToast && hubToastText) {
+            clearTimeout(toastHideTimeout);
+            if (platform === 'Video Testimonial') {
+              hubToastText.textContent = 'Opening Video Studio...';
+            } else if (platform === 'App Install') {
+              hubToastText.textContent = 'PWA Saved to Home Screen!';
+            } else {
+              hubToastText.textContent = `✓ ${platform} Form Selected`;
+            }
+            hubToast.classList.add('hub-toast-show');
+            
+            toastHideTimeout = setTimeout(() => {
+              hubToast.classList.remove('hub-toast-show');
+            }, 2400);
+          }
+
+          // If clicking Video Testimonial, seamlessly transition to Slide 2!
+          if (platform === 'Video Testimonial') {
+            setTimeout(() => {
+              goToSlide(1);
+            }, 550);
+          }
+        });
+      });
+
+      // Slide 2: Mobile Live Video Recording Interactions
+      let isRecording = true;
+      let recordSeconds = 18;
+      let recordInterval = null;
+      let isFlipped = false;
+      let isMicMuted = false;
+
+      const liveTimerText = document.getElementById('liveTimerText');
+      const liveRecLabel = document.getElementById('liveRecLabel');
+      const recIndicatorDot = document.getElementById('recIndicatorDot');
+      const recAuraCircle = document.getElementById('recAuraCircle');
+      const recCenterShape = document.getElementById('recCenterShape');
+      const soundwaveContainer = document.getElementById('soundwaveContainer');
+      const cameraRecordBtn = document.getElementById('cameraRecordBtn');
+      const flipCameraBtn = document.getElementById('flipCameraBtn');
+      const cameraUserFeed = document.getElementById('cameraUserFeed');
+      const cameraFlashOverlay = document.getElementById('cameraFlashOverlay');
+      const micToggleBtn = document.getElementById('micToggleBtn');
+      const micIconBody = document.getElementById('micIconBody');
+      const micIconArc = document.getElementById('micIconArc');
+      const micIconStem = document.getElementById('micIconStem');
+
+      function formatTime(totalSec) {
+        const m = Math.floor(totalSec / 60).toString().padStart(2, '0');
+        const s = (totalSec % 60).toString().padStart(2, '0');
+        return `${m}:${s}`;
+      }
+
+      function startRecordingTimer() {
+        if (recordInterval) clearInterval(recordInterval);
+        recordInterval = setInterval(() => {
+          if (isRecording) {
+            recordSeconds++;
+            if (liveTimerText) liveTimerText.textContent = formatTime(recordSeconds);
+          }
+        }, 1000);
+      }
+
+      startRecordingTimer();
+
+      // Record / Pause Toggle Button
+      if (cameraRecordBtn) {
+        cameraRecordBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          isRecording = !isRecording;
+
+          if (isRecording) {
+            // Resumed
+            if (liveRecLabel) {
+              liveRecLabel.textContent = 'REC';
+              liveRecLabel.setAttribute('fill', '#ef4444');
+            }
+            if (recIndicatorDot) {
+              recIndicatorDot.setAttribute('fill', '#ef4444');
+              recIndicatorDot.classList.add('rec-dot-animated');
+            }
+            if (recAuraCircle) recAuraCircle.style.display = 'block';
+            if (recCenterShape) {
+              recCenterShape.setAttribute('rx', '9');
+              recCenterShape.setAttribute('width', '18');
+              recCenterShape.setAttribute('height', '18');
+              recCenterShape.setAttribute('x', '-9');
+              recCenterShape.setAttribute('y', '-9');
+            }
+            if (!isMicMuted && soundwaveContainer) {
+              soundwaveContainer.classList.remove('soundwaves-paused');
+            }
+          } else {
+            // Paused
+            if (liveRecLabel) {
+              liveRecLabel.textContent = 'PAUSED';
+              liveRecLabel.setAttribute('fill', '#f59e0b');
+            }
+            if (recIndicatorDot) {
+              recIndicatorDot.setAttribute('fill', '#f59e0b');
+              recIndicatorDot.classList.remove('rec-dot-animated');
+            }
+            if (recAuraCircle) recAuraCircle.style.display = 'none';
+            if (recCenterShape) {
+              recCenterShape.setAttribute('rx', '2.5');
+              recCenterShape.setAttribute('width', '14');
+              recCenterShape.setAttribute('height', '14');
+              recCenterShape.setAttribute('x', '-7');
+              recCenterShape.setAttribute('y', '-7');
+            }
+            if (soundwaveContainer) {
+              soundwaveContainer.classList.add('soundwaves-paused');
+            }
+          }
+        });
+      }
+
+      // Flip Camera Button
+      if (flipCameraBtn && cameraUserFeed) {
+        flipCameraBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          isFlipped = !isFlipped;
+          
+          // Flash effect
+          if (cameraFlashOverlay) {
+            cameraFlashOverlay.classList.remove('camera-flash-active');
+            void cameraFlashOverlay.offsetWidth;
+            cameraFlashOverlay.classList.add('camera-flash-active');
+          }
+
+          if (isFlipped) {
+            cameraUserFeed.style.transform = 'translate(160px, 92px) scaleX(-1)';
+          } else {
+            cameraUserFeed.style.transform = 'translate(160px, 92px) scaleX(1)';
+          }
+        });
+      }
+
+      // Mic Toggle Button
+      if (micToggleBtn) {
+        micToggleBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          isMicMuted = !isMicMuted;
+          const color = isMicMuted ? '#ef4444' : '#22c55e';
+          if (micIconBody) micIconBody.setAttribute('fill', color);
+          if (micIconArc) micIconArc.setAttribute('stroke', color);
+          if (micIconStem) micIconStem.setAttribute('stroke', color);
+          
+          if (soundwaveContainer) {
+            if (isMicMuted || !isRecording) {
+              soundwaveContainer.classList.add('soundwaves-paused');
+            } else {
+              soundwaveContainer.classList.remove('soundwaves-paused');
+            }
+          }
+        });
       }
 
       startAutoPlay();

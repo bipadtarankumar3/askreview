@@ -414,6 +414,271 @@ html, body.auth-body {
   transform: scale(1.05);
 }
 
+/* --------------------------------------------------------------------------
+   Interactive Mobile Screen & Video Testimonial Live Activity Styles
+   -------------------------------------------------------------------------- */
+/* Base Review Row Setup */
+.hub-review-row {
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.hub-review-row rect.hub-card-bg {
+  transition: stroke 0.22s ease, stroke-width 0.22s ease, filter 0.22s ease, fill 0.22s ease;
+}
+
+.hub-review-row circle {
+  transition: filter 0.22s ease;
+}
+
+.hub-review-row path.row-arrow {
+  transition: stroke 0.22s ease, stroke-width 0.22s ease;
+}
+
+.hub-review-row:hover circle {
+  filter: brightness(1.12);
+}
+
+/* Active click state: gentle opacity feedback with zero translation jumping */
+.hub-review-row:active {
+  opacity: 0.8;
+}
+
+/* 1. Google Hover & Active (Google Blue #4285F4) */
+.hub-review-row[data-platform="Google"]:hover rect.hub-card-bg {
+  stroke: #4285f4 !important;
+  stroke-width: 1.8 !important;
+  filter: drop-shadow(0 3px 10px rgba(66, 133, 244, 0.32));
+}
+.hub-review-row[data-platform="Google"]:hover path.row-arrow {
+  stroke: #4285f4 !important;
+  stroke-width: 1.8 !important;
+}
+.hub-review-row[data-platform="Google"].active rect.hub-card-bg {
+  stroke: #4285f4 !important;
+  stroke-width: 2 !important;
+  fill: #eff6ff !important;
+}
+
+/* 2. Facebook Hover & Active (Facebook Blue #1877F2) */
+.hub-review-row[data-platform="Facebook"]:hover rect.hub-card-bg {
+  stroke: #1877f2 !important;
+  stroke-width: 1.8 !important;
+  filter: drop-shadow(0 3px 10px rgba(24, 119, 242, 0.32));
+}
+.hub-review-row[data-platform="Facebook"]:hover path.row-arrow {
+  stroke: #1877f2 !important;
+  stroke-width: 1.8 !important;
+}
+.hub-review-row[data-platform="Facebook"].active rect.hub-card-bg {
+  stroke: #1877f2 !important;
+  stroke-width: 2 !important;
+  fill: #eff6ff !important;
+}
+
+/* 3. Instagram Hover & Active (Instagram Magenta/Pink #E1306C) */
+.hub-review-row[data-platform="Instagram"]:hover rect.hub-card-bg {
+  stroke: #e1306c !important;
+  stroke-width: 1.8 !important;
+  filter: drop-shadow(0 3px 10px rgba(225, 48, 108, 0.35));
+}
+.hub-review-row[data-platform="Instagram"]:hover path.row-arrow {
+  stroke: #e1306c !important;
+  stroke-width: 1.8 !important;
+}
+.hub-review-row[data-platform="Instagram"].active rect.hub-card-bg {
+  stroke: #e1306c !important;
+  stroke-width: 2 !important;
+  fill: #fdf2f8 !important;
+}
+
+/* 4. YouTube Hover & Active (YouTube Red #FF0000) */
+.hub-review-row[data-platform="YouTube"]:hover rect.hub-card-bg {
+  stroke: #ff0000 !important;
+  stroke-width: 1.8 !important;
+  filter: drop-shadow(0 3px 10px rgba(255, 0, 0, 0.32));
+}
+.hub-review-row[data-platform="YouTube"]:hover path.row-arrow {
+  stroke: #ff0000 !important;
+  stroke-width: 1.8 !important;
+}
+.hub-review-row[data-platform="YouTube"].active rect.hub-card-bg {
+  stroke: #ff0000 !important;
+  stroke-width: 2 !important;
+  fill: #fef2f2 !important;
+}
+
+/* 5. Video Testimonial Hover & Active (Brand Rose/Red #E11D48) */
+.hub-review-row[data-platform="Video Testimonial"]:hover rect.hub-card-bg {
+  stroke: #e11d48 !important;
+  stroke-width: 1.8 !important;
+  filter: drop-shadow(0 3px 10px rgba(225, 29, 72, 0.32));
+}
+.hub-review-row[data-platform="Video Testimonial"]:hover path.row-arrow {
+  stroke: #e11d48 !important;
+  stroke-width: 1.8 !important;
+}
+.hub-review-row[data-platform="Video Testimonial"].active rect.hub-card-bg {
+  stroke: #e11d48 !important;
+  stroke-width: 2 !important;
+  fill: #ffe4e6 !important;
+}
+
+/* 6. Private Enquiry Hover & Active (Warm Amber/Gold #D97706) */
+.hub-review-row[data-platform="Private Enquiry"]:hover rect.hub-card-bg {
+  stroke: #d97706 !important;
+  stroke-width: 1.8 !important;
+  filter: drop-shadow(0 3px 10px rgba(217, 119, 6, 0.35));
+}
+.hub-review-row[data-platform="Private Enquiry"]:hover path.row-arrow {
+  stroke: #d97706 !important;
+  stroke-width: 1.8 !important;
+}
+.hub-review-row[data-platform="Private Enquiry"].active rect.hub-card-bg {
+  stroke: #d97706 !important;
+  stroke-width: 2 !important;
+  fill: #fef3c7 !important;
+}
+
+/* 7. Install App Pill Button Hover & Active (Royal Blue #2563EB) */
+.hub-review-row[data-platform="App Install"]:hover rect.hub-card-bg {
+  stroke: #2563eb !important;
+  stroke-width: 1.6 !important;
+  filter: drop-shadow(0 3px 10px rgba(37, 99, 235, 0.32));
+}
+.hub-review-row[data-platform="App Install"].active rect.hub-card-bg {
+  stroke: #2563eb !important;
+  stroke-width: 1.8 !important;
+  fill: #dbeafe !important;
+}
+
+/* Pulsing Live REC Dot in Video Testimonial */
+@keyframes recBlinkAnimation {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+.rec-dot-animated {
+  animation: recBlinkAnimation 1.2s ease-in-out infinite;
+}
+
+/* Camera Target Autofocus Reticle Pulse */
+@keyframes focusTargetPulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.7)); }
+}
+
+.camera-focus-reticle {
+  animation: focusTargetPulse 2s ease-in-out infinite;
+}
+
+/* Audio Soundwave Equalizer Bars Animation */
+@keyframes soundWaveBar {
+  0%, 100% { height: 4px; y: 304px; }
+  50% { height: 16px; y: 292px; }
+}
+
+.wave-bar-1 { animation: soundWaveBar 0.9s ease-in-out infinite 0.1s; }
+.wave-bar-2 { animation: soundWaveBar 0.7s ease-in-out infinite 0.3s; }
+.wave-bar-3 { animation: soundWaveBar 1.1s ease-in-out infinite 0.15s; }
+.wave-bar-4 { animation: soundWaveBar 0.65s ease-in-out infinite 0.45s; }
+.wave-bar-5 { animation: soundWaveBar 1.0s ease-in-out infinite 0.25s; }
+.wave-bar-6 { animation: soundWaveBar 0.8s ease-in-out infinite 0.4s; }
+.wave-bar-7 { animation: soundWaveBar 1.15s ease-in-out infinite 0.05s; }
+.wave-bar-8 { animation: soundWaveBar 0.75s ease-in-out infinite 0.35s; }
+.wave-bar-9 { animation: soundWaveBar 0.95s ease-in-out infinite 0.2s; }
+
+.soundwaves-paused rect {
+  animation: none !important;
+  height: 3px !important;
+  y: 304px !important;
+  opacity: 0.35 !important;
+}
+
+/* Record Button Pulsing Outer Ring */
+@keyframes recButtonAura {
+  0% { r: 16; opacity: 0.6; }
+  50% { r: 21; opacity: 0.15; }
+  100% { r: 16; opacity: 0.6; }
+}
+
+.record-aura-ring {
+  animation: recButtonAura 1.8s ease-out infinite;
+  transform-origin: 230px 348px;
+}
+
+.camera-record-btn {
+  cursor: pointer;
+  transition: filter 0.2s ease, opacity 0.2s ease;
+}
+
+.camera-record-btn:hover {
+  filter: drop-shadow(0 0 12px rgba(239, 68, 68, 0.85));
+}
+
+.camera-record-btn:hover #recCenterShape {
+  fill: #f43f5e;
+}
+
+.camera-record-btn:active {
+  opacity: 0.75;
+  filter: drop-shadow(0 0 6px rgba(239, 68, 68, 0.6));
+}
+
+.camera-tool-btn {
+  cursor: pointer;
+  transition: opacity 0.2s ease, filter 0.2s ease;
+}
+
+.camera-tool-btn:hover {
+  opacity: 1 !important;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.5));
+}
+
+.camera-tool-btn:hover circle {
+  fill: rgba(255, 255, 255, 0.28) !important;
+  stroke: rgba(255, 255, 255, 0.5) !important;
+}
+
+.camera-tool-btn:active {
+  opacity: 0.7;
+}
+
+/* Camera Flip Animation */
+@keyframes cameraFlipAnim {
+  0% { transform: scaleX(1); }
+  50% { transform: scaleX(0); filter: brightness(1.8) contrast(1.2); }
+  100% { transform: scaleX(-1); }
+}
+
+@keyframes cameraFlipAnimReverse {
+  0% { transform: scaleX(-1); }
+  50% { transform: scaleX(0); filter: brightness(1.8) contrast(1.2); }
+  100% { transform: scaleX(1); }
+}
+
+.camera-flipped {
+  transform: scaleX(-1);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* Shutter Flash Effect */
+@keyframes cameraShutterFlash {
+  0% { opacity: 0.85; }
+  100% { opacity: 0; }
+}
+
+.camera-flash-active {
+  animation: cameraShutterFlash 0.4s ease-out forwards;
+}
+
+/* Mobile Toast Message in Hub */
+.hub-toast-show {
+  opacity: 1 !important;
+  transform: translate(148px, 315px) !important;
+}
+
 /* Hero Footer */
 .hero-footer {
   display: flex;
@@ -513,19 +778,29 @@ html, body.auth-body {
 .auth-brand-top {
   display: flex;
   align-items: center;
-  margin-bottom: 1.2rem;
+  justify-content: center;
+  text-align: center;
+  margin-bottom: 1.35rem;
+  width: 100%;
 }
 
 .auth-brand-link {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   text-decoration: none;
+  transition: transform 0.22s ease, filter 0.22s ease;
+}
+
+.auth-brand-link:hover {
+  transform: scale(1.035);
+  filter: drop-shadow(0 4px 12px rgba(15, 23, 42, 0.08));
 }
 
 .auth-brand-logo-img {
-  height: 50px;
+  height: 58px;
   width: auto;
-  max-width: 200px;
+  max-width: 240px;
   object-fit: contain;
   display: block;
 }
