@@ -179,15 +179,19 @@ class FrontendController extends Controller
 
 
                 if (isset($_GET['from']) && $_GET['from'] == 'qr') {
-                    $qr = QrTrack::where('ip_address',request()->ip())->first();
+                    $qr = QrTrack::where('ip_address', request()->ip())
+                        ->where('user_id', $user->id)
+                        ->whereDate('created_at', date('Y-m-d'))
+                        ->first();
                     if (empty($qr)) {
                         QrTrack::create([
-                            'user_id'=>$user->id,
-                            'ip_address'=>request()->ip(),
-                            'qr_count'=>1
+                            'user_id' => $user->id,
+                            'ip_address' => request()->ip(),
+                            'qr_count' => 1
                         ]);
+                    } else {
+                        $qr->increment('qr_count');
                     }
-                    
                 }
                 
 
