@@ -371,15 +371,33 @@
         }
 
         var url = $('#spinner_form').attr("action");
-        var form = $('#spinner_form')[0];
-        // console.log(url);return;
-        var formData = new FormData(form);// yourForm: form selector        
+        var postData = $('#spinner_form').serializeArray();
+        
+        var reviewKey = $('#review_key').val();
+        if (reviewKey) {
+            var encodedKey = btoa(unescape(encodeURIComponent(reviewKey)));
+            var found = false;
+            for (var i = 0; i < postData.length; i++) {
+                if (postData[i].name === 'review_key') {
+                    postData[i].value = encodedKey;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                postData.push({ name: 'review_key', value: encodedKey });
+            }
+            postData.push({ name: 'is_encoded', value: '1' });
+        }
+
         $.ajax({
             type: "POST",
-            url: url,// where you wanna post
-            data: formData,
-            processData: false,
-            contentType: false,
+            url: url,
+            data: $.param(postData),
+            dataType: 'json',
+            headers: {
+                'Accept': 'application/json, text/javascript, */*; q=0.01'
+            },
             error: function(jqXHR, textStatus, errorMessage) {
                 console.log(errorMessage); // Optional
             },

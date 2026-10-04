@@ -417,6 +417,14 @@ class ReviewController extends Controller
 
         ///dd($request->all());
 
+        if ($request->has('review_key') && !empty($request->review_key)) {
+            $rawKey = $request->review_key;
+            $decoded = base64_decode($rawKey, true);
+            if ($decoded !== false && (str_starts_with($decoded, 'http://') || str_starts_with($decoded, 'https://') || $request->input('is_encoded') == '1')) {
+                $request->merge(['review_key' => $decoded]);
+            }
+        }
+
         if(Auth::check()){
             
             if ($request->id !='') {

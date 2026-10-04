@@ -47,6 +47,15 @@ const returnFromCache = function (request) {
 };
 
 self.addEventListener("fetch", function (event) {
+    // Only intercept GET requests - never intercept POST/PUT/DELETE
+    if (event.request.method !== 'GET') {
+        return;
+    }
+    // Do not intercept admin requests
+    if (event.request.url.includes('/admin/')) {
+        return;
+    }
+
     event.respondWith(checkResponse(event.request).catch(function () {
         return returnFromCache(event.request);
     }));
