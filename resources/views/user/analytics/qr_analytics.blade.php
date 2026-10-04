@@ -164,32 +164,37 @@
 <div class="container-fluid qr-analytics-wrapper py-3">
 
     <!-- Header & Action Row -->
-    <div class="row align-items-center mb-4">
-        <div class="col-md-7 col-12">
-            <div class="d-flex align-items-center gap-2">
-                <span class="badge bg-primary-subtle text-primary fw-semibold px-2 py-1 rounded-pill">
-                    <i class="fa fa-qrcode me-1"></i> QR Performance
+    <div class="d-flex flex-column flex-xl-row align-items-start align-items-xl-center justify-content-between gap-3 mb-4">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <span class="badge" style="background: #eef2ff; color: #4f46e5; font-weight: 700; font-size: 0.72rem; padding: 4px 10px; border-radius: 9999px;">
+                    <i class="ti ti-qrcode me-1"></i> QR Performance
                 </span>
-                <span class="text-muted small">| Live Business Analytics</span>
+                <span class="text-muted small fw-medium">| Live Business Analytics</span>
             </div>
-            <h3 class="fw-bold text-dark mt-1 mb-0">My QR Analytics & Insights</h3>
+            <h3 class="fw-bold text-dark mb-1" style="font-size: 1.55rem; letter-spacing: -0.02em;">My QR Analytics & Insights</h3>
             <p class="text-muted small mb-0">Showing scans and customer visit trends recorded exclusively for your QR code stand.</p>
         </div>
-        <div class="col-md-5 col-12 text-md-end mt-3 mt-md-0">
-            @php
-                $qrUrl = URL::to("u/".Auth::user()->name_url)."?from=qr";
-            @endphp
-            <div class="btn-group">
-                <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3" onclick="copyQrLink('{{ $qrUrl }}')">
-                    <i class="fa fa-copy me-1"></i> Copy Link
-                </button>
-                <button type="button" class="btn btn-primary btn-sm rounded-pill px-3 ms-2" onclick="downloadQrPng()">
-                    <i class="fa fa-download me-1"></i> Download PNG
-                </button>
-                <a href="{{ $qrUrl }}" target="_blank" class="btn btn-outline-dark btn-sm rounded-pill px-3 ms-2">
-                    <i class="fa fa-external-link-alt me-1"></i> Test Scan
-                </a>
-            </div>
+        @php
+            $qrUrl = URL::to("u/".Auth::user()->name_url)."?from=qr";
+        @endphp
+        <div class="d-flex align-items-center flex-wrap gap-2 flex-shrink-0">
+            <a href="{{ URL::to('admin/view_qr') }}" class="btn btn-sm d-inline-flex align-items-center gap-2" style="background: linear-gradient(135deg, #e11d48 0%, #be123c 100%); color: #ffffff; border-radius: 10px; font-weight: 700; padding: 8px 16px; border: none; box-shadow: 0 4px 12px rgba(225, 29, 72, 0.25); text-decoration: none;">
+                <i class="ti ti-qrcode fs-5"></i>
+                <span>Download QR Stand</span>
+            </a>
+            <button type="button" class="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-2" style="border-radius: 10px; font-weight: 600; padding: 8px 14px;" onclick="copyQrLink('{{ $qrUrl }}')">
+                <i class="ti ti-copy fs-5"></i>
+                <span>Copy Link</span>
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-2" style="border-radius: 10px; font-weight: 600; padding: 8px 14px;" onclick="downloadQrPng()">
+                <i class="ti ti-download fs-5"></i>
+                <span>PNG</span>
+            </button>
+            <a href="{{ $qrUrl }}" target="_blank" class="btn btn-sm btn-outline-dark d-inline-flex align-items-center gap-2" style="border-radius: 10px; font-weight: 600; padding: 8px 14px; text-decoration: none;">
+                <i class="ti ti-external-link fs-5"></i>
+                <span>Test Scan</span>
+            </a>
         </div>
     </div>
 
@@ -300,12 +305,24 @@
                     </div>
 
                     <div class="d-grid gap-2">
-                        <button type="button" class="btn btn-primary btn-sm rounded-3 py-2 fw-semibold" onclick="downloadQrPng()">
-                            <i class="fa fa-download me-1"></i> Download QR Image (PNG)
-                        </button>
-                        <button type="button" class="btn btn-outline-secondary btn-sm rounded-3 py-2" onclick="downloadQrSvg()">
-                            <i class="fa fa-file-code me-1"></i> Download Vector (SVG)
-                        </button>
+                        <a href="{{ URL::to('admin/view_qr') }}" class="btn btn-sm py-2 fw-bold text-white shadow-sm d-flex align-items-center justify-content-center gap-2" style="background: linear-gradient(135deg, #e11d48 0%, #be123c 100%); border-radius: 10px; border: none; box-shadow: 0 4px 12px rgba(225, 29, 72, 0.22); text-decoration: none;">
+                            <i class="ti ti-qrcode fs-5"></i>
+                            <span>Download QR Stand</span>
+                        </a>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <button type="button" class="btn btn-outline-primary btn-sm w-100 fw-semibold d-flex align-items-center justify-content-center gap-1.5" style="border-radius: 8px; padding: 7px 10px;" onclick="downloadQrPng()">
+                                    <i class="ti ti-download"></i>
+                                    <span>PNG Image</span>
+                                </button>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" class="btn btn-outline-secondary btn-sm w-100 fw-semibold d-flex align-items-center justify-content-center gap-1.5" style="border-radius: 8px; padding: 7px 10px;" onclick="downloadQrSvg()">
+                                    <i class="ti ti-file-code"></i>
+                                    <span>Vector (SVG)</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
