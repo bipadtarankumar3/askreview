@@ -124,7 +124,7 @@
                   <div class="col-sm-12 col-md-4">
                     <div class="mb-3">
                       <label for="video_access" class="control-label col-form-label">Video Access</label>
-                      <select name="video_access" id=""  class="col-3 control-label col-form-label form-control" required>
+                      <select name="video_access" id="video_access" class="form-control" required>
                         <option value="" >Select Video Access</option>
                         <option value="YES" style="background-color: green;color:white" @if (isset($user)) @if($user->video_access =='YES' ) selected @endif  @endif>YES</option>
                         <option value="NO"  style="background-color: red;color:white"  @if (isset($user)) @if($user->video_access =='NO' ) selected @endif  @endif>NO</option>
@@ -133,8 +133,8 @@
                   </div>
                   <div class="col-sm-12 col-md-4">
                     <div class="mb-3">
-                      <label for="inputcontact" class="control-label col-form-label">Status <span style="color: red;">*</span></label>
-                      <select name="status" id=""  class="col-3 control-label col-form-label form-control" required>
+                      <label for="status" class="control-label col-form-label">Status <span style="color: red;">*</span></label>
+                      <select name="status" id="status" class="form-control" required>
                        
                         <option value="active" style="background-color: green;color:white" @if (isset($user)) @if($user->status =='active' ) selected @endif  @endif>Active</option>
                         <option value="inactive"  style="background-color: red;color:white"  @if (isset($user)) @if($user->status =='inactive' ) selected @endif  @endif>Inactive</option>

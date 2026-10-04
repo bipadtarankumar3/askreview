@@ -92,7 +92,9 @@
 
     /* ========================================================= */
     /* MINI-SIDEBAR (COLLAPSED): PERFECT CENTERING & NO ARROW    */
+    /* (DESKTOP SCREENS >= 992px ONLY)                           */
     /* ========================================================= */
+    @media (min-width: 992px) {
     #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .brand-logo,
     #main-wrapper.mini-sidebar .left-sidebar .brand-logo,
     .mini-sidebar .left-sidebar .brand-logo {
@@ -445,6 +447,406 @@
     #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item .sidebar-link.active .ti {
         color: #e11d48 !important;
     }
+    } /* ================= END DESKTOP ONLY (min-width: 992px) ================= */
+
+    /* ========================================================= */
+    /* FULL MOBILE RESPONSIVE ENGINE (< 992px)                   */
+    /* ========================================================= */
+    @media (max-width: 991.98px) {
+        html, body {
+            overflow-x: hidden !important;
+            max-width: 100vw !important;
+            width: 100% !important;
+        }
+
+        /* 1. RESET BODY WRAPPER: Zero margin-left to prevent 87px offset */
+        #main-wrapper .body-wrapper,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .body-wrapper,
+        #main-wrapper.mini-sidebar .body-wrapper,
+        .mini-sidebar .body-wrapper,
+        #main-wrapper[data-sidebartype="full"] .body-wrapper {
+            margin-left: 0 !important;
+            width: 100% !important;
+            max-width: 100vw !important;
+            min-width: 0 !important;
+            overflow-x: hidden !important;
+            position: relative !important;
+            min-height: 100vh !important;
+            padding: 0 !important;
+        }
+
+        /* 2. APP HEADER: Full-width sticky header, perfectly aligned */
+        #main-wrapper .app-header,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .app-header,
+        #main-wrapper.mini-sidebar .app-header,
+        #main-wrapper[data-sidebartype="full"] .app-header,
+        .app-header {
+            width: 100% !important;
+            left: 0 !important;
+            right: 0 !important;
+            margin-left: 0 !important;
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 1020 !important;
+        }
+
+        /* 3. OFF-CANVAS MOBILE SIDEBAR DRAWER */
+        #main-wrapper .left-sidebar,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar,
+        #main-wrapper.mini-sidebar .left-sidebar,
+        .mini-sidebar .left-sidebar,
+        #main-wrapper[data-sidebartype="full"] .left-sidebar {
+            position: fixed !important;
+            top: 0 !important;
+            bottom: 0 !important;
+            left: -300px !important;
+            width: 280px !important;
+            max-width: 85vw !important;
+            height: 100vh !important;
+            z-index: 1055 !important;
+            background: #ffffff !important;
+            box-shadow: none !important;
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            display: block !important;
+            overflow-y: auto !important;
+            border-right: 1px solid #e2e8f0 !important;
+        }
+
+        /* Open state for off-canvas mobile drawer */
+        #main-wrapper.show-sidebar .left-sidebar {
+            left: 0 !important;
+            box-shadow: 0 0 35px rgba(15, 23, 42, 0.25) !important;
+        }
+
+        /* 4. SIDEBAR DRAWER INTERIOR: Full readable text and close button */
+        #main-wrapper .left-sidebar .brand-logo,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .brand-logo,
+        #main-wrapper.mini-sidebar .left-sidebar .brand-logo,
+        .mini-sidebar .left-sidebar .brand-logo {
+            padding: 16px 20px !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            text-align: left !important;
+            height: 70px !important;
+            border-bottom: 1px solid #f1f5f9 !important;
+        }
+
+        #main-wrapper .left-sidebar .brand-logo .logo-img,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .brand-logo .logo-img,
+        #main-wrapper.mini-sidebar .left-sidebar .brand-logo .logo-img,
+        .mini-sidebar .left-sidebar .brand-logo .logo-img {
+            margin: 0 !important;
+            width: auto !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        #main-wrapper .left-sidebar .brand-logo img,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .brand-logo img,
+        #main-wrapper.mini-sidebar .left-sidebar .brand-logo img,
+        .mini-sidebar .left-sidebar .brand-logo img {
+            margin: 0 !important;
+            max-height: 42px !important;
+            max-width: 155px !important;
+        }
+
+        #main-wrapper .left-sidebar .brand-logo #sidebarCollapse,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .brand-logo #sidebarCollapse,
+        #main-wrapper.mini-sidebar .left-sidebar .brand-logo #sidebarCollapse {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 36px !important;
+            height: 36px !important;
+            border-radius: 8px !important;
+            background: #f1f5f9 !important;
+            color: #475569 !important;
+            cursor: pointer !important;
+        }
+
+        #main-wrapper .left-sidebar .sidebar-nav,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav,
+        #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav {
+            padding: 12px 14px 40px 14px !important;
+        }
+
+        #main-wrapper .left-sidebar .sidebar-nav ul#sidebarnav,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav ul#sidebarnav,
+        #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav ul#sidebarnav {
+            display: block !important;
+            width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        #main-wrapper .left-sidebar .sidebar-nav ul .sidebar-item,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav ul .sidebar-item,
+        #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item {
+            display: block !important;
+            width: 100% !important;
+            margin-bottom: 4px !important;
+        }
+
+        #main-wrapper .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link,
+        #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link {
+            width: 100% !important;
+            height: auto !important;
+            min-height: 44px !important;
+            padding: 10px 14px !important;
+            margin: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: flex-start !important;
+            gap: 12px !important;
+            border-radius: 12px !important;
+            border: none !important;
+            color: #475569 !important;
+        }
+
+        #main-wrapper .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link span:first-child,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link span:first-child,
+        #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link span:first-child {
+            width: 28px !important;
+            height: 28px !important;
+            flex-shrink: 0 !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        #main-wrapper .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link i,
+        #main-wrapper .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link .ti,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link i,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link .ti,
+        #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link i,
+        #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link .ti {
+            font-size: 1.35rem !important;
+            width: 28px !important;
+            height: 28px !important;
+            margin: 0 !important;
+        }
+
+        #main-wrapper .left-sidebar .sidebar-nav .hide-menu,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav .hide-menu,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .hide-menu,
+        #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav .hide-menu,
+        #main-wrapper.mini-sidebar .hide-menu {
+            display: inline !important;
+            font-size: 0.88rem !important;
+            font-weight: 600 !important;
+            color: inherit !important;
+            white-space: nowrap !important;
+        }
+
+        #main-wrapper .left-sidebar .sidebar-nav .ti-chevron-down,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav .ti-chevron-down,
+        #main-wrapper[data-sidebartype="mini-sidebar"] [class*="ti-chevron"],
+        #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav .ti-chevron-down,
+        #main-wrapper.mini-sidebar [class*="ti-chevron"] {
+            display: inline-block !important;
+            font-size: 0.85rem !important;
+            margin-left: auto !important;
+            color: #94a3b8 !important;
+        }
+
+        #main-wrapper .left-sidebar .sidebar-nav .nav-small-cap,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav .nav-small-cap,
+        #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav .nav-small-cap {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: flex-start !important;
+            padding: 16px 14px 6px 14px !important;
+            text-align: left !important;
+            width: 100% !important;
+        }
+
+        #main-wrapper .left-sidebar .sidebar-nav .nav-small-cap .hide-menu,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav .nav-small-cap .hide-menu,
+        #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav .nav-small-cap .hide-menu {
+            display: block !important;
+            color: #94a3b8 !important;
+            font-size: 0.68rem !important;
+            font-weight: 800 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.08em !important;
+        }
+
+        #main-wrapper .left-sidebar .sidebar-nav .nav-small-cap .nav-small-cap-icon,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav .nav-small-cap .nav-small-cap-icon,
+        #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav .nav-small-cap .nav-small-cap-icon {
+            display: none !important;
+        }
+
+        #main-wrapper .left-sidebar .sidebar-nav .first-level,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav .first-level,
+        #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav .first-level {
+            padding-left: 14px !important;
+            border-left: 2px solid #f1f5f9 !important;
+            margin-left: 18px !important;
+            width: calc(100% - 18px) !important;
+        }
+
+        #main-wrapper .left-sidebar .sidebar-nav .first-level .sidebar-item,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav .first-level .sidebar-item,
+        #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav .first-level .sidebar-item {
+            display: block !important;
+            width: 100% !important;
+        }
+
+        #main-wrapper .left-sidebar .sidebar-nav .first-level .sidebar-item .sidebar-link,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav .first-level .sidebar-item .sidebar-link,
+        #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav .first-level .sidebar-item .sidebar-link {
+            width: 100% !important;
+            height: auto !important;
+            min-height: 38px !important;
+            padding: 8px 12px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: flex-start !important;
+        }
+    }
+
+    /* 5. BACKDROP OVERLAY FOR MOBILE SIDEBAR */
+    .sidebar-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(15, 23, 42, 0.45);
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+        z-index: 1050;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+    #main-wrapper.show-sidebar .sidebar-backdrop {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* 6. MOBILE REFINEMENTS (< 768px) */
+    @media (max-width: 767.98px) {
+        .container-fluid {
+            padding-left: 14px !important;
+            padding-right: 14px !important;
+            padding-top: 14px !important;
+        }
+
+        .app-header .px-4 {
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+        }
+
+        .card {
+            margin-bottom: 14px !important;
+            border-radius: 12px !important;
+        }
+
+        .card-body {
+            padding: 14px !important;
+        }
+
+        .card-header {
+            padding: 12px 14px !important;
+        }
+
+        /* Form elements full fluid width */
+        .form-control.col-3, select.col-3, input.col-3 {
+            width: 100% !important;
+            flex: 1 1 auto !important;
+        }
+
+        .form-control, .form-select {
+            max-width: 100% !important;
+        }
+
+        /* Breadcrumb banner cards clean stacking */
+        .bg-light-info .col-3 {
+            display: none !important;
+        }
+        .bg-light-info .col-9 {
+            width: 100% !important;
+        }
+
+        /* Responsive Tables & DataTables */
+        .table-responsive {
+            -webkit-overflow-scrolling: touch;
+            width: 100% !important;
+            margin-bottom: 1rem;
+        }
+
+        div.dataTables_wrapper {
+            width: 100% !important;
+            overflow-x: auto !important;
+        }
+
+        div.dataTables_wrapper div.dataTables_length,
+        div.dataTables_wrapper div.dataTables_filter,
+        div.dataTables_wrapper div.dataTables_info,
+        div.dataTables_wrapper div.dataTables_paginate {
+            text-align: left !important;
+            float: none !important;
+            width: 100% !important;
+            margin-bottom: 10px !important;
+        }
+
+        div.dataTables_wrapper div.dataTables_filter input {
+            width: 100% !important;
+            margin-left: 0 !important;
+            margin-top: 4px !important;
+        }
+
+        div.dataTables_wrapper div.dataTables_paginate {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            justify-content: center !important;
+            gap: 4px !important;
+        }
+    }
+
+    /* 7. EXTRA SMALL SCREENS (< 576px) */
+    @media (max-width: 575.98px) {
+        #dropUserMenu {
+            padding: 0 8px 0 4px !important;
+        }
+
+        #dropUserMenu .user-name-display {
+            max-width: 80px !important;
+            font-size: 0.78rem !important;
+        }
+
+        .dropdown-menu {
+            max-width: calc(100vw - 20px) !important;
+        }
+
+        .floating-button {
+            bottom: 20px !important;
+            right: 16px !important;
+            width: 48px !important;
+            height: 48px !important;
+        }
+
+        .floating-button i {
+            font-size: 16px !important;
+        }
+
+        .floating-button span {
+            font-size: 9px !important;
+        }
+    }
+
+    /* 8. ULTRA SMALL SCREENS (< 420px) */
+    @media (max-width: 420px) {
+        #dropUserMenu .user-name-display {
+            display: none !important;
+        }
+    }
     @media print {
         body {
             -webkit-print-color-adjust: exact;
@@ -761,12 +1163,15 @@
       </aside>
       <!-- Sidebar End -->
 
+      <!-- Mobile Backdrop Overlay -->
+      <div class="sidebar-backdrop d-lg-none"></div>
+
       <!-- Main wrapper -->
       <div class="body-wrapper d-flex flex-column min-vh-100">
 
         <!-- Header Start -->
         <header class="app-header" style="width: 100% !important; position: sticky; top: 0; z-index: 99; background: #ffffff; border-bottom: 1px solid #f1f5f9; box-shadow: 0 1px 4px rgba(0,0,0,0.04);">
-          <div class="d-flex align-items-center justify-content-between px-4" style="height: 64px; gap: 12px;">
+          <div class="d-flex align-items-center justify-content-between px-3 px-md-4" style="height: 64px; gap: 8px;">
 
             <!-- LEFT: Hamburger + Role Indicator -->
             <div class="d-flex align-items-center gap-3 flex-shrink-0">
@@ -855,7 +1260,7 @@
                     <span class="position-absolute" style="top: 2px; right: 2px; width: 16px; height: 16px; border-radius: 50%; background: #e11d48; color: #fff; font-size: 0.6rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 2px solid #fff;">{{ $noti_num }}</span>
                   @endif
                 </a>
-                <div class="dropdown-menu dropdown-menu-end" style="min-width: 320px; border-radius: 16px; border: 1px solid #f1f5f9; box-shadow: 0 12px 32px rgba(0,0,0,0.1); padding: 0; overflow: hidden;">
+                <div class="dropdown-menu dropdown-menu-end" style="min-width: 290px; width: 320px; max-width: calc(100vw - 24px); border-radius: 16px; border: 1px solid #f1f5f9; box-shadow: 0 12px 32px rgba(0,0,0,0.1); padding: 0; overflow: hidden;">
                   <div class="d-flex align-items-center justify-content-between px-4 py-3 border-bottom">
                     <h6 class="mb-0 fw-bold" style="color: #0f172a; font-size: 0.92rem;">Notifications</h6>
                     <span class="badge rounded-pill" style="background: #fff1f2; color: #e11d48; font-weight: 700; font-size: 0.72rem;">{{ $noti_num }} new</span>
@@ -884,10 +1289,10 @@
                   <div style="width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #e11d48, #be123c); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 0.78rem; flex-shrink: 0;">
                     {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                   </div>
-                  <span class="fw-bold" style="color: #0f172a; font-size: 0.82rem; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ Auth::user()->name }}</span>
+                  <span class="fw-bold user-name-display" style="color: #0f172a; font-size: 0.82rem; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ Auth::user()->name }}</span>
                   <i class="ti ti-chevron-down text-muted" style="font-size: 0.72rem; flex-shrink: 0;"></i>
                 </a>
-                <div class="dropdown-menu dropdown-menu-end" style="min-width: 260px; border-radius: 16px; border: 1px solid #f1f5f9; box-shadow: 0 12px 32px rgba(0,0,0,0.1); padding: 0; overflow: hidden; margin-top: 8px;">
+                <div class="dropdown-menu dropdown-menu-end" style="min-width: 260px; max-width: calc(100vw - 24px); border-radius: 16px; border: 1px solid #f1f5f9; box-shadow: 0 12px 32px rgba(0,0,0,0.1); padding: 0; overflow: hidden; margin-top: 8px;">
                   <!-- User Info Card -->
                   <div class="d-flex align-items-center gap-3 p-4 border-bottom" style="background: #f8fafc;">
                     <div style="width: 44px; height: 44px; border-radius: 50%; background: #e11d48; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem; flex-shrink: 0;">
@@ -1649,6 +2054,24 @@
   <script src="{{asset('adminAssets/js/app-style-switcher.js')}}"></script>
   <script src="{{asset('adminAssets/js/sidebarmenu.js')}}"></script>
   <script src="{{asset('adminAssets/js/custom.js')}}"></script>
+  <script>
+    $(document).ready(function() {
+      // Close mobile drawer when clicking the backdrop overlay
+      $(document).on('click', '.sidebar-backdrop', function() {
+        $('#main-wrapper').removeClass('show-sidebar');
+      });
+      // Close mobile drawer when close button inside sidebar is clicked
+      $(document).on('click', '#sidebarCollapse', function() {
+        $('#main-wrapper').removeClass('show-sidebar');
+      });
+      // Close mobile drawer when navigation links are clicked (on screens < 992px)
+      $(document).on('click', '#sidebarnav a:not([data-bs-toggle="collapse"]):not(.has-arrow)', function() {
+        if (window.innerWidth < 992) {
+          $('#main-wrapper').removeClass('show-sidebar');
+        }
+      });
+    });
+  </script>
   <!-- current page js files -->
   <script src="{{asset('adminAssets/libs/apexcharts/dist/apexcharts.min.js')}}"></script>
   <script src="{{asset('adminAssets/js/dashboard4.js')}}"></script>
