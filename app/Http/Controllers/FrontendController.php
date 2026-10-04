@@ -73,10 +73,31 @@ class FrontendController extends Controller
 
     protected function setMailConfig()
     {
+        $hasEnvConfig = !empty(env('MAIL_USERNAME')) && env('MAIL_HOST') !== 'mailhog';
+        $preferEnv = env('MAIL_USE_ENV', false) || $hasEnvConfig;
+
+        if ($preferEnv) {
+            config([
+                'mail.default' => env('MAIL_MAILER', 'smtp'),
+                'mail.mailers.smtp.transport' => 'smtp',
+                'mail.mailers.smtp.host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+                'mail.mailers.smtp.port' => (int)env('MAIL_PORT', 587),
+                'mail.mailers.smtp.encryption' => env('MAIL_ENCRYPTION', 'tls'),
+                'mail.mailers.smtp.username' => env('MAIL_USERNAME'),
+                'mail.mailers.smtp.password' => env('MAIL_PASSWORD'),
+                'mail.mailers.smtp.timeout' => 10,
+                'mail.from.address' => env('MAIL_FROM_ADDRESS', 'noreply@askreview.com'),
+                'mail.from.name' => env('MAIL_FROM_NAME', config('app.name', 'AskReview')),
+            ]);
+            app('mail.manager')->purge('smtp');
+            return;
+        }
+
         $mail = DB::table('mail_configures')->first();
-        if ($mail) {
+        if ($mail && !empty($mail->mail_host) && !empty($mail->mail_username)) {
             $port = (int)$mail->mail_port;
             $encryption = $mail->mail_encryption ?: ($port == 465 ? 'ssl' : 'tls');
+            $fromAddress = !empty($mail->mail_from_address) ? $mail->mail_from_address : $mail->mail_username;
 
             config([
                 'mail.default' => 'smtp',
@@ -87,10 +108,24 @@ class FrontendController extends Controller
                 'mail.mailers.smtp.username' => $mail->mail_username,
                 'mail.mailers.smtp.password' => $mail->mail_password,
                 'mail.mailers.smtp.timeout' => 10,
-                'mail.from.address' => $mail->mail_from_address,
-                'mail.from.name' => $mail->mail_from_name,
+                'mail.from.address' => $fromAddress,
+                'mail.from.name' => $mail->mail_from_name ?: 'AskReview',
             ]);
 
+            app('mail.manager')->purge('smtp');
+        } else {
+            config([
+                'mail.default' => env('MAIL_MAILER', 'smtp'),
+                'mail.mailers.smtp.transport' => 'smtp',
+                'mail.mailers.smtp.host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+                'mail.mailers.smtp.port' => (int)env('MAIL_PORT', 587),
+                'mail.mailers.smtp.encryption' => env('MAIL_ENCRYPTION', 'tls'),
+                'mail.mailers.smtp.username' => env('MAIL_USERNAME'),
+                'mail.mailers.smtp.password' => env('MAIL_PASSWORD'),
+                'mail.mailers.smtp.timeout' => 10,
+                'mail.from.address' => env('MAIL_FROM_ADDRESS', 'noreply@askreview.com'),
+                'mail.from.name' => env('MAIL_FROM_NAME', config('app.name', 'AskReview')),
+            ]);
             app('mail.manager')->purge('smtp');
         }
     }

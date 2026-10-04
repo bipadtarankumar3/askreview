@@ -1038,14 +1038,13 @@ class UserController extends Controller
     }
 
 
-    protected function setMailConfig()
+    protected function applyDbMailConfig()
     {
         $mail = DB::table('mail_configures')->first();
-        if ($mail) {
+        if ($mail && !empty($mail->mail_host) && !empty($mail->mail_username)) {
             $port = (int)$mail->mail_port;
             $encryption = ($port == 465) ? 'ssl' : ($mail->mail_encryption ?: 'tls');
-
-            $fromAddress = !empty($mail->mail_username) ? $mail->mail_username : $mail->mail_from_address;
+            $fromAddress = !empty($mail->mail_from_address) ? $mail->mail_from_address : $mail->mail_username;
 
             config([
                 'mail.default' => 'smtp',
@@ -1061,6 +1060,41 @@ class UserController extends Controller
             ]);
 
             app('mail.manager')->purge('smtp');
+            return true;
+        }
+        return false;
+    }
+
+    protected function applyEnvMailConfig()
+    {
+        config([
+            'mail.default' => env('MAIL_MAILER', 'smtp'),
+            'mail.mailers.smtp.transport' => 'smtp',
+            'mail.mailers.smtp.host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+            'mail.mailers.smtp.port' => (int)env('MAIL_PORT', 587),
+            'mail.mailers.smtp.encryption' => env('MAIL_ENCRYPTION', 'tls'),
+            'mail.mailers.smtp.username' => env('MAIL_USERNAME'),
+            'mail.mailers.smtp.password' => env('MAIL_PASSWORD'),
+            'mail.mailers.smtp.timeout' => 10,
+            'mail.from.address' => env('MAIL_FROM_ADDRESS', 'noreply@askreview.com'),
+            'mail.from.name' => env('MAIL_FROM_NAME', config('app.name', 'AskReview')),
+        ]);
+
+        app('mail.manager')->purge('smtp');
+        return true;
+    }
+
+    protected function setMailConfig()
+    {
+        $hasEnvConfig = !empty(env('MAIL_USERNAME')) && env('MAIL_HOST') !== 'mailhog';
+        $preferEnv = env('MAIL_USE_ENV', false) || $hasEnvConfig;
+
+        if ($preferEnv) {
+            $this->applyEnvMailConfig();
+        } else {
+            if (!$this->applyDbMailConfig()) {
+                $this->applyEnvMailConfig();
+            }
         }
     }
 
@@ -1088,13 +1122,46 @@ class UserController extends Controller
             ]);
 
             // Send password reset email with OTP and reset link
-            try {
-                $this->setMailConfig();
-                $type = "ADMIN";
-                Mail::to($adminMail)->send(new adminForgotPassMail($type, $resetToken, $subject, $otp));
-                \Log::info('Forgot password email sent successfully to: ' . $adminMail);
-            } catch (\Throwable $e) {
-                \Log::error('Forgot password email error: ' . $e->getMessage());
+            // Supports DB config with automatic fallback to .env (or .env preference)
+            $mailSent = false;
+            $hasEnvConfig = !empty(env('MAIL_USERNAME')) && env('MAIL_HOST') !== 'mailhog';
+            $preferEnv = env('MAIL_USE_ENV', false) || $hasEnvConfig;
+
+            if ($preferEnv) {
+                try {
+                    $this->applyEnvMailConfig();
+                    $type = "ADMIN";
+                    Mail::to($adminMail)->send(new adminForgotPassMail($type, $resetToken, $subject, $otp));
+                    $mailSent = true;
+                    \Log::info('Forgot password email sent successfully via .env config to: ' . $adminMail);
+                } catch (\Throwable $e) {
+                    \Log::warning('Email send via .env failed: ' . $e->getMessage() . '. Retrying via DB config...');
+                }
+            }
+
+            if (!$mailSent) {
+                try {
+                    if ($this->applyDbMailConfig()) {
+                        $type = "ADMIN";
+                        Mail::to($adminMail)->send(new adminForgotPassMail($type, $resetToken, $subject, $otp));
+                        $mailSent = true;
+                        \Log::info('Forgot password email sent successfully via DB config to: ' . $adminMail);
+                    }
+                } catch (\Throwable $e) {
+                    \Log::warning('Email send via DB config failed: ' . $e->getMessage() . '. Attempting fallback to .env...');
+                }
+            }
+
+            if (!$mailSent && !$preferEnv) {
+                try {
+                    $this->applyEnvMailConfig();
+                    $type = "ADMIN";
+                    Mail::to($adminMail)->send(new adminForgotPassMail($type, $resetToken, $subject, $otp));
+                    $mailSent = true;
+                    \Log::info('Forgot password email sent successfully via .env fallback to: ' . $adminMail);
+                } catch (\Throwable $e) {
+                    \Log::error('All mail sending attempts (DB and .env) failed: ' . $e->getMessage());
+                }
             }
 
             // Also trigger WhatsApp OTP if phone number is available
