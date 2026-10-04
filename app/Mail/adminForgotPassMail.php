@@ -21,11 +21,14 @@ class adminForgotPassMail extends Mailable
     public $type;
     public $getsubject;
     public $getData;
-    public function __construct($userData,$getData,$subject)
+    public $otp;
+
+    public function __construct($userData, $getData, $subject, $otp = null)
     {
-        $this->type=$userData;
-        $this->getData=$getData;
-        $this->getsubject=$subject;
+        $this->type = $userData;
+        $this->getData = $getData;
+        $this->getsubject = $subject;
+        $this->otp = $otp;
     }
 
     /**
@@ -36,7 +39,7 @@ class adminForgotPassMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Forgot Pass Mail',
+            subject: $this->getsubject ?: 'Password Reset Request - AskReview',
         );
     }
 

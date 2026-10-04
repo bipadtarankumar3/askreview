@@ -814,7 +814,7 @@
               />
             </div>
             <span style="font-size: 0.74rem; color: #64748b; margin-top: 5px; display: block;">
-              <i class="bi bi-info-circle"></i> OTP will be sent to your registered WhatsApp / Phone.
+              <i class="bi bi-info-circle"></i> Verification OTP &amp; reset link will be sent to your email.
             </span>
           </div>
 

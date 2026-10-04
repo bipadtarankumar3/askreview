@@ -770,14 +770,28 @@
             <span>Set New Password</span>
           </div>
           <h1 class="auth-title">Reset Password</h1>
-          <p class="auth-subtitle">Enter the verification OTP sent to your registered number and create your new secure password.</p>
+          <p class="auth-subtitle">Enter the verification OTP sent to your email and create your new secure password.</p>
         </div>
 
         @if ($adminStatus == 'urlAvailable')
-          <div style="background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; padding: 10px 14px; border-radius: 10px; font-size: 0.85rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-            <i class="bi bi-whatsapp text-success" style="font-size: 1.1rem;"></i>
-            <span>OTP has been sent to your registered WhatsApp / phone.</span>
-          </div>
+          @if (session('error'))
+            <div style="background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; padding: 10px 14px; border-radius: 10px; font-size: 0.85rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+              <i class="bi bi-exclamation-triangle-fill"></i>
+              <span>{{ session('error') }}</span>
+            </div>
+          @endif
+
+          @if (session('success'))
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; padding: 10px 14px; border-radius: 10px; font-size: 0.85rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+              <i class="bi bi-check-circle-fill"></i>
+              <span>{{ session('success') }}</span>
+            </div>
+          @else
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; padding: 10px 14px; border-radius: 10px; font-size: 0.85rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+              <i class="bi bi-envelope-check-fill text-success" style="font-size: 1.1rem;"></i>
+              <span>Verification OTP has been sent to your registered email.</span>
+            </div>
+          @endif
 
           <!-- Reset Password Form -->
           <form method="POST" action="{{ URL::to('confirmPassword') }}" id="confirmPasswordForm">

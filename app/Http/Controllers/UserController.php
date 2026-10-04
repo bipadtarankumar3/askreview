@@ -1038,195 +1038,191 @@ class UserController extends Controller
     }
 
 
-        //Admin Forgot Password
-        public function forgotPassword(){
+    protected function setMailConfig()
+    {
+        $mail = DB::table('mail_configures')->first();
+        if ($mail) {
+            $port = (int)$mail->mail_port;
+            $encryption = ($port == 465) ? 'ssl' : ($mail->mail_encryption ?: 'tls');
 
-            //echo "di";die;
-    
-            return view('admin.forgotPassword.forgotPassword');
-         }
-    
-         //admin UserId Check
-         public function adminUserIdCheck(Request $request){
-             $userName = $request->email;
-             $admin=DB::table('users')->where('email',$request->email)->first();
-             if ($admin) {
-                 //echo "dd";
-                 //print_r($admin);
-                 $adminKey = $admin->user_unique_id;
-                 $adminMail = $admin->email;
-                 $phone = $admin->phone;
-                 $subject='Admin Forgot Password';
-                 $otp = random_int(10000, 99999);
+            $fromAddress = !empty($mail->mail_username) ? $mail->mail_username : $mail->mail_from_address;
 
+            config([
+                'mail.default' => 'smtp',
+                'mail.mailers.smtp.transport' => 'smtp',
+                'mail.mailers.smtp.host' => $mail->mail_host,
+                'mail.mailers.smtp.port' => $port,
+                'mail.mailers.smtp.encryption' => $encryption,
+                'mail.mailers.smtp.username' => $mail->mail_username,
+                'mail.mailers.smtp.password' => $mail->mail_password,
+                'mail.mailers.smtp.timeout' => 10,
+                'mail.from.address' => $fromAddress,
+                'mail.from.name' => $mail->mail_from_name ?: 'AskReview',
+            ]);
 
-                 //$message='Thank You For Contact Us';
-                 $admin=DB::table('users')->where('email',$request->email)->update(['otp'=>$otp,'user_email_status'=>'urlAvailable']);
-    
-                //  $this->sendOtp($otp,$phone);
+            app('mail.manager')->purge('smtp');
+        }
+    }
 
-                //  $mail=DB::table('mail_configures')->first();
-                //  $config = array(
-                //     'driver' => 'smtp',
-                //     'host' => $mail->mail_host,
-                //     'port' => $mail->mail_port,
-                //     'from' => array('address' => $mail->mail_from_address, 'name' => $mail->mail_from_name),
-                //     'encryption' => $mail->mail_encryption,
-                //     'username' => $mail->mail_username,
-                //     'password' => $mail->mail_password,
-                //     'sendmail' => '/usr/sbin/sendmail -bs',
-                //     'pretend' => false,
-                //     'stream' => [
-                //         'ssl' => [
-                //             'allow_self_signed' => true,
-                //             'verify_peer' => false,
-                //             'verify_peer_name' => false,
-                //         ],
-                //     ],
-                // );
-                // Config::set('mail',$config);
-                // $type="ADMIN";
-                //  $user= Mail::to($adminMail)->send(new adminForgotPassMail($type,$adminKey,$subject));
-                //  $request->session()->flash('checkYourMail', 'checkYourMail');
-                //  $notification = array(
-                //             'messege'=>'Check Your Email',
-                //             'alert-type'=>'success'
-                //         );
-                //         return back()->with($notification);
-                //  return view('admin.forgotPassword.forgotConfirmPassword',compact('userName'));
+    //Admin Forgot Password
+    public function forgotPassword(){
+        return view('admin.forgotPassword.forgotPassword');
+    }
 
-                // $curl = curl_init();
+    //admin UserId Check
+    public function adminUserIdCheck(Request $request){
+        $userName = $request->email;
+        $admin = DB::table('users')->where('email', $request->email)->first();
+        if ($admin) {
+            $resetToken = Str::random(40);
+            $adminMail = $admin->email;
+            $phone = $admin->phone;
+            $subject = 'Your AskReview Password Reset OTP';
+            $otp = random_int(10000, 99999);
 
-                // curl_setopt_array($curl, array(
-                // CURLOPT_URL => 'http://yoursms.in/sms-panel/api/http/index.php?username=ClickipediaAdmin&apikey=191C7-7D3E5&apirequest=Text&sender=Clicki&mobile=7001580904&message=You have requested to reset your admin panel password. Your OTP is 11111. Do not share it with anyone. Clickipedia&route=TRANS&TemplateID=1407173764581495462&format=JSON',
-                // CURLOPT_RETURNTRANSFER => true,
-                // CURLOPT_ENCODING => '',
-                // CURLOPT_MAXREDIRS => 10,
-                // CURLOPT_TIMEOUT => 0,
-                // CURLOPT_FOLLOWLOCATION => true,
-                // CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                // CURLOPT_CUSTOMREQUEST => 'GET',
-                // CURLOPT_HTTPHEADER => array(
-                //     'Cookie: PHPSESSID=nrtt695jh10g03fk865rjd1tn4'
-                // ),
-                // ));
-    
-                // $response = curl_exec($curl);
-    
-                // curl_close($curl);
+            DB::table('users')->where('id', $admin->id)->update([
+                'otp' => $otp,
+                'remember_token' => $resetToken,
+                'otp_link_status' => $resetToken,
+                'user_email_status' => 'urlAvailable'
+            ]);
 
-                // $response = Http::timeout(30)->get('http://yoursms.in/sms-panel/api/http/index.php', [
-                //     'username' => 'ClickipediaAdmin',
-                //     'apikey' => '191C7-7D3E5',
-                //     'apirequest' => 'Text',
-                //     'sender' => 'Clicki',
-                //     'mobile' => $phone,
-                //     'message' => 'You have requested to reset your admin panel password. Your OTP is '.$otp.'. Do not share it with anyone. Clickipedia',
-                //     'route' => 'TRANS',
-                //     'TemplateID' => '1407173764581495462',
-                //     'format' => 'JSON'
-                // ]);
-                
-                // if ($response->failed()) {
-                //     dd('HTTP Request Failed: ' . $response->body());
-                // }
-                
+            // Send password reset email with OTP and reset link
+            try {
+                $this->setMailConfig();
+                $type = "ADMIN";
+                Mail::to($adminMail)->send(new adminForgotPassMail($type, $resetToken, $subject, $otp));
+                \Log::info('Forgot password email sent successfully to: ' . $adminMail);
+            } catch (\Throwable $e) {
+                \Log::error('Forgot password email error: ' . $e->getMessage());
+            }
 
-  $curl = curl_init();
-
+            // Also trigger WhatsApp OTP if phone number is available
+            if (!empty($phone)) {
+                try {
+                    $curl = curl_init();
                     curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'https://app.digitalvyapari.online/api/WhatsApp?authkey=c1NZc1R6QkNmQXp4QitDTzNQdnd6dz09&wa_number=919087868584&mobile=91'.$phone.'&template_name=verify_otp&body_1='.$otp.'&web_url_1=123456',
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'GET',
-                    CURLOPT_HTTPHEADER => array(
-                        'Cookie: ci_session=7cm81ol6tgc2aei42fli0ggek8otm51n'
-                    ),
+                        CURLOPT_URL => 'https://app.digitalvyapari.online/api/WhatsApp?authkey=c1NZc1R6QkNmQXp4QitDTzNQdnd6dz09&wa_number=919087868584&mobile=91'.$phone.'&template_name=verify_otp&body_1='.$otp.'&web_url_1=123456',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 5,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'GET',
+                        CURLOPT_HTTPHEADER => array(
+                            'Cookie: ci_session=7cm81ol6tgc2aei42fli0ggek8otm51n'
+                        ),
                     ));
-
                     $response = curl_exec($curl);
-
                     curl_close($curl);
-                
-
-
-                return redirect('confirmPasswordPage/'.$adminKey);
-    
-             } else {
-                $notification = array(
-                    'messege'=>'User Id Not Maching',
-                    'alert-type'=>'error'
-                );
-                return back()->with($notification);
-             }
-         }
-    
-         //admin Password Check
-         public function confirmPasswordPage($adminKey){
-                
-             
-             
-             $admin=DB::table('users')
-             ->where('user_unique_id',$adminKey)
-             ->first();
-                // dd($admin);
-             $adminStatus='';
-             if ( $admin) {
-                 if ($admin->user_email_status == 'urlAvailable') {
-                     $adminStatus= "urlAvailable";
-                 } else {
-                     $adminStatus= "urlNotAvailable";
-                 }
-             }else{
-                 $adminStatus= "adminNotAvailable";
-             }
-             //echo $adminStatus;
-             $adminKey = $adminKey;
-             return view('admin.forgotPassword.forgotConfirmPassword',compact('adminKey','adminStatus'));
-         }
-    
-         //admin Password Check
-         public function confirmPassword(Request $request){
-             $password = $request->password;
-             $confirmPassword = $request->confirmPassword;
-            
-            $admin=User::where('user_unique_id',$request->adminKey)->first();
-
-            if ($admin->otp == $request->otp) {
-                if ( $password  == $confirmPassword) {
-                    $adminUp=DB::table('users')->where('user_unique_id',$request->adminKey)->update(['password'=>Hash::make($password),'user_email_status'=>'urlNotAvailable']);
-                    
-                       $credentials = [
-                           'email' => $admin->email,
-                           'password' =>$password,
-                       ];
-   
-                           if (Auth::attempt($credentials)) {
-                               return redirect('admin/dashboard');
-                           }
-                } else {
-                   
-                    $notification = array(
-                       'messege'=>'Password Not Match',
-                       'alert-type'=>'error'
-                   );
-                   return back()->with($notification);
+                } catch (\Throwable $e) {
+                    \Log::error('Forgot password WhatsApp error: ' . $e->getMessage());
                 }
+            }
+
+            return redirect('confirmPasswordPage/'.$resetToken)->with('success', 'Verification OTP has been sent to your email and WhatsApp.');
+
+        } else {
+            $notification = array(
+                'messege' => 'No account found with this email address.',
+                'alert-type' => 'error'
+            );
+            return back()->with($notification)->with('error', 'No account found with this email address.');
+        }
+    }
+
+    //admin Password Check
+    public function confirmPasswordPage($adminKey){
+        // Look up by unique token first, then fallback to user_unique_id with active status
+        $admin = DB::table('users')
+            ->where('remember_token', $adminKey)
+            ->orWhere('otp_link_status', $adminKey)
+            ->first();
+
+        if (!$admin) {
+            $admin = DB::table('users')
+                ->where('user_unique_id', $adminKey)
+                ->where('user_email_status', 'urlAvailable')
+                ->first();
+
+            if (!$admin) {
+                $admin = DB::table('users')->where('user_unique_id', $adminKey)->first();
+            }
+        }
+
+        $adminStatus = '';
+        if ($admin) {
+            if ($admin->user_email_status == 'urlAvailable') {
+                $adminStatus = "urlAvailable";
+            } else {
+                $adminStatus = "urlNotAvailable";
+            }
+        } else {
+            $adminStatus = "adminNotAvailable";
+        }
+
+        return view('admin.forgotPassword.forgotConfirmPassword', compact('adminKey', 'adminStatus'));
+    }
+
+    //admin Password Check
+    public function confirmPassword(Request $request){
+        $password = $request->password;
+        $confirmPassword = $request->confirmPassword;
+        
+        $admin = User::where('remember_token', $request->adminKey)
+            ->orWhere('otp_link_status', $request->adminKey)
+            ->first();
+
+        if (!$admin) {
+            $admin = User::where('user_unique_id', $request->adminKey)
+                ->where('user_email_status', 'urlAvailable')
+                ->first();
+
+            if (!$admin) {
+                $admin = User::where('user_unique_id', $request->adminKey)->first();
+            }
+        }
+
+        if (!$admin) {
+            return redirect('forgotPassword')->with('error', 'Invalid or expired password reset request.');
+        }
+
+        if ($admin->otp == $request->otp) {
+            if ($password == $confirmPassword) {
+                DB::table('users')->where('id', $admin->id)->update([
+                    'password' => Hash::make($password),
+                    'user_email_status' => 'urlNotAvailable',
+                    'otp' => null,
+                    'remember_token' => null,
+                    'otp_link_status' => null,
+                ]);
+                
+                $credentials = [
+                    'email' => $admin->email,
+                    'password' => $password,
+                ];
+
+                if (Auth::attempt($credentials)) {
+                    return redirect('admin/dashboard');
+                }
+
+                return redirect('login')->with('success', 'Password reset successfully! Please sign in with your new password.');
             } else {
                 $notification = array(
-                    'messege'=>'Please Enter Correct Otp',
-                    'alert-type'=>'error'
+                    'messege' => 'Passwords do not match.',
+                    'alert-type' => 'error'
                 );
-                return back()->with($notification);
+                return back()->with($notification)->with('error', 'Passwords do not match. Please try again.');
             }
-            
-
-             
-         }
+        } else {
+            $notification = array(
+                'messege' => 'Please enter the correct OTP code.',
+                'alert-type' => 'error'
+            );
+            return back()->with($notification)->with('error', 'Invalid OTP code. Please check your email and enter the correct code.');
+        }
+    }
 
 
 
