@@ -54,14 +54,26 @@ class FrontendController extends Controller
 
     protected function getS3()
     {
+        $key = env('AWS_ACCESS_KEY_ID');
+        $secret = env('AWS_SECRET_ACCESS_KEY');
+        $bucket = env('AWS_BUCKET');
+
+        if (empty($key) || empty($secret) || empty($bucket)) {
+            return null;
+        }
+
         if (!$this->s3) {
             try {
                 $this->s3 = new S3Client([
                     'version'     => 'latest',
-                    'region'      => env('AWS_DEFAULT_REGION', 'us-east-1'),
+                    'region'      => env('AWS_DEFAULT_REGION', 'ap-south-1'),
                     'credentials' => [
-                        'key'    => env('AWS_ACCESS_KEY_ID'),
-                        'secret' => env('AWS_SECRET_ACCESS_KEY'),
+                        'key'    => $key,
+                        'secret' => $secret,
+                    ],
+                    'http'        => [
+                        'timeout'         => 10,
+                        'connect_timeout' => 4,
                     ],
                 ]);
             } catch (\Exception $e) {
@@ -751,79 +763,97 @@ class FrontendController extends Controller
         
     public function video_testimonial_form_submit(Request $request){
 
-        // try {
+        try {
             $rating_number = $request->rating_number; 
-            $user_id =decrypt($request->testi_user_id); 
+            try {
+                $user_id = decrypt($request->testi_user_id); 
+            } catch (\Exception $e) {
+                return response()->json([
+                    'message' => 'Invalid session, please refresh and try again',
+                    'status' => 0,
+                    'data' => '',
+                ]);
+            }
+
             $User = User::where('id',$user_id)->first();
             $data = $request->all();
-            // dd($data );
+
             if ($User) {
 
                 date_default_timezone_set("Asia/Calcutta"); 
-                $url='';
-                /*************document upload **********/
                 $fileName = null;
-                $result = null;
                 $outPutFile = null;
+                $videoUrl = '';
 
                 if($request->hasFile('video')) {
-
                     $file = $request->file('video');
-                    // Generate a unique filename with milliseconds
-                    $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $ext = $file->getClientOriginalExtension() ?: 'mp4';
+                    $fileName = time() . '_' . uniqid() . '.' . $ext;
 
+                    // 1. ALWAYS save locally first in public/upload/ so it never hangs or loses the file
+                    $destinationPath = public_path('upload');
+                    if (!file_exists($destinationPath)) {
+                        @mkdir($destinationPath, 0777, true);
+                    }
+                    $file->move($destinationPath, $fileName);
+                    $localPath = $destinationPath . '/' . $fileName;
+
+                    $outPutFile = $fileName;
+                    $videoUrl = asset('upload/' . $fileName);
+
+                    // 2. If AWS S3 credentials are valid, safely attempt upload
                     $s3 = $this->getS3();
-                    // Upload the video to S3
-                    if ($s3) {
+                    if ($s3 && file_exists($localPath)) {
                         try {
                             $result = $s3->putObject([
                                 'Bucket' => env('AWS_BUCKET'),
                                 'Key' => 'uploads/' . $fileName,
-                                'SourceFile' => $file->getPathname()
+                                'SourceFile' => $localPath
                             ]);
+                            if (isset($result['ObjectURL'])) {
+                                $videoUrl = $result['ObjectURL'];
+                            }
+
+                            if (!empty(env('AWS_TRANSCODER_PIPELINE_ID'))) {
+                                $inputKey = 'uploads/' . $fileName;
+                                $outputKey = 'transcoded/' . pathinfo($fileName, PATHINFO_FILENAME) . '_transcoded.mp4';
+                                $presetId = '1351620000001-000020';
+                                try {
+                                    $transcodeResult = $this->transcoder->createJob($inputKey, $outputKey, $presetId);
+                                    if ($transcodeResult) {
+                                        $outPutFile = pathinfo($fileName, PATHINFO_FILENAME) . '_transcoded.mp4';
+                                    }
+                                } catch (\Exception $e) {
+                                    \Log::warning('Transcoder job create failed: ' . $e->getMessage());
+                                }
+                            }
                         } catch (\Exception $e) {
                             \Log::error('S3 video upload failed: ' . $e->getMessage());
                         }
                     }
-
-                    $inputKey = 'uploads/' . $fileName;
-                    $outputKey = 'transcoded/' . pathinfo($fileName, PATHINFO_FILENAME) . '_transcoded.mp4';
-                    $presetId = '1351620000001-000020'; // Example preset ID for Generic 1080p
-        
-                    try {
-                        $transcodeResult = $this->transcoder->createJob($inputKey, $outputKey, $presetId);
-                    } catch (\Exception $e) {
-                        \Log::warning('Transcoder job create failed: ' . $e->getMessage());
-                    }
-                    
-                    $outPutFile = pathinfo($fileName, PATHINFO_FILENAME) . '_transcoded.mp4';
-
-                    // $video=$request->file('video');
-                    // $milisecond=round(microtime(true)*1000);
-                    // $name=$video->getClientOriginalName();
-                    // $actual_name=str_replace(" ","_",$name);
-                    // $uploadName=$milisecond."_".$actual_name;
-                    // $video->move(public_path().'/upload/',$uploadName);
-                    // $url = asset('upload/'.$uploadName);
                 }
-                /***********document upload ************/
 
                 $arr = array(
                     'rating'=>$rating_number,
                     'video'=>isset($outPutFile)?$outPutFile:'',
-                    'video_url'=>isset($result['ObjectURL'])?$result['ObjectURL']:'',
+                    'video_url'=>isset($videoUrl)?$videoUrl:'',
                     'video_customer_name'=>$request->video_customer_name,
                     'video_customer_phone'=>$request->video_customer_phone,
                     'user_id'=>$user_id,
                 );
                 $video_testimonial = video_testimonial::create($arr);
 
-                // Generate a secure video download link valid for 30 days
-                $download_url = URL::temporarySignedRoute(
-                    'video.download',
-                    now()->addDays(30),
-                    ['id' => $video_testimonial->id]
-                );
+                // Generate download url (fallback to local videoUrl if signed route fails)
+                $download_url = '';
+                try {
+                    $download_url = URL::temporarySignedRoute(
+                        'video.download',
+                        now()->addDays(30),
+                        ['id' => $video_testimonial->id]
+                    );
+                } catch (\Exception $e) {
+                    $download_url = $videoUrl;
+                }
 
                 $notification_arr = array(
                     'type'=>'video',
@@ -834,24 +864,24 @@ class FrontendController extends Controller
                 );
                 notification::create($notification_arr);
 
-                $this->setMailConfig();
-                $subject = "New Video Testimonial from " . ($request->video_customer_name ?: 'Customer');
-                $mail_arr = array(
-                    'title' => 'New Video Testimonial Received',
-                    'name' => $request->video_customer_name,
-                    'phone' => $request->video_customer_phone,
-                    'rating' => $rating_number,
-                    'video_url' => $download_url,
-                    'admin_url' => url('admin/video_testimonial_details/' . $video_testimonial->id)
-                );
-                
-                $userDate = User::where('id',$user_id)->first();
-                if ($userDate && !empty($userDate->email)) {
-                    try {
+                try {
+                    $this->setMailConfig();
+                    $subject = "New Video Testimonial from " . ($request->video_customer_name ?: 'Customer');
+                    $mail_arr = array(
+                        'title' => 'New Video Testimonial Received',
+                        'name' => $request->video_customer_name,
+                        'phone' => $request->video_customer_phone,
+                        'rating' => $rating_number,
+                        'video_url' => $download_url,
+                        'admin_url' => url('admin/video_testimonial_details/' . $video_testimonial->id)
+                    );
+                    
+                    $userDate = User::where('id',$user_id)->first();
+                    if ($userDate && !empty($userDate->email)) {
                         Mail::to($userDate->email)->send(new SpinnerFormMail('ADMIN', $mail_arr, $subject));
-                    } catch (\Throwable $e) {
-                        \Log::error('Video testimonial mail error: ' . $e->getMessage());
                     }
+                } catch (\Throwable $e) {
+                    \Log::error('Video testimonial mail error: ' . $e->getMessage());
                 }
                 
                 $data = array(
@@ -861,24 +891,22 @@ class FrontendController extends Controller
                 );
                 return response()->json($data);
     
-    
             } else {
                 $data = array(
-                        'message'=>'Not Valid User Id',
-                        'status'=>0,
-                        'data'=>'',
-                    );
-                    return response()->json($data);
-
+                    'message'=>'Not Valid User Id',
+                    'status'=>0,
+                    'data'=>'',
+                );
+                return response()->json($data);
             }
-        // } catch (\Throwable $th) {
-        //     $data = array(
-        //         'message'=>'Code Error',
-        //         'status'=>0,
-        //         'data'=>'',
-        //     );
-        //     return response()->json($data);
-        // } 
+        } catch (\Throwable $th) {
+            \Log::error('Video testimonial submit error: ' . $th->getMessage());
+            return response()->json([
+                'message' => 'Error submitting video testimonial',
+                'status'  => 0,
+                'data'    => '',
+            ], 500);
+        }
     }
     
     public function dummy(){
@@ -1020,45 +1048,51 @@ class FrontendController extends Controller
 
         $video_testimonial = video_testimonial::where('id', $id)->firstOrFail();
 
+        // 1. If local file exists in public/upload/, serve it directly
+        $localPath = public_path('upload/' . $video_testimonial->video);
+        if (file_exists($localPath)) {
+            return response()->download($localPath);
+        }
+
+        // 2. Otherwise try S3
         $s3 = $this->getS3();
-        if (!$s3) {
-            abort(500, 'Storage service unavailable.');
-        }
+        if ($s3 && !empty(env('AWS_BUCKET'))) {
+            $key = null;
+            if (!empty($video_testimonial->video)) {
+                $transcodedKey = 'transcoded/' . $video_testimonial->video;
+                try {
+                    if ($s3->doesObjectExist(env('AWS_BUCKET'), $transcodedKey)) {
+                        $key = $transcodedKey;
+                    }
+                } catch (\Exception $e) {}
+            }
 
-        $key = null;
-        // Check if transcoded file is available
-        if (!empty($video_testimonial->video)) {
-            $transcodedKey = 'transcoded/' . $video_testimonial->video;
-            try {
-                if ($s3->doesObjectExist(env('AWS_BUCKET'), $transcodedKey)) {
-                    $key = $transcodedKey;
+            if (!$key && !empty($video_testimonial->video_url)) {
+                $path = parse_url($video_testimonial->video_url, PHP_URL_PATH);
+                $rawKey = ltrim($path, '/');
+                if (!empty($rawKey)) {
+                    $key = $rawKey;
                 }
-            } catch (\Exception $e) {
-                // fallback to raw upload
+            }
+
+            if ($key) {
+                try {
+                    $cmd = $s3->getCommand('GetObject', [
+                        'Bucket' => env('AWS_BUCKET'),
+                        'Key' => $key,
+                        'ResponseContentDisposition' => 'attachment; filename="' . basename($key) . '"'
+                    ]);
+                    $presignedUrl = (string)$s3->createPresignedRequest($cmd, '+2 hours')->getUri();
+                    return redirect()->away($presignedUrl);
+                } catch (\Exception $e) {}
             }
         }
 
-        // If transcoded not yet available, fallback to raw uploaded file
-        if (!$key && !empty($video_testimonial->video_url)) {
-            $path = parse_url($video_testimonial->video_url, PHP_URL_PATH);
-            $rawKey = ltrim($path, '/');
-            if (!empty($rawKey)) {
-                $key = $rawKey;
-            }
+        // 3. Fallback to direct URL if present
+        if (!empty($video_testimonial->video_url)) {
+            return redirect()->away($video_testimonial->video_url);
         }
 
-        if (!$key) {
-            abort(404, 'Video file not found.');
-        }
-
-        // Generate a dynamic 2-hour presigned URL for direct streaming/downloading
-        $cmd = $s3->getCommand('GetObject', [
-            'Bucket' => env('AWS_BUCKET'),
-            'Key' => $key,
-            'ResponseContentDisposition' => 'attachment; filename="' . basename($key) . '"'
-        ]);
-
-        $presignedUrl = (string)$s3->createPresignedRequest($cmd, '+2 hours')->getUri();
-        return redirect()->away($presignedUrl);
+        abort(404, 'Video file not found.');
     }
 }

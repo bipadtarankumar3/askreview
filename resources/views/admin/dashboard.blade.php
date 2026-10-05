@@ -411,19 +411,22 @@
         </div>
       </div>
 
-      <!-- 4. WhatsApp Messages -->
+      <!-- 4. Google Reviews -->
       <div class="col-sm-6 col-xl-6 col-xxl">
         <div class="card border-0 h-100" style="border-radius: 18px; background: #ffffff; border: 1px solid #e2e8f0 !important; box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.04); transition: transform 0.2s ease;">
           <div class="card-body p-4">
             <div class="d-flex align-items-center justify-content-between mb-3">
-              <span style="font-size: 0.85rem; font-weight: 700; color: #64748b;">WhatsApp Sent</span>
-              <div style="width: 44px; height: 44px; border-radius: 12px; background: #ecfdf5; display: flex; align-items: center; justify-content: center; color: #059669; font-size: 1.3rem;">
-                <i class="ti ti-brand-whatsapp"></i>
+              <span style="font-size: 0.85rem; font-weight: 700; color: #64748b;">Google Reviews</span>
+              <div style="width: 44px; height: 44px; border-radius: 12px; background: #f0fdf4; display: flex; align-items: center; justify-content: center;">
+                <img src="{{ asset('frontend/images/google.png') }}" style="width: 22px; height: 22px; object-fit: contain;" alt="Google">
               </div>
             </div>
             <div class="d-flex align-items-baseline justify-content-between">
-              <h2 class="mb-0 fw-bold" style="color: #059669; font-size: 1.9rem;">{{ Auth::user()->wp_count ?? 0 }}</h2>
-              <span class="badge rounded-pill" style="background: #d1fae5; color: #065f46; font-weight: 700; font-size: 0.72rem;">Sent</span>
+              <h2 class="mb-0 fw-bold" style="color: #059669; font-size: 1.9rem;">{{ $google_reviews_count ?? (\App\Models\ReviewLinksAnalytics::where('user_id', Auth::user()->id)->where('type', 'google')->count()) }}</h2>
+              <a href="{{ url('admin/links_analytics?type=google') }}" class="btn btn-xs d-flex align-items-center gap-1" style="background: #ecfdf5; color: #059669; border-radius: 8px; font-weight: 700; font-size: 0.75rem; padding: 4px 10px; text-decoration: none;">
+                <span>Track</span>
+                <i class="ti ti-arrow-right"></i>
+              </a>
             </div>
           </div>
         </div>
@@ -500,7 +503,7 @@
             </div>
 
             <!-- Features Pill List -->
-            <div class="d-flex align-items-center gap-2 flex-wrap pt-3 border-top">
+            <!-- <div class="d-flex align-items-center gap-2 flex-wrap pt-3 border-top">
               <a href="{{ url('u/'.Auth::user()->name_url) }}" target="_blank" class="btn btn-sm btn-outline-dark d-flex align-items-center gap-1.5" style="border-radius: 10px; font-weight: 700; padding: 6px 14px;">
                 <i class="ti ti-external-link"></i> Preview Portal
               </a>
@@ -510,7 +513,7 @@
               <a href="{{ url('admin/review_links') }}" class="btn btn-sm btn-light d-flex align-items-center gap-1.5" style="border-radius: 10px; font-weight: 700; color: #475569; padding: 6px 14px;">
                 <i class="ti ti-plug"></i> Google Reviews Link
               </a>
-            </div>
+            </div> -->
 
           </div>
         </div>
@@ -590,6 +593,11 @@
             </thead>
             <tbody>
               @forelse($recent_feedbacks as $fb)
+                @php
+                  $customerName = !empty($fb->f_customer_name) ? $fb->f_customer_name : (!empty($fb->name) ? $fb->name : 'Anonymous Customer');
+                  $customerPhone = !empty($fb->f_phone_number) ? $fb->f_phone_number : (!empty($fb->phone) ? $fb->phone : null);
+                  $initial = strtoupper(substr($customerName, 0, 1));
+                @endphp
                 <tr>
                   <td class="ps-4">
                     <span class="badge rounded-pill" style="background: #f1f5f9; color: #475569; font-weight: 700;">#{{ $fb->id }}</span>
@@ -597,14 +605,14 @@
                   <td>
                     <div class="d-flex align-items-center gap-2">
                       <div style="width: 32px; height: 32px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #475569; font-size: 0.8rem;">
-                        {{ strtoupper(substr($fb->name ?? 'A', 0, 1)) }}
+                        {{ $initial }}
                       </div>
-                      <span class="fw-bold text-dark">{{ $fb->name ?? 'Anonymous Customer' }}</span>
+                      <span class="fw-bold text-dark">{{ $customerName }}</span>
                     </div>
                   </td>
                   <td>
-                    @if($fb->phone)
-                      <a href="tel:{{ $fb->phone }}" class="text-muted text-decoration-none"><i class="ti ti-phone me-1"></i>{{ $fb->phone }}</a>
+                    @if($customerPhone)
+                      <a href="tel:{{ $customerPhone }}" class="text-muted text-decoration-none"><i class="ti ti-phone me-1"></i>{{ $customerPhone }}</a>
                     @else
                       <span class="text-muted">-</span>
                     @endif

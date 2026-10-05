@@ -23,6 +23,7 @@ use App\Models\privateReview;
 use App\Models\TemplateCategory;
 use App\Models\video_testimonial;
 use App\Models\Integration;
+use App\Models\ReviewLinksAnalytics;
 use Illuminate\Support\Facades\URL;
 
 use Illuminate\Support\Facades\Auth;
@@ -416,6 +417,7 @@ class UserController extends Controller
             $data['presend_day'] = date('Y-m-d');
             $data['expiredUsers'] = User::where('type','user')->where('user_id',Auth::user()->id)->whereDate('expiry_date','<',$presend_day)->count();
             $data['video_testimonial'] = video_testimonial::where('user_id',Auth::user()->id)->whereMonth('created_at',$presend_month)->count();
+            $data['google_reviews_count'] = ReviewLinksAnalytics::where('user_id', Auth::user()->id)->where('type', 'google')->count();
             // $Camping = Camping::where('created_by',Auth::user()->id)->count();
             // $CampingList = Camping::where('created_by',Auth::user()->id)->select('id')->get()->toArray();
 

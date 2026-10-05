@@ -39,14 +39,39 @@ class ReviewController extends Controller
 
     public function __construct()
     {
-        $this->s3 = new S3Client([
-            'version' => 'latest',
-            'region' => env('AWS_DEFAULT_REGION'),
-            'credentials' => [
-                'key' => env('AWS_ACCESS_KEY_ID'),
-                'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            ],
-        ]);
+        // S3 client initialized lazily via getS3() to avoid hanging or crashing
+    }
+
+    protected function getS3()
+    {
+        $key = env('AWS_ACCESS_KEY_ID');
+        $secret = env('AWS_SECRET_ACCESS_KEY');
+        $bucket = env('AWS_BUCKET');
+
+        if (empty($key) || empty($secret) || empty($bucket)) {
+            return null;
+        }
+
+        if (!$this->s3) {
+            try {
+                $this->s3 = new S3Client([
+                    'version' => 'latest',
+                    'region' => env('AWS_DEFAULT_REGION', 'ap-south-1'),
+                    'credentials' => [
+                        'key' => $key,
+                        'secret' => $secret,
+                    ],
+                    'http' => [
+                        'timeout'         => 10,
+                        'connect_timeout' => 4,
+                    ],
+                ]);
+            } catch (\Exception $e) {
+                \Log::warning('ReviewController S3Client init failed: ' . $e->getMessage());
+                return null;
+            }
+        }
+        return $this->s3;
     }
 
 
@@ -636,21 +661,38 @@ class ReviewController extends Controller
     public function video_testimonial_details($id){
 
         if(Auth::check()){
-            $data['video_testimonial'] = video_testimonial::where('id',$id)
-            ->first();
+            $data['video_testimonial'] = video_testimonial::where('id',$id)->first();
 
-            //$data['url'] = $this->s3->getObjectUrl(env('AWS_BUCKET'), 'uploads/' . $data['video_testimonial']->video);
+            if (!$data['video_testimonial']) {
+                abort(404, 'Video testimonial not found');
+            }
 
-            $cmd = $this->s3->getCommand('GetObject', [
-                'Bucket' => env('AWS_BUCKET'),
-                'Key' => 'transcoded/' . $data['video_testimonial']->video
-            ]);
-    
-            $request = $this->s3->createPresignedRequest($cmd, '+20 minutes');
-    
-            $data['url'] = (string)$request->getUri();
+            $localPath = public_path('upload/' . $data['video_testimonial']->video);
+            if (!empty($data['video_testimonial']->video) && file_exists($localPath)) {
+                $data['url'] = asset('upload/' . $data['video_testimonial']->video);
+            } else {
+                $s3 = $this->getS3();
+                if ($s3 && !empty(env('AWS_BUCKET'))) {
+                    try {
+                        $key = 'transcoded/' . $data['video_testimonial']->video;
+                        if (!$s3->doesObjectExist(env('AWS_BUCKET'), $key)) {
+                            $key = 'uploads/' . $data['video_testimonial']->video;
+                        }
 
-            // dd($result);
+                        $cmd = $s3->getCommand('GetObject', [
+                            'Bucket' => env('AWS_BUCKET'),
+                            'Key' => $key
+                        ]);
+                
+                        $request = $s3->createPresignedRequest($cmd, '+20 minutes');
+                        $data['url'] = (string)$request->getUri();
+                    } catch (\Exception $e) {
+                        $data['url'] = $data['video_testimonial']->video_url ?? '';
+                    }
+                } else {
+                    $data['url'] = $data['video_testimonial']->video_url ?: asset('upload/' . $data['video_testimonial']->video);
+                }
+            }
 
             return view('user.review_links.video_testimonial_details',$data);
         }

@@ -112,14 +112,14 @@
                                         <div class="button_box">
                                             @if ($item->type == 'google')
                                                 @if ($isConfigured)
-                                                    <button class="btn btn-secondary edit" onclick="open_integration_remove_model('google')">Edit</button>
+                                                    <button class="btn btn-secondary edit" onclick="open_integration_remove_model('google')">Customize</button>
                                                 @else
                                                     <button class="btn btn-secondary integrate" onclick="open_integration_model('google')">Integrate</button>
                                                 @endif
                                             @elseif ($item->type == 'record')
                                                 @if (isset($admin_user) && $admin_user->video_access == 'YES' && $video_access_show == true)
                                                     @if ($isConfigured)
-                                                        <button class="btn btn-secondary edit" onclick="add_spinner_btn('record')">Edit</button>
+                                                        <button class="btn btn-secondary edit" onclick="add_spinner_btn('record')">Customize</button>
                                                     @else
                                                         <button class="btn btn-secondary integrate" onclick="add_spinner_btn('record')">Integrate</button>
                                                     @endif
@@ -127,7 +127,7 @@
                                             @elseif ($item->type == 'private')
                                             @else
                                                 @if ($isConfigured)
-                                                    <button class="btn btn-secondary edit" onclick="add_spinner_btn('{{$item->type}}')">Edit</button>
+                                                    <button class="btn btn-secondary edit" onclick="add_spinner_btn('{{$item->type}}')">Customize</button>
                                                 @else
                                                     <button class="btn btn-secondary integrate" onclick="add_spinner_btn('{{$item->type}}')">Integrate</button>
                                                 @endif
@@ -159,7 +159,7 @@
                                     <div class="button_box">
 
                                         @if (isset($IntegrationGoogle))
-                                            <button class="btn btn-secondary edit"  onclick="open_integration_remove_model('google')">Edit</button>
+                                            <button class="btn btn-secondary edit"  onclick="open_integration_remove_model('google')">Customize</button>
                                         @else
                                             <button class="btn btn-secondary integrate" onclick="open_integration_model('google')">Integrate</button>
                                                                             
@@ -199,7 +199,7 @@
 
                                     <div class="button_box">
                                         @if (isset($IntegrationFacebook))
-                                            <button class="btn btn-secondary edit"  onclick="add_spinner_btn('facebook')">Edit</button>
+                                            <button class="btn btn-secondary edit"  onclick="add_spinner_btn('facebook')">Customize</button>
                                         @else
                                             <button class="btn btn-secondary integrate"  onclick="add_spinner_btn('facebook')">Integrate</button>
                                                                             
@@ -234,7 +234,7 @@
 
                                     <div class="button_box">
                                         @if (isset($IntegrationYoutube))
-                                            <button class="btn btn-secondary edit"  onclick="add_spinner_btn('youtube')">Edit</button>
+                                            <button class="btn btn-secondary edit"  onclick="add_spinner_btn('youtube')">Customize</button>
                                         @else
                                             <button class="btn btn-secondary integrate" onclick="add_spinner_btn('youtube')">Integrate</button>
                                                                             
@@ -269,7 +269,7 @@
 
                                     <div class="button_box">
                                         @if (isset($IntegrationInstagram))
-                                            <button class="btn btn-secondary edit"  onclick="add_spinner_btn('instagram')">Edit</button>
+                                            <button class="btn btn-secondary edit"  onclick="add_spinner_btn('instagram')">Customize</button>
                                         @else
                                             <button class="btn btn-secondary integrate" onclick="add_spinner_btn('instagram')">Integrate</button>
                                                                             
@@ -303,7 +303,7 @@
 
                                     <div class="button_box">
                                         @if (isset($IntegrationWhatsApp))
-                                            <button class="btn btn-secondary edit"  onclick="add_spinner_btn('whatsapp')">Edit</button>
+                                            <button class="btn btn-secondary edit"  onclick="add_spinner_btn('whatsapp')">Customize</button>
                                         @else
                                             <button class="btn btn-secondary integrate" onclick="add_spinner_btn('whatsapp')">Integrate</button>
                                                                             
@@ -341,7 +341,7 @@
 
                                     <div class="button_box">
                                         @if (isset($IntegrationRecord))
-                                            <button class="btn btn-secondary edit"  onclick="add_spinner_btn('record')">Edit</button>
+                                            <button class="btn btn-secondary edit"  onclick="add_spinner_btn('record')">Customize</button>
                                         @else
                                             <button class="btn btn-secondary integrate" onclick="add_spinner_btn('record')">Integrate</button>
                                                                             

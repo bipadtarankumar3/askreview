@@ -1064,7 +1064,20 @@
                 <li class="sidebar-item">
                   <a class="sidebar-link" href="{{URL::to('admin/questions')}}" aria-expanded="false">
                     <span><i class="ti ti-forms"></i></span>
-                    <span class="hide-menu">Feedback Form</span>
+                    <span class="hide-menu">Manage Form</span>
+                  </a>
+                </li>
+                
+                <li class="sidebar-item">
+                  <a class="sidebar-link" href="{{URL::to('admin/video_testimonial')}}" aria-expanded="false">
+                    <span><i class="ti ti-video"></i></span>
+                    <span class="hide-menu">Video Testimonials</span>
+                  </a>
+                </li>
+                <li class="sidebar-item">
+                  <a class="sidebar-link" href="{{URL::to('admin/private_review_list')}}" aria-expanded="false">
+                    <span><i class="ti ti-address-book"></i></span>
+                    <span class="hide-menu">Private Enquiry</span>
                   </a>
                 </li>
                 <li class="sidebar-item">
@@ -1074,23 +1087,12 @@
                   </a>
                 </li>
                 <li class="sidebar-item">
-                  <a class="sidebar-link" href="{{URL::to('admin/private_review_list')}}" aria-expanded="false">
-                    <span><i class="ti ti-address-book"></i></span>
-                    <span class="hide-menu">Private Contacts</span>
-                  </a>
-                </li>
-                <li class="sidebar-item">
                   <a class="sidebar-link" href="{{URL::to('admin/social_review_list')}}" aria-expanded="false">
                     <span><i class="ti ti-star"></i></span>
                     <span class="hide-menu">Social Reviews</span>
                   </a>
                 </li>
-                <li class="sidebar-item">
-                  <a class="sidebar-link" href="{{URL::to('admin/video_testimonial')}}" aria-expanded="false">
-                    <span><i class="ti ti-video"></i></span>
-                    <span class="hide-menu">Video Testimonials</span>
-                  </a>
-                </li>
+                
 
                 <li class="nav-small-cap">
                   <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
@@ -1100,7 +1102,7 @@
                 <li class="sidebar-item">
                   <a class="sidebar-link" href="{{URL::to('admin/user_payments_list')}}" aria-expanded="false">
                     <span><i class="ti ti-crown"></i></span>
-                    <span class="hide-menu">Membership &amp; Plans</span>
+                    <span class="hide-menu">Subscriptions</span>
                   </a>
                 </li>
                 <li class="sidebar-item">
