@@ -806,9 +806,10 @@ class FrontendController extends Controller
                     if ($s3 && file_exists($localPath)) {
                         try {
                             $result = $s3->putObject([
-                                'Bucket' => env('AWS_BUCKET'),
-                                'Key' => 'uploads/' . $fileName,
-                                'SourceFile' => $localPath
+                                'Bucket'     => env('AWS_BUCKET'),
+                                'Key'        => 'uploads/' . $fileName,
+                                'SourceFile' => $localPath,
+                                'Tagging'    => 'autodelete=30days',
                             ]);
                             if (isset($result['ObjectURL'])) {
                                 $videoUrl = $result['ObjectURL'];

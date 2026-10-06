@@ -157,7 +157,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
     Route::any('integration_form', [ReviewController::class,'integration_form']);
     Route::any('open_integration_remove_modal', [ReviewController::class,'open_integration_remove_modal']);
     Route::any('integration_remove', [ReviewController::class,'integration_remove']);
-    Route::post('add_review_links', [ReviewController::class,'add_review_links']);
+    Route::any('add_review_links', [ReviewController::class,'add_review_links']);
     Route::get('edit_review_links/{id}', [ReviewController::class,'edit_review_links']);
     Route::get('delete_review_links/{id}', [ReviewController::class,'delete_review_links']);
     Route::get('social_review_list', [ReviewController::class,'social_review_list']);
@@ -297,6 +297,11 @@ Route::get('/manifest/{userId}.json', function ($userId) {
         'userId' => $userId,
         'lastVisitedUrl' => $lastVisitedUrl
     ])->header('Content-Type', 'application/json');
+});
+
+Route::get('/clear-cache', function() {
+    \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+    return '<h1>Application cache cleared successfully!</h1>';
 });
 
 

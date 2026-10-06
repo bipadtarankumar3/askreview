@@ -643,42 +643,23 @@
 
     function add_submit() {
 
-        var spin_round = $('.value').val();
-        if (spin_round == '') {
-            $('.spin_round_error').html('Please Enter Spin Round Value');
-            return;
-        } else {
-            $('.spin_round_error').html('');
-        }
-
-        var url = $('#spinner_form').attr("action");
-        var postData = $('#spinner_form').serializeArray();
-        
-        var reviewKey = $('#review_key').val();
-        if (reviewKey) {
-            var encodedKey = btoa(unescape(encodeURIComponent(reviewKey)));
-            var found = false;
-            for (var i = 0; i < postData.length; i++) {
-                if (postData[i].name === 'review_key') {
-                    postData[i].value = encodedKey;
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                postData.push({ name: 'review_key', value: encodedKey });
-            }
-            postData.push({ name: 'is_encoded', value: '1' });
-        }
+        var id = $('#spinner_form input[name="id"]').val();
+        var review_type = $('#spinner_form input[name="review_type"]').val();
+        var review_key = $('#spinner_form input[name="review_key"]').val();
+        var status = $('#spinner_form select[name="status"]').val();
+        var _token = $('#spinner_form input[name="_token"]').val();
 
         $.ajax({
-            type: "POST",
-            url: url,
-            data: $.param(postData),
-            dataType: 'json',
-            headers: {
-                'Accept': 'application/json, text/javascript, */*; q=0.01'
+            type: "GET",
+            url: "{{URL::to('admin/add_review_links')}}",
+            data: {
+                id: id,
+                review_type: review_type,
+                review_key: review_key,
+                status: status,
+                _token: _token
             },
+            dataType: 'json',
             error: function(jqXHR, textStatus, errorMessage) {
                 console.log(errorMessage); // Optional
             },
