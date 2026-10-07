@@ -54,8 +54,7 @@
                <div id="integrationContainer" class="row">
                 
                     @if (isset($integrationList) && count($integrationList) > 0)
-                   
-                        @if (isset($integrationList[0]) && $integrationList[0]->button_order != null)
+                        @if (isset($integrationList[0]))
                             @foreach ($integrationList as $item)
                                 @php
                                     $isConfigured = false;
@@ -348,6 +347,38 @@
                                         @endif
                                     </div>
                                     
+                                </div>
+                            </div>
+                            <div class="col-md-3 mt-2">
+                                <div class="links_box">
+                                    <br>
+                                    @if (isset($IntegrationWebsite))
+                                    <div class="redirect_box">
+                                        @if (!empty($IntegrationWebsite->review_links))
+                                            <a href="{{$IntegrationWebsite->review_links}}" target="_blank" class="redirect_anchor">
+                                                <i class="fa-solid fa-diamond-turn-right"></i>
+                                            </a>
+                                        @endif
+                                        <span class="success_right">
+                                            @if ($IntegrationWebsite->status == 'active')
+                                                <i class="fa-solid fa-square-check"></i>
+                                            @else
+                                                <i class="fa-solid fa-xmark" style="color: red"></i>
+                                            @endif
+                                        </span>
+                                    </div>
+                                    @endif
+                                    <div class="img_box">
+                                        <img src="{{asset('frontend/images/website.png')}}" class="link_image" alt="">
+                                        <p>Website</p>
+                                    </div>
+                                    <div class="button_box">
+                                        @if (isset($IntegrationWebsite) && (!empty($IntegrationWebsite->review_links) || !empty($IntegrationWebsite->status)))
+                                            <button class="btn btn-secondary edit" onclick="add_spinner_btn('website')">Customize</button>
+                                        @else
+                                            <button class="btn btn-secondary integrate" onclick="add_spinner_btn('website')">Integrate</button>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                             @endif

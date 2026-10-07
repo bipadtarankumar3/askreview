@@ -127,6 +127,26 @@ class ReviewController extends Controller
                         'button_order' => $maxOrder + 1,
                     ]);
                 }
+
+                // Automatically populate button_order for legacy integrations missing it
+                $defaultOrders = [
+                    'google' => 1,
+                    'facebook' => 2,
+                    'instagram' => 3,
+                    'youtube' => 4,
+                    'whatsapp' => 5,
+                    'record' => 6,
+                    'private' => 7,
+                    'website' => 8,
+                ];
+                $orderIndex = 1;
+                foreach (Integration::where('user_id', Auth::user()->id)->get() as $uInt) {
+                    if ($uInt->button_order === null || $uInt->button_order == 0) {
+                        $uInt->button_order = $defaultOrders[$uInt->type] ?? $orderIndex;
+                        $uInt->save();
+                    }
+                    $orderIndex++;
+                }
             }
 
             $array['integrationList'] = Integration::where('user_id',Auth::user()->id)->orderBy('button_order','asc')->get();
