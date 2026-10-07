@@ -1319,7 +1319,21 @@
                                                 </div>
                                                 <div class="platform-info-text">
                                                     <div class="platform-name">{{$item->button_name}}</div>
-                                                    <p class="platform-hint">Review us on {{$item->button_name}}</p>
+                                                    @php
+                                                        $pType = strtolower(trim($item->type ?? ''));
+                                                        $pName = strtolower(trim($item->button_name ?? ''));
+                                                    @endphp
+                                                    @if ($pType == 'facebook' || str_contains($pName, 'facebook'))
+                                                        <p class="platform-hint">Recommend us on Facebook</p>
+                                                    @elseif ($pType == 'youtube' || str_contains($pName, 'youtube'))
+                                                        <p class="platform-hint">Subscribe & support us</p>
+                                                    @elseif ($pType == 'instagram' || str_contains($pName, 'instagram'))
+                                                        <p class="platform-hint">Follow us on Instagram</p>
+                                                    @elseif ($pType == 'whatsapp' || str_contains($pName, 'whatsapp'))
+                                                        <p class="platform-hint">Chat directly with our team</p>
+                                                    @else
+                                                        <p class="platform-hint">Review us on {{$item->button_name}}</p>
+                                                    @endif
                                                 </div>
                                                 <div class="platform-chevron-wrap">
                                                     <i class="fa-solid fa-chevron-right"></i>

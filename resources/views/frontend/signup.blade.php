@@ -151,7 +151,7 @@
                       <circle cx="13" cy="13" r="8" fill="#1877f2"/>
                       <text x="13" y="16.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="9.5" font-weight="800" fill="#ffffff" text-anchor="middle">f</text>
                       <text x="27" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Facebook</text>
-                      <text x="27" y="19" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b">Review us on Facebook</text>
+                      <text x="27" y="19" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b">Recommend us on Facebook</text>
                       <circle cx="160" cy="13" r="5" fill="#f8fafc"/>
                       <path class="row-arrow" d="M159 11 L161.5 13 L159 15" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
                     </g>
@@ -164,7 +164,7 @@
                       <circle cx="13" cy="13" r="2.2" fill="none" stroke="#ffffff" stroke-width="0.8"/>
                       <circle cx="15.5" cy="10.7" r="0.5" fill="#ffffff"/>
                       <text x="27" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Instagram</text>
-                      <text x="27" y="19" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b">Review us on Instagram</text>
+                      <text x="27" y="19" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b">Follow us on Instagram</text>
                       <circle cx="160" cy="13" r="5" fill="#f8fafc"/>
                       <path class="row-arrow" d="M159 11 L161.5 13 L159 15" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
                     </g>
@@ -175,7 +175,7 @@
                       <circle cx="13" cy="13" r="8" fill="#ff0000"/>
                       <polygon points="11.5,10 16,13 11.5,16" fill="#ffffff"/>
                       <text x="27" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Youtube</text>
-                      <text x="27" y="19" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b">Review us on Youtube</text>
+                      <text x="27" y="19" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b">Subscribe &amp; support us</text>
                       <circle cx="160" cy="13" r="5" fill="#f8fafc"/>
                       <path class="row-arrow" d="M159 11 L161.5 13 L159 15" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
                     </g>
