@@ -334,8 +334,10 @@ class UserController extends Controller
         $request->validate([
             'business_name' => 'required|string|max:255',
             'email' => 'nullable|email|max:255',
-            'phone' => 'required|string|max:25',
+            'phone' => ['required', 'string', 'regex:/^(?:(?:\+|0{0,2})91[\s-]?)?[0]?[6-9]\d{9}$/'],
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,webp,gif|max:5120'
+        ], [
+            'phone.regex' => 'Please enter a valid 10-digit Indian mobile number.'
         ]);
 
         $user = User::find(Auth::id());

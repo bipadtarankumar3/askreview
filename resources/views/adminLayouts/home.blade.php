@@ -2281,6 +2281,65 @@
         } catch(e) {
             $('#googleOnboardingModal').modal('show');
         }
+
+        // --- Indian Mobile Number Validation ---
+        function validateIndianMobile(phone) {
+            if (!phone) return false;
+            // Clean out spaces, dashes, parentheses
+            var cleaned = phone.toString().trim().replace(/[\s\-\(\)]/g, '');
+            // Valid Indian mobile: optional +91, 91, or 0 prefix, followed by 10 digits starting with 6, 7, 8, or 9
+            var regex = /^(?:(?:\+|0{0,2})91|0)?[6-9]\d{9}$/;
+            return regex.test(cleaned);
+        }
+
+        // Live input sanitizer: only allow digits, +, space, and hyphen
+        $('#onboardingPhone').on('input', function() {
+            var val = $(this).val();
+            var filtered = val.replace(/[^0-9+\s\-]/g, '');
+            if (val !== filtered) {
+                $(this).val(filtered);
+                val = filtered;
+            }
+
+            var cleaned = val.replace(/[\s\-\(\)]/g, '');
+            if (cleaned.length >= 10) {
+                if (validateIndianMobile(val)) {
+                    $(this).css({ 'border-color': '#10b981', 'box-shadow': '0 0 0 3px rgba(16, 185, 129, 0.15)' });
+                    $('#phoneValidationMsg').hide();
+                } else {
+                    $(this).css({ 'border-color': '#e11d48', 'box-shadow': '0 0 0 3px rgba(225, 29, 72, 0.15)' });
+                    $('#phoneValidationMsg').show();
+                }
+            } else {
+                $(this).css({ 'border-color': '#cbd5e1', 'box-shadow': 'none' });
+                $('#phoneValidationMsg').hide();
+            }
+        });
+
+        // Blur validation
+        $('#onboardingPhone').on('blur', function() {
+            var val = $(this).val().trim();
+            if (val.length > 0) {
+                if (!validateIndianMobile(val)) {
+                    $(this).css({ 'border-color': '#e11d48', 'box-shadow': '0 0 0 3px rgba(225, 29, 72, 0.15)' });
+                    $('#phoneValidationMsg').slideDown(150);
+                } else {
+                    $(this).css({ 'border-color': '#cbd5e1', 'box-shadow': 'none' });
+                    $('#phoneValidationMsg').hide();
+                }
+            }
+        });
+
+        // Submit guard
+        $('#googleOnboardingForm').on('submit', function(e) {
+            var phone = $('#onboardingPhone').val().trim();
+            if (!validateIndianMobile(phone)) {
+                e.preventDefault();
+                $('#onboardingPhone').css({ 'border-color': '#e11d48', 'box-shadow': '0 0 0 3px rgba(225, 29, 72, 0.25)' }).focus();
+                $('#phoneValidationMsg').slideDown(150);
+                return false;
+            }
+        });
     });
 
     function previewBusinessLogo(input) {
@@ -2400,16 +2459,22 @@
                   <i class="ti ti-brand-whatsapp"></i>
                 </span>
                 <input 
-                  type="text" 
+                  type="tel" 
                   name="phone" 
                   id="onboardingPhone" 
                   class="form-control" 
-                  placeholder="+91 98765 43210" 
+                  placeholder="e.g. 9876543210 or +91 98765 43210" 
                   value="{{ Auth::user()->phone }}" 
                   required 
-                  style="height: 48px; padding-left: 44px; border-radius: 12px; border: 1.5px solid #cbd5e1; font-size: 0.92rem; color: #0f172a;"
+                  maxlength="16"
+                  inputmode="tel"
+                  autocomplete="tel"
+                  style="height: 48px; padding-left: 44px; border-radius: 12px; border: 1.5px solid #cbd5e1; font-size: 0.92rem; color: #0f172a; transition: border-color 0.2s ease, box-shadow 0.2s ease;"
                 />
               </div>
+              <small id="phoneValidationMsg" style="display: none; color: #e11d48; font-size: 0.76rem; font-weight: 600; margin-top: 6px;">
+                <i class="ti ti-alert-circle me-1"></i>Please enter a valid 10-digit Indian mobile number (e.g. 9876543210 or +91 98765 43210).
+              </small>
             </div>
 
             <!-- 4. Business Logo (Optional - Logo is NOT Mandatory) -->

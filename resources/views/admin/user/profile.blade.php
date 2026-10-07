@@ -62,7 +62,7 @@
                   <div class="col-sm-12 col-md-4">
                     <div class="mb-3">
                       <label for="inputcontact" class="control-label col-form-label">Phone</label>
-                      <input type="text" name="phone"    pattern="^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[789]\d{9}$" required title="Enter Valid mobile number ex.9811111111"  @if (isset($user)) value="{{$user->phone}}"  @endif class="form-control" id="phone" placeholder="Phone Here">
+                      <input type="text" name="phone"    pattern="^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6-9]\d{9}$" required title="Enter Valid mobile number ex.9811111111"  @if (isset($user)) value="{{$user->phone}}"  @endif class="form-control" id="phone" placeholder="Phone Here">
                     </div>
                   </div>
                
