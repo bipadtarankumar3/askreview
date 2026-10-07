@@ -328,20 +328,26 @@
             line-height: 1.55;
         }
 
-        /* Dynamic Star Rating Component (Bigger Interactive Stars) */
+        /* Dynamic Star Rating Component (Responsive & Fluid) */
         .stars-rating-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin: 1.5rem 0 0.5rem 0;
+            margin: 1.25rem 0 0.5rem 0;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
         }
 
         .rating-interactive-stars {
             display: inline-flex;
             flex-direction: row-reverse;
             justify-content: center;
-            gap: 14px;
+            align-items: center;
+            gap: 12px;
             margin-bottom: 1.25rem;
+            max-width: 100%;
+            box-sizing: border-box;
         }
 
         .rating-interactive-stars input[type="radio"] {
@@ -350,14 +356,17 @@
 
         .rating-interactive-stars label {
             cursor: pointer;
-            width: 62px;
-            height: 62px;
+            width: 56px;
+            height: 56px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3rem;
+            font-size: 2.75rem;
             color: #e2e8f0;
             transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
 
         .rating-interactive-stars label::before {
@@ -370,8 +379,8 @@
         .rating-interactive-stars label:hover ~ label,
         .rating-interactive-stars input[type="radio"]:checked ~ label {
             color: var(--star-gold);
-            transform: scale(1.22);
-            filter: drop-shadow(0 6px 18px rgba(245, 158, 11, 0.5));
+            transform: scale(1.15);
+            filter: drop-shadow(0 4px 14px rgba(245, 158, 11, 0.45));
         }
 
         .rating-interactive-stars label:active {
@@ -1001,11 +1010,81 @@
                 display: none !important;
             }
             .left-content-col {
-                padding: 4rem 1.25rem 2rem 1.25rem;
+                padding: 3.5rem 1rem 2rem 1rem;
             }
             .portal-card {
-                padding: 2.25rem 1.5rem;
+                padding: 2rem 1.25rem;
                 border-radius: 24px;
+            }
+            .portal-title {
+                font-size: 1.75rem;
+            }
+            .rating-interactive-stars {
+                gap: 8px;
+            }
+            .rating-interactive-stars label {
+                width: 48px;
+                height: 48px;
+                font-size: 2.35rem;
+            }
+            .rating-interactive-stars label:hover,
+            .rating-interactive-stars label:hover ~ label,
+            .rating-interactive-stars input[type="radio"]:checked ~ label {
+                transform: scale(1.12);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .left-content-col {
+                padding: 3rem 0.75rem 1.5rem 0.75rem;
+            }
+            .portal-card {
+                padding: 1.75rem 0.75rem;
+                border-radius: 20px;
+            }
+            .portal-title {
+                font-size: 1.45rem;
+            }
+            .portal-subtitle {
+                font-size: 0.9rem;
+                margin-bottom: 1.25rem;
+            }
+            .rating-interactive-stars {
+                gap: 6px;
+                margin-bottom: 1rem;
+            }
+            .rating-interactive-stars label {
+                width: 44px;
+                height: 44px;
+                font-size: 2.15rem;
+            }
+            .rating-interactive-stars label:hover,
+            .rating-interactive-stars label:hover ~ label,
+            .rating-interactive-stars input[type="radio"]:checked ~ label {
+                transform: scale(1.08);
+            }
+            .rating-prompt-badge {
+                font-size: 0.82rem;
+                padding: 0.4rem 1.1rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .portal-card {
+                padding: 1.5rem 0.5rem;
+            }
+            .rating-interactive-stars {
+                gap: 4px;
+            }
+            .rating-interactive-stars label {
+                width: 38px;
+                height: 38px;
+                font-size: 1.85rem;
+            }
+            .rating-interactive-stars label:hover,
+            .rating-interactive-stars label:hover ~ label,
+            .rating-interactive-stars input[type="radio"]:checked ~ label {
+                transform: scale(1.05);
             }
         }
     </style>
