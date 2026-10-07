@@ -69,8 +69,16 @@
                   
                   <div class="col-sm-12 col-md-4">
                     <div class="mb-3">
-                      <label for="inputlname" class="control-label col-form-label">Email</label>
-                      <input type="email" name="email"  @if (isset($user)) value="{{$user->email}}"  @endif class="form-control" id="inputEmail3" placeholder="Email Here" @required(true)>
+                      <label for="inputlname" class="control-label col-form-label">
+                        Email
+                        @if(isset($user) && (!empty($user->google_id) || $user->user_create_type == 'google'))
+                          <span class="badge bg-light-secondary text-secondary ms-1" style="font-size: 0.72rem;"><i class="ti ti-lock"></i> Google Account</span>
+                        @endif
+                      </label>
+                      <input type="email" name="email" @if (isset($user)) value="{{$user->email}}" @endif class="form-control" id="inputEmail3" placeholder="Email Here" @required(true) @if(isset($user) && (!empty($user->google_id) || $user->user_create_type == 'google')) readonly style="background-color: #f8fafc; cursor: not-allowed;" @endif>
+                      @if(isset($user) && (!empty($user->google_id) || $user->user_create_type == 'google'))
+                        <small class="text-muted" style="font-size: 0.74rem;">Email is connected to Google and cannot be modified.</small>
+                      @endif
                     </div>
                   </div>
                   <div class="col-sm-12 col-md-4">

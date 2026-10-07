@@ -382,8 +382,9 @@ class FrontendController extends Controller
             return back()->withInput()->with($notification);
         }
 
-        // 3. Unique email check
-        $user = User::where('email', $request->email)->first();
+        // 3. Unique email check (case-insensitive & trimmed)
+        $cleanEmail = strtolower(trim($request->email));
+        $user = User::whereRaw('LOWER(TRIM(email)) = ?', [$cleanEmail])->first();
         if ($user) {
             $notification = array(
                 'messege' => 'Email address is already registered. Please login or use another email.',
@@ -418,7 +419,7 @@ class FrontendController extends Controller
             'user_unique_id' => $formatted_number,
             'name' => $request->name,
             'name_url' => $name_url,
-            'email' => $request->email,
+            'email' => $cleanEmail,
             'password' => Hash::make($request->password),
             'phone' => $request->phone,
             'type' => 'user',

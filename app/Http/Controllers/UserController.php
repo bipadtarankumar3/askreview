@@ -167,9 +167,9 @@ class UserController extends Controller
             if ($response->successful()) {
                 $payload = $response->json();
                 $googleUser = [
-                    'sub' => $payload['sub'] ?? '',
-                    'email' => $payload['email'] ?? '',
-                    'name' => $payload['name'] ?? ($payload['email'] ?? 'Google User'),
+                    'sub' => trim($payload['sub'] ?? ''),
+                    'email' => strtolower(trim($payload['email'] ?? '')),
+                    'name' => trim($payload['name'] ?? ($payload['email'] ?? 'Google User')),
                     'picture' => $payload['picture'] ?? null,
                 ];
 
@@ -192,9 +192,9 @@ class UserController extends Controller
 
     public function loginOrCreateGoogleUser($googleUser)
     {
-        $googleId = $googleUser['sub'] ?? '';
-        $email = $googleUser['email'] ?? '';
-        $name = $googleUser['name'] ?? 'Google User';
+        $googleId = trim($googleUser['sub'] ?? '');
+        $email = strtolower(trim($googleUser['email'] ?? ''));
+        $name = trim($googleUser['name'] ?? ($googleUser['email'] ?? 'Google User'));
         $avatar = $googleUser['picture'] ?? '';
 
         if (empty($email)) {
@@ -205,10 +205,13 @@ class UserController extends Controller
             return redirect('/login')->with($notification);
         }
 
-        $user = User::where('email', $email)->first();
-        if (!$user && !empty($googleId)) {
-            $user = User::where('google_id', $googleId)->first();
-        }
+        // Search for existing user by normalized email OR google_id
+        $user = User::where(function($query) use ($email, $googleId) {
+            $query->whereRaw('LOWER(TRIM(email)) = ?', [$email]);
+            if (!empty($googleId)) {
+                $query->orWhere('google_id', $googleId);
+            }
+        })->first();
 
         if ($user) {
             if (!empty($googleId) && empty($user->google_id)) {
@@ -239,6 +242,17 @@ class UserController extends Controller
             return redirect('admin/dashboard')->with($notification);
         }
 
+        // Strict guard: ensure email is not already present before creating
+        $existingByEmail = User::whereRaw('LOWER(TRIM(email)) = ?', [$email])->first();
+        if ($existingByEmail) {
+            if (!empty($googleId) && empty($existingByEmail->google_id)) {
+                $existingByEmail->google_id = $googleId;
+                $existingByEmail->save();
+            }
+            Auth::login($existingByEmail, true);
+            return redirect('admin/dashboard');
+        }
+
         // First time Google Sign in / Registration: USER TYPE MUST BE 'user'
         $nameUrl = strtolower(preg_replace('/[^a-zA-Z0-9]+/', '_', trim($name)));
         if (empty($nameUrl)) {
@@ -249,7 +263,7 @@ class UserController extends Controller
             $nameUrl = $nameUrl . '_' . rand(100, 999);
         }
 
-        $superAdmin = User::where('type', 'super_admin')->first() ?? User::first();
+        $superAdmin = User::where('email', 'digitalvyapariofficial@gmail.com')->first() ?? User::first();
         $parentUserId = $superAdmin ? $superAdmin->id : 1;
 
         $lastUser = User::where('user_id', $parentUserId)->orderBy('id', 'desc')->first();
@@ -319,14 +333,17 @@ class UserController extends Controller
 
         $request->validate([
             'business_name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
+            'email' => 'nullable|email|max:255',
             'phone' => 'required|string|max:25',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,webp,gif|max:5120'
         ]);
 
         $user = User::find(Auth::id());
         $user->name = trim($request->business_name);
-        $user->email = trim($request->email);
+        // Prevent changing email if registered or logged in with Google
+        if (empty($user->google_id) && $user->user_create_type != 'google' && !empty($request->email)) {
+            $user->email = trim($request->email);
+        }
         $user->phone = trim($request->phone);
 
         $nameUrl = strtolower(preg_replace('/[^a-zA-Z0-9]+/', '_', trim($request->business_name)));
@@ -548,7 +565,9 @@ class UserController extends Controller
                 
                 $user->name = $request->name;
                 $user->name_url = $request->name_url;
-                $user->email = $request->email;
+                if (empty($user->google_id) && $user->user_create_type != 'google' && !empty($request->email)) {
+                    $user->email = $request->email;
+                }
                 $user->phone = $request->phone;
 
                 if ($request->template_category_id != '') {
@@ -881,7 +900,9 @@ class UserController extends Controller
 
                 $user->name = $request->name;
                 $user->name_url = $request->name_url;
-                $user->email = $request->email;
+                if (empty($user->google_id) && $user->user_create_type != 'google' && !empty($request->email)) {
+                    $user->email = $request->email;
+                }
                 $user->phone = $request->phone;
 
                 if ($request->template_category_id != '') {

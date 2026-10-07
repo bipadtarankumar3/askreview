@@ -2355,11 +2355,16 @@
               </div>
             </div>
 
-            <!-- 2. Email Address (Mandatory) -->
+            <!-- 2. Email Address (Google Account - Locked) -->
             <div class="mb-3">
-              <label for="onboardingEmail" style="font-weight: 700; font-size: 0.86rem; color: #1e293b; margin-bottom: 6px; display: block;">
-                Email Address <span style="color: #e11d48;">*</span>
-              </label>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <label for="onboardingEmail" style="font-weight: 700; font-size: 0.86rem; color: #1e293b; margin: 0;">
+                  Email Address <span style="color: #e11d48;">*</span>
+                </label>
+                <span style="font-size: 0.72rem; font-weight: 600; color: #475569; background: #f1f5f9; padding: 2px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px;">
+                  <i class="ti ti-lock" style="font-size: 0.8rem; color: #64748b;"></i> Google Account (Cannot change)
+                </span>
+              </div>
               <div style="position: relative; display: flex; align-items: center;">
                 <span style="position: absolute; left: 14px; color: #94a3b8; font-size: 1.15rem; pointer-events: none; display: flex; align-items: center;">
                   <i class="ti ti-mail"></i>
@@ -2371,10 +2376,18 @@
                   class="form-control" 
                   placeholder="contact@business.com" 
                   value="{{ Auth::user()->email }}" 
+                  readonly 
+                  tabindex="-1"
                   required 
-                  style="height: 48px; padding-left: 44px; border-radius: 12px; border: 1.5px solid #cbd5e1; font-size: 0.92rem; color: #0f172a;"
+                  style="height: 48px; padding-left: 44px; padding-right: 40px; border-radius: 12px; border: 1.5px solid #e2e8f0; font-size: 0.92rem; color: #475569; background-color: #f8fafc; cursor: not-allowed;"
                 />
+                <span style="position: absolute; right: 14px; color: #94a3b8; font-size: 1.1rem; pointer-events: none; display: flex; align-items: center;" title="Email cannot be changed for Google login">
+                  <i class="ti ti-lock"></i>
+                </span>
               </div>
+              <small style="color: #94a3b8; font-size: 0.74rem; margin-top: 4px; display: block;">
+                Signed in with Google. Email address is permanent and cannot be modified.
+              </small>
             </div>
 
             <!-- 3. WhatsApp / Contact Number (Mandatory) -->
