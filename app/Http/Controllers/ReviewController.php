@@ -149,9 +149,47 @@ class ReviewController extends Controller
                 }
             }
 
+            // Calculate video_access_show
+            $video_access_show = false;
+            if (Auth::user()->user_create_type == 'sign_up') {
+                $service = Payment::select('payments.*','services.title','services.subscription_date','services.video_access')
+                ->join('services','services.id','payments.service_id')
+                ->where('payments.user_id',Auth::user()->id)
+                ->orderBy('payments.id','desc')
+                ->first();
+
+                if ($service && $service->video_access == 'YES') {
+                    $video_access_show = true;
+                } else {
+                    $video_access_show = (Auth::user()->video_access == 'YES');
+                }
+            } else {
+                $video_access_show = (Auth::user()->video_access == 'YES');
+            }
+            $array['video_access_show'] = $video_access_show;
+
+            // If admin enabled video access, ensure record integration is immediately active and ready
+            if ($video_access_show || Auth::user()->video_access == 'YES') {
+                $recInt = Integration::where('user_id', Auth::user()->id)->where('type', 'record')->first();
+                if (!$recInt) {
+                    $maxOrder = Integration::where('user_id', Auth::user()->id)->max('button_order') ?? 5;
+                    Integration::create([
+                        'type' => 'record',
+                        'user_id' => Auth::user()->id,
+                        'button_icon' => URL::to('frontend/images/record.png'),
+                        'button_name' => 'Video Testimonial',
+                        'button_order' => $maxOrder + 1,
+                        'status' => 'active'
+                    ]);
+                } elseif ($recInt->status != 'active') {
+                    $recInt->status = 'active';
+                    $recInt->save();
+                }
+            } elseif (Auth::user()->video_access == 'NO') {
+                Integration::where('user_id', Auth::user()->id)->where('type', 'record')->update(['status' => 'inactive']);
+            }
+
             $array['integrationList'] = Integration::where('user_id',Auth::user()->id)->orderBy('button_order','asc')->get();
-
-
 
             $array['IntegrationGoogle'] = Integration::where('user_id',Auth::user()->id)
             ->where('type','google')
@@ -177,35 +215,6 @@ class ReviewController extends Controller
             ->first();
 
             $array['admin_user'] = User::where('id',Auth::user()->user_id)->orderBy('id','desc')->first();
-
-            $array['video_access_show'] = false;
-            if (Auth::user()->user_create_type == 'sign_up') {
-                $service = Payment::select('payments.*','services.title','services.subscription_date','services.video_access')
-                ->join('services','services.id','payments.service_id')
-                ->where('payments.user_id',Auth::user()->id)
-                ->orderBy('payments.id','desc')
-                ->first();
-
-                if ($service && $service->video_access	== 'YES') {
-                    $array['video_access_show'] = true;
-                }else{
-
-                    if (Auth::user()->video_access == 'YES') {
-                        $array['video_access_show'] = true;
-                    }else{
-                        $array['video_access_show'] = false;
-                    } 
-                    
-                }
-                
-            }else{
-                if (Auth::user()->video_access == 'YES') {
-                    $array['video_access_show'] = true;
-                }else{
-                    $array['video_access_show'] = false;
-                } 
-                
-            }
 
 
             

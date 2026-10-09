@@ -494,7 +494,7 @@
                         if (isset($integrationList)) {
                             foreach ($integrationList as $itemCheck) {
                                 if ($itemCheck->type == 'google' && (!empty($itemCheck->review_links) || !empty($itemCheck->place_id) || !empty($itemCheck->status))) $connectedCount++;
-                                elseif ($itemCheck->type == 'record' && !empty($itemCheck->status)) $connectedCount++;
+                                elseif ($itemCheck->type == 'record' && (($video_access_show == true || (Auth::check() && Auth::user()->video_access == 'YES')) && $itemCheck->status != 'inactive')) $connectedCount++;
                                 elseif ($itemCheck->type != 'private' && (!empty($itemCheck->review_links) || !empty($itemCheck->status))) $connectedCount++;
                             }
                         }
@@ -657,11 +657,12 @@
             @if (isset($integrationList[0]))
                 @foreach ($integrationList as $item)
                     @php
+                        $hasVideoAccess = ($video_access_show == true || (Auth::check() && Auth::user()->video_access == 'YES'));
                         $isConfigured = false;
                         if ($item->type == 'google') {
                             $isConfigured = (!empty($item->review_links) || !empty($item->place_id) || !empty($item->status));
                         } elseif ($item->type == 'record') {
-                            $isConfigured = (!empty($item->status));
+                            $isConfigured = $hasVideoAccess && ($item->status != 'inactive');
                         } elseif ($item->type == 'private') {
                             $isConfigured = true; // Built-in active shield
                         } else {
@@ -700,6 +701,20 @@
                                     <span class="status-badge-pill status-shield">
                                         <i class="ti ti-shield-check"></i> Built-in Shield
                                     </span>
+                                @elseif ($item->type == 'record')
+                                    @if ($hasVideoAccess && !$isInactive)
+                                        <span class="status-badge-pill status-connected" title="Video access enabled by Admin">
+                                            <span class="pulse-dot-green"></span> Connected &amp; Live
+                                        </span>
+                                    @elseif ($isInactive)
+                                        <span class="status-badge-pill status-inactive" title="Channel is disabled">
+                                            <i class="ti ti-circle-x"></i> Inactive
+                                        </span>
+                                    @else
+                                        <span class="status-badge-pill status-unconnected" title="Video access not enabled">
+                                            <i class="ti ti-lock"></i> Not Enabled
+                                        </span>
+                                    @endif
                                 @elseif ($isConfigured)
                                     @if ($isInactive)
                                         <span class="status-badge-pill status-inactive" title="Channel is disabled">
@@ -757,19 +772,18 @@
                                     @endif
 
                                 @elseif ($item->type == 'record')
-                                    @if (isset($admin_user) && $admin_user->video_access == 'YES' && $video_access_show == true)
-                                        @if ($isConfigured)
-                                            <button type="button" class="btn-configure-action w-100" onclick="add_spinner_btn('record')">
-                                                <i class="ti ti-settings"></i> Configure Video
+                                    @if ($hasVideoAccess)
+                                        <div class="d-flex align-items-center gap-2 w-100">
+                                            <div class="badge py-2 px-3 rounded-pill fw-bold d-flex align-items-center justify-content-center gap-1 flex-grow-1" style="font-size: 0.8rem; background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0;">
+                                                <i class="ti ti-circle-check"></i> Active &amp; Ready
+                                            </div>
+                                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="add_spinner_btn('record')" title="Video Testimonial Settings" style="border-radius: 10px; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center;">
+                                                <i class="ti ti-settings"></i>
                                             </button>
-                                        @else
-                                            <button type="button" class="btn-connect-action" onclick="add_spinner_btn('record')">
-                                                <i class="ti ti-plus"></i> Enable Video Testimonials
-                                            </button>
-                                        @endif
+                                        </div>
                                     @else
-                                        <div class="shield-badge-box">
-                                            <i class="ti ti-lock"></i> Upgrade to Enable Video
+                                        <div class="shield-badge-box w-100" style="background: #f8fafc; border: 1px solid #e2e8f0; color: #94a3b8;">
+                                            <i class="ti ti-lock"></i> Video Access Disabled by Admin
                                         </div>
                                     @endif
 

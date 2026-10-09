@@ -256,11 +256,14 @@ class FrontendController extends Controller
                         ]);
                         $array['IntegrationRecord'] = $recordIntegration;
                         $array['integrationList'] = Integration::where('user_id', $user->id)->orderBy('button_order', 'asc')->get();
-                    } elseif ($recordIntegration->status === null) {
+                    } elseif ($recordIntegration->status !== 'active') {
                         $recordIntegration->update(['status' => 'active']);
                         $array['IntegrationRecord'] = $recordIntegration;
                         $array['integrationList'] = Integration::where('user_id', $user->id)->orderBy('button_order', 'asc')->get();
                     }
+                } else {
+                    Integration::where('user_id', $userDate->id)->where('type', 'record')->update(['status' => 'inactive']);
+                    $array['integrationList'] = Integration::where('user_id', $user->id)->orderBy('button_order', 'asc')->get();
                 }
 
 
