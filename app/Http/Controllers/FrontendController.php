@@ -428,6 +428,7 @@ class FrontendController extends Controller
             'status' => 'active',
             'expiry_date' => $future_date,
             'seven_day_trial' => 'YES',
+            'onboarding_completed' => 0,
             'user_create_limit' => 10,
             'front_page_text' => '',
             'default_background' => 'Yes',

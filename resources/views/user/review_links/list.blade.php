@@ -34,25 +34,25 @@
                 start Zero Configuration
             ---------------- -->
         <div class="card">
-            <div class="card-header">
+            <div class="card-header" id="reviewLinksCardHeader">
                 <div class="mb-2">
-                    <div class="row">
-                        <div class="col-md-10">
-                            <h5 class="mb-0">Review Links List</h5>
+                    <div class="row align-items-center">
+                        <div class="col-md-9 col-7">
+                            <h5 class="mb-0 fw-bold" style="color: #0f172a;">Review Links List</h5>
                         </div>
-                        <div class="col-md-2">
-                            {{-- <a href="{{URL::to('admin/add_spinner_page')}}" class="btn btn-info">Add Spinner</a> --}}
-                            {{-- <a href="#" onclick="add_spinner_btn()" class="btn btn-info">Add Review Links</a> --}}
+                        <div class="col-md-3 col-5 text-end">
+                            <button type="button" class="btn btn-sm" id="btnRestartTour" onclick="startIntegrationsTour(true)" style="background: #eff6ff; border: 1.5px solid #bfdbfe; color: #1d4ed8; font-weight: 700; border-radius: 10px; padding: 6px 14px; font-size: 0.82rem; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(37,99,235,0.08);">
+                                <i class="ti ti-compass" style="font-size: 1.05rem;"></i>
+                                <span>Page Tour</span>
+                            </button>
                         </div>
                     </div>
-                    
-                    
                 </div>
             </div>
             <div class="card-body">
-                <h4 class="text-center">Drag & Drop your favorite social media tabs to customize your feed</h4>
+                <h4 class="text-center" id="reviewLinksIntroTitle" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #1e293b; margin-bottom: 24px;">Drag &amp; Drop your favorite social media tabs to customize your feed</h4>
                <div id="integrationContainer" class="row">
-                
+                 
                     @if (isset($integrationList) && count($integrationList) > 0)
                         @if (isset($integrationList[0]))
                             @foreach ($integrationList as $item)
@@ -68,7 +68,7 @@
                                         $isConfigured = (!empty($item->review_links) || !empty($item->status));
                                     }
                                 @endphp
-                                <div class="col-md-3 mt-4 drag-item" id="dragbble_{{$item->id}}" data-order="{{$item->button_order}}">
+                                <div class="col-md-3 mt-4 drag-item" id="dragbble_{{$item->id}}" data-order="{{$item->button_order}}" data-type="{{$item->type}}">
                                     <div class="links_box">
                                         <br>
                                         @if ($isConfigured)
@@ -136,7 +136,7 @@
                                 </div>
                             @endforeach
                         @else
-                            <div class="col-md-3">
+                            <div class="col-md-3" data-type="google">
                                 <div class="links_box">
                                     <br>
                                     @if (isset($IntegrationGoogle))
@@ -170,7 +170,7 @@
                                 </div>
                             </div>
                  
-                            <div class="col-md-3">
+                            <div class="col-md-3" data-type="facebook">
                                 <div class="links_box">
                                     
                                     <br>
@@ -208,7 +208,7 @@
                                     
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-3" data-type="youtube">
                                 <div class="links_box">
                                     
                                     <br>
@@ -243,7 +243,7 @@
                                     
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-3" data-type="instagram">
                                 <div class="links_box">
                                     
                                     <br>
@@ -808,5 +808,309 @@
     });
 </script>
 
+<!-- ====================================================================
+     INTERACTIVE ONBOARDING TOUR FOR REVIEW LINKS (FIRST-TIME VISITORS)
+     ==================================================================== -->
+<div id="integrationsTourOverlay" style="display: none; position: fixed; inset: 0; z-index: 99998; pointer-events: auto;">
+    <!-- Clickable backdrop to close or advance -->
+    <div id="tourBackdropClickCatcher" onclick="closeIntegrationsTour()" style="position: absolute; inset: 0; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(2px); cursor: pointer;" title="Click anywhere to exit tour"></div>
+    
+    <!-- Dynamic Spotlight cutout box with pulsing illumination -->
+    <div id="tourSpotlightBox" style="position: absolute; pointer-events: none; border-radius: 16px; border: 3px solid #2563eb; box-shadow: 0 0 0 9999px rgba(15, 23, 42, 0.65), 0 0 30px rgba(37, 99, 235, 0.55); transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1); z-index: 99999; display: none;"></div>
+
+    <!-- Floating Tour Tooltip Card -->
+    <div id="tourTooltipCard" style="position: absolute; width: 360px; max-width: calc(100vw - 32px); background: #ffffff; border-radius: 20px; border: 1px solid rgba(226, 232, 240, 0.95); box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.38); padding: 22px; z-index: 100000; font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.32s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: auto;">
+        
+        <!-- Top row: Badge, Steps counter, Close -->
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+            <span id="tourStepBadge" style="display: inline-flex; align-items: center; gap: 4px; background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; font-size: 0.72rem; font-weight: 800; padding: 3px 10px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.04em;">
+                Step 1 of 5
+            </span>
+            <button type="button" onclick="closeIntegrationsTour()" style="background: none; border: none; color: #94a3b8; font-size: 1.35rem; line-height: 1; cursor: pointer; padding: 2px 6px; border-radius: 6px; transition: all 0.2s;" onmouseover="this.style.color='#0f172a'; this.style.background='#f1f5f9';" onmouseout="this.style.color='#94a3b8'; this.style.background='none';" title="Exit Tour (Esc)">
+                &times;
+            </button>
+        </div>
+
+        <!-- Step Title -->
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+            <div id="tourStepIcon" style="width: 36px; height: 36px; border-radius: 10px; background: #eff6ff; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; color: #2563eb; flex-shrink: 0;">
+                <i class="ti ti-rocket"></i>
+            </div>
+            <h6 id="tourStepTitle" style="font-weight: 800; font-size: 1.06rem; color: #0f172a; margin: 0; line-height: 1.3;">
+                Welcome to Review Links!
+            </h6>
+        </div>
+
+        <!-- Step Description -->
+        <p id="tourStepContent" style="font-size: 0.85rem; color: #475569; line-height: 1.55; margin: 0 0 18px 0;">
+            This is where you configure which review channels appear on your public review page.
+        </p>
+
+        <!-- Footer -->
+        <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #f1f5f9; padding-top: 14px;">
+            <!-- Progress dots -->
+            <div id="tourProgressDots" style="display: flex; gap: 6px; align-items: center;"></div>
+
+            <!-- Nav Buttons -->
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <button type="button" id="tourPrevBtn" onclick="prevTourStep()" class="btn btn-sm" style="display: none; background: #f8fafc; border: 1px solid #e2e8f0; color: #475569; font-weight: 700; font-size: 0.8rem; border-radius: 10px; padding: 6px 14px; transition: all 0.2s;">
+                    &larr; Back
+                </button>
+                <button type="button" id="tourNextBtn" onclick="nextTourStep()" class="btn btn-sm" style="background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); border: none; color: #ffffff; font-weight: 700; font-size: 0.82rem; border-radius: 10px; padding: 7px 18px; box-shadow: 0 3px 10px rgba(37,99,235,0.25); display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;">
+                    <span>Next</span> &rarr;
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+(function() {
+    var tourCurrentStep = 0;
+    var tourSteps = [
+        {
+            target: '#reviewLinksIntroTitle',
+            fallbackTarget: '#reviewLinksCardHeader',
+            badge: 'Step 1 of 5 • Welcome',
+            icon: '<i class="ti ti-rocket"></i>',
+            title: 'Welcome to Integrations Hub! 🚀',
+            content: 'This is where you activate the review channels for your business. Every platform you configure here appears instantly on your public review page and smart QR standees!',
+            placement: 'bottom'
+        },
+        {
+            target: '[data-type="google"]',
+            fallbackTarget: '.drag-item:first-child',
+            badge: 'Step 2 of 5 • Top Priority',
+            icon: '<i class="ti ti-brand-google"></i>',
+            title: 'Connect Google Reviews ⭐',
+            content: 'Google Reviews have the highest impact on your store ranking. Click <strong>"Integrate"</strong> to link your Google Business profile so happy customers are directed straight to leave a 5-star review on Google Maps.',
+            placement: 'bottom'
+        },
+        {
+            target: '[data-type="whatsapp"]',
+            fallbackTarget: '[data-type="facebook"]',
+            badge: 'Step 3 of 5 • Multi-Channel',
+            icon: '<i class="ti ti-brand-whatsapp"></i>',
+            title: 'WhatsApp & Social Channels 💬',
+            content: 'Enable WhatsApp, Facebook, or Instagram so customers who don\'t have a Google account can still recommend your store, leave feedback, or chat with you directly.',
+            placement: 'bottom'
+        },
+        {
+            target: '#integrationContainer',
+            fallbackTarget: '.card-body',
+            badge: 'Step 4 of 5 • Custom Order',
+            icon: '<i class="ti ti-arrows-sort"></i>',
+            title: 'Drag & Drop Ordering 🔄',
+            content: 'You can freely reorder your buttons! Simply click and drag any card to customize their layout. Platforms placed at the top will be shown first to your customers.',
+            placement: 'top'
+        },
+        {
+            target: '#navbarLiveReviewPill',
+            fallbackTarget: '#btnRestartTour',
+            badge: 'Step 5 of 5 • Live Preview',
+            icon: '<i class="ti ti-external-link"></i>',
+            title: 'Test Your Live Review Page 🌐',
+            content: 'Click your <strong>Live Link</strong> in the header anytime to see exactly what your customers experience when they scan your QR code standees or click your link. You\'re all set!',
+            placement: 'bottom'
+        }
+    ];
+
+    window.startIntegrationsTour = function(forceRestart) {
+        tourCurrentStep = 0;
+        var overlay = document.getElementById('integrationsTourOverlay');
+        if (!overlay) return;
+        overlay.style.display = 'block';
+        showTourStep(tourCurrentStep);
+    };
+
+    window.closeIntegrationsTour = function() {
+        var overlay = document.getElementById('integrationsTourOverlay');
+        if (overlay) overlay.style.display = 'none';
+        var spotlight = document.getElementById('tourSpotlightBox');
+        if (spotlight) spotlight.style.display = 'none';
+        
+        // Mark tour as seen in localStorage
+        try {
+            localStorage.setItem('askreview_integrations_tour_seen', 'true');
+        } catch(e) {}
+
+        // Remove tour / source params from URL without refreshing
+        try {
+            var url = new URL(window.location.href);
+            if (url.searchParams.has('tour') || url.searchParams.has('source')) {
+                url.searchParams.delete('tour');
+                url.searchParams.delete('source');
+                window.history.replaceState({}, document.title, url.toString());
+            }
+        } catch(e) {}
+    };
+
+    window.nextTourStep = function() {
+        if (tourCurrentStep < tourSteps.length - 1) {
+            tourCurrentStep++;
+            showTourStep(tourCurrentStep);
+        } else {
+            closeIntegrationsTour();
+        }
+    };
+
+    window.prevTourStep = function() {
+        if (tourCurrentStep > 0) {
+            tourCurrentStep--;
+            showTourStep(tourCurrentStep);
+        }
+    };
+
+    function showTourStep(index) {
+        var step = tourSteps[index];
+        if (!step) return;
+
+        // Find target element
+        var targetEl = document.querySelector(step.target);
+        if (!targetEl || targetEl.offsetParent === null) {
+            if (step.fallbackTarget) {
+                targetEl = document.querySelector(step.fallbackTarget);
+            }
+        }
+        if (!targetEl || targetEl.offsetParent === null) {
+            targetEl = document.getElementById('reviewLinksCardHeader') || document.body;
+        }
+
+        // Update Text & UI
+        var badge = document.getElementById('tourStepBadge');
+        if (badge) badge.innerText = step.badge;
+
+        var icon = document.getElementById('tourStepIcon');
+        if (icon) icon.innerHTML = step.icon;
+
+        var title = document.getElementById('tourStepTitle');
+        if (title) title.innerText = step.title;
+
+        var content = document.getElementById('tourStepContent');
+        if (content) content.innerHTML = step.content;
+
+        // Prev & Next Buttons
+        var prevBtn = document.getElementById('tourPrevBtn');
+        if (prevBtn) {
+            prevBtn.style.display = (index > 0) ? 'inline-block' : 'none';
+        }
+
+        var nextBtn = document.getElementById('tourNextBtn');
+        if (nextBtn) {
+            if (index === tourSteps.length - 1) {
+                nextBtn.innerHTML = '<span>Finish Tour</span> <i class="ti ti-check ms-1"></i>';
+                nextBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+            } else {
+                nextBtn.innerHTML = '<span>Next</span> &rarr;';
+                nextBtn.style.background = 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)';
+            }
+        }
+
+        // Render progress dots
+        var dotsBox = document.getElementById('tourProgressDots');
+        if (dotsBox) {
+            var dotsHtml = '';
+            for (var i = 0; i < tourSteps.length; i++) {
+                if (i === index) {
+                    dotsHtml += '<span style="width: 18px; height: 6px; border-radius: 9999px; background: #2563eb; transition: all 0.2s ease;"></span>';
+                } else if (i < index) {
+                    dotsHtml += '<span style="width: 6px; height: 6px; border-radius: 50%; background: #10b981; transition: all 0.2s ease;"></span>';
+                } else {
+                    dotsHtml += '<span style="width: 6px; height: 6px; border-radius: 50%; background: #cbd5e1; transition: all 0.2s ease;"></span>';
+                }
+            }
+            dotsBox.innerHTML = dotsHtml;
+        }
+
+        // Scroll and position
+        targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        setTimeout(function() {
+            positionTourElements(targetEl, step.placement);
+        }, 120);
+    }
+
+    function positionTourElements(targetEl, preferredPlacement) {
+        var spotlight = document.getElementById('tourSpotlightBox');
+        var card = document.getElementById('tourTooltipCard');
+        if (!spotlight || !card) return;
+
+        var rect = targetEl.getBoundingClientRect();
+        var scrollY = window.pageYOffset || document.documentElement.scrollTop;
+        var scrollX = window.pageXOffset || document.documentElement.scrollLeft;
+
+        var pad = 8;
+        var spotTop = rect.top + scrollY - pad;
+        var spotLeft = rect.left + scrollX - pad;
+        var spotWidth = rect.width + (pad * 2);
+        var spotHeight = rect.height + (pad * 2);
+
+        spotlight.style.display = 'block';
+        spotlight.style.top = spotTop + 'px';
+        spotlight.style.left = spotLeft + 'px';
+        spotlight.style.width = spotWidth + 'px';
+        spotlight.style.height = spotHeight + 'px';
+
+        // Calculate card position
+        var cardWidth = card.offsetWidth || 360;
+        var cardHeight = card.offsetHeight || 220;
+
+        var cardTop = 0;
+        var cardLeft = (rect.left + scrollX) + (rect.width / 2) - (cardWidth / 2);
+
+        if (preferredPlacement === 'top') {
+            cardTop = (rect.top + scrollY) - cardHeight - 16;
+            if (cardTop < scrollY + 10) {
+                cardTop = (rect.bottom + scrollY) + 16;
+            }
+        } else {
+            cardTop = (rect.bottom + scrollY) + 16;
+            if (cardTop + cardHeight > document.documentElement.scrollHeight - 10) {
+                cardTop = (rect.top + scrollY) - cardHeight - 16;
+            }
+        }
+
+        // Clamp horizontally
+        if (cardLeft < 16) cardLeft = 16;
+        if (cardLeft + cardWidth > window.innerWidth - 16) {
+            cardLeft = window.innerWidth - cardWidth - 16;
+        }
+
+        card.style.top = cardTop + 'px';
+        card.style.left = cardLeft + 'px';
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+        var overlay = document.getElementById('integrationsTourOverlay');
+        if (!overlay || overlay.style.display === 'none') return;
+
+        if (e.key === 'Escape') {
+            closeIntegrationsTour();
+        } else if (e.key === 'ArrowRight' || e.key === 'Enter') {
+            nextTourStep();
+        } else if (e.key === 'ArrowLeft') {
+            prevTourStep();
+        }
+    });
+
+    // Auto-launch for first-time visitors or if URL has tour=1 / source=onboarding
+    document.addEventListener('DOMContentLoaded', function() {
+        var urlParams = new URLSearchParams(window.location.search);
+        var hasTourParam = urlParams.get('tour') === '1' || urlParams.get('source') === 'onboarding';
+        var tourSeen = false;
+        try {
+            tourSeen = localStorage.getItem('askreview_integrations_tour_seen') === 'true';
+        } catch(e) {}
+
+        if (hasTourParam || !tourSeen) {
+            setTimeout(function() {
+                startIntegrationsTour(false);
+            }, 600);
+        }
+    });
+})();
+</script>
 
 @endsection

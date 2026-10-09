@@ -232,8 +232,9 @@ class UserController extends Controller
                 return redirect('/login')->with($notification);
             }
 
-            if (empty($user->phone)) {
+            if (empty($user->phone) || empty($user->onboarding_completed)) {
                 Session::put('needs_google_onboarding', true);
+                Session::put('first_time_login', true);
             }
 
             Auth::login($user, true);
@@ -375,6 +376,7 @@ class UserController extends Controller
         }
 
         Session::put('needs_google_onboarding', true);
+        Session::put('first_time_login', true);
         Auth::login($newUser, true);
         $notification = array(
             'messege' => 'Registration successful via Google! Please complete your business profile.',
@@ -427,23 +429,47 @@ class UserController extends Controller
             $user->logo = url('upload/' . $fileName);
         }
 
+        $user->onboarding_completed = 1;
         $user->save();
         Session::forget('needs_google_onboarding');
+        Session::forget('first_time_login');
 
         $notification = array(
-            'messege' => 'Business profile setup completed successfully! Welcome to your dashboard.',
+            'messege' => 'Business profile setup completed successfully!',
             'alert-type' => 'success'
         );
 
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json([
                 'status' => true,
-                'message' => 'Profile updated successfully!',
+                'message' => 'Profile updated successfully! Proceeding to integrations.',
+                'redirect' => url('admin/review_links?source=onboarding&tour=1')
+            ]);
+        }
+
+        return redirect('admin/review_links?source=onboarding&tour=1')->with($notification);
+    }
+
+    public function skip_onboarding(Request $request)
+    {
+        if (Auth::check()) {
+            $user = User::find(Auth::id());
+            if ($user) {
+                $user->onboarding_completed = 1;
+                $user->save();
+            }
+            Session::forget('needs_google_onboarding');
+            Session::forget('first_time_login');
+        }
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'status' => true,
                 'redirect' => url('admin/dashboard')
             ]);
         }
 
-        return redirect('admin/dashboard')->with($notification);
+        return redirect('admin/dashboard');
     }
 
     public function login_post(Request $request)
@@ -464,6 +490,10 @@ class UserController extends Controller
                     $userModel->seven_day_trial = 'YES';
                     $userModel->save();
                 }
+            }
+
+            if ($authUser->type == 'user' && (empty($authUser->phone) || empty($authUser->onboarding_completed))) {
+                Session::put('first_time_login', true);
             }
 
             if (Auth::user()->type == 'super_admin') {

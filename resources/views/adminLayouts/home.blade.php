@@ -1190,7 +1190,7 @@
 
               <!-- Role Indicator Pill -->
               @if(Auth::user()->type == 'user')
-                <div class="d-none d-xl-flex align-items-center gap-2 px-3" style="height: 36px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 9999px; font-size: 0.82rem; white-space: nowrap;">
+                <div id="navbarLiveReviewPill" class="d-none d-xl-flex align-items-center gap-2 px-3" style="height: 36px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 9999px; font-size: 0.82rem; white-space: nowrap;">
                   <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 0 3px rgba(16,185,129,0.15); flex-shrink: 0;"></span>
                   <span class="text-muted fw-500">Live:</span>
                   <a href="{{ url('u/'.Auth::user()->name_url) }}" target="_blank" class="fw-bold text-dark text-decoration-none d-flex align-items-center gap-1">
@@ -2140,7 +2140,7 @@
   @endphp
   
   @php
-    $needsGoogleOnboarding = (Auth::user()->type == 'user' && (empty(Auth::user()->phone) || session('needs_google_onboarding')));
+    $needsGoogleOnboarding = (Auth::check() && Auth::user()->type == 'user' && (empty(Auth::user()->phone) || empty(Auth::user()->onboarding_completed) || session('needs_google_onboarding') || session('first_time_login')));
   @endphp
   
   @if (Auth::user()->type == 'user' && !$needsGoogleOnboarding)
@@ -2258,7 +2258,7 @@
         });
     }
 
-    @if(Auth::check() && Auth::user()->type == 'user' && (empty(Auth::user()->phone) || session('needs_google_onboarding')))
+    @if(Auth::check() && Auth::user()->type == 'user' && (empty(Auth::user()->phone) || empty(Auth::user()->onboarding_completed) || session('needs_google_onboarding') || session('first_time_login')))
     $(document).ready(function() {
         // Ensure expiry modal stays hidden while onboarding is required
         $('#expiry_alert_modal').modal('hide');
@@ -2287,14 +2287,12 @@
         // --- Indian Mobile Number Validation ---
         function validateIndianMobile(phone) {
             if (!phone) return false;
-            // Clean out spaces, dashes, parentheses
             var cleaned = phone.toString().trim().replace(/[\s\-\(\)]/g, '');
-            // Valid Indian mobile: optional +91, 91, or 0 prefix, followed by 10 digits starting with 6, 7, 8, or 9
             var regex = /^(?:(?:\+|0{0,2})91|0)?[6-9]\d{9}$/;
             return regex.test(cleaned);
         }
 
-        // Live input sanitizer: only allow digits, +, space, and hyphen
+        // Live input sanitizer
         $('#onboardingPhone').on('input', function() {
             var val = $(this).val();
             var filtered = val.replace(/[^0-9+\s\-]/g, '');
@@ -2318,7 +2316,6 @@
             }
         });
 
-        // Blur validation
         $('#onboardingPhone').on('blur', function() {
             var val = $(this).val().trim();
             if (val.length > 0) {
@@ -2332,17 +2329,115 @@
             }
         });
 
-        // Submit guard
+        // Step 1 Form AJAX Submission
         $('#googleOnboardingForm').on('submit', function(e) {
+            e.preventDefault();
+
             var phone = $('#onboardingPhone').val().trim();
             if (!validateIndianMobile(phone)) {
-                e.preventDefault();
                 $('#onboardingPhone').css({ 'border-color': '#e11d48', 'box-shadow': '0 0 0 3px rgba(225, 29, 72, 0.25)' }).focus();
                 $('#phoneValidationMsg').slideDown(150);
                 return false;
             }
+
+            var $btn = $('#onboardingStep1Btn');
+            var originalBtnHtml = $btn.html();
+            $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Saving Profile...');
+            $('#step1Alert').hide();
+
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                success: function(res) {
+                    $btn.prop('disabled', false).html(originalBtnHtml);
+                    goToOnboardingStep(2);
+                },
+                error: function(xhr) {
+                    $btn.prop('disabled', false).html(originalBtnHtml);
+                    var msg = 'An error occurred while saving your details. Please check your inputs.';
+                    if (xhr.responseJSON && xhr.responseJSON.errors) {
+                        var errors = xhr.responseJSON.errors;
+                        var firstKey = Object.keys(errors)[0];
+                        if (firstKey && errors[firstKey][0]) {
+                            msg = errors[firstKey][0];
+                        }
+                    } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                        msg = xhr.responseJSON.message;
+                    }
+                    $('#step1AlertText').text(msg);
+                    $('#step1Alert').slideDown(200);
+                }
+            });
         });
     });
+
+    // Step switching function
+    function goToOnboardingStep(step) {
+        if (step === 2) {
+            // Update Stepper Pill 1
+            $('#stepPill1').removeClass('active').addClass('completed');
+            $('#stepPill1 .step-badge').html('<i class="ti ti-check" style="font-weight: 800; font-size: 13px;"></i>').css({'background': '#10b981', 'color': '#ffffff', 'border': 'none'});
+            $('#stepPill1 .step-text').css('color', '#10b981');
+            $('#stepLineProgress').css('background', '#10b981');
+
+            // Update Stepper Pill 2
+            $('#stepPill2').addClass('active').removeClass('completed');
+            $('#stepPill2 .step-badge').css({'background': '#2563eb', 'color': '#ffffff', 'border': 'none'});
+            $('#stepPill2 .step-text').css('color', '#0f172a');
+
+            // Header info
+            $('#onboardingModalTitle').text('Connect Review Integrations');
+            $('#onboardingModalSubtitle').text('Integrate platforms to start gathering verified 5-star customer reviews.');
+            $('#modalHeaderIcon').css({'background': 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)', 'border-color': '#bfdbfe', 'color': '#2563eb'}).html('<i class="ti ti-plug-connected"></i>');
+
+            // Transition body containers
+            $('#onboardingStep1Container').hide();
+            $('#onboardingStep2Container').fadeIn(250);
+        } else {
+            // Back to Step 1
+            $('#stepPill1').addClass('active').removeClass('completed');
+            $('#stepPill1 .step-badge').text('1').css({'background': '#e11d48', 'color': '#ffffff', 'border': 'none'});
+            $('#stepPill1 .step-text').css('color', '#0f172a');
+            $('#stepLineProgress').css('background', '#e2e8f0');
+
+            $('#stepPill2').removeClass('active completed');
+            $('#stepPill2 .step-badge').text('2').css({'background': '#f1f5f9', 'color': '#64748b', 'border': '1px solid #cbd5e1'});
+            $('#stepPill2 .step-text').css('color', '#64748b');
+
+            $('#onboardingModalTitle').text('Complete Business Profile');
+            $('#onboardingModalSubtitle').text('Please set up your store details to activate your review QR codes.');
+            $('#modalHeaderIcon').css({'background': 'linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%)', 'border-color': '#fecdd3', 'color': '#e11d48'}).html('<i class="ti ti-rocket"></i>');
+
+            $('#onboardingStep2Container').hide();
+            $('#onboardingStep1Container').fadeIn(250);
+        }
+    }
+
+    function skipOnboardingToDashboard() {
+        var $skipBtn = $('#skipOnboardingBtn');
+        $skipBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1" role="status"></span> Skipping...');
+        $.ajax({
+            url: "{{ route('user.skip_onboarding') }}",
+            type: 'POST',
+            data: {
+                _token: "{{ csrf_token() }}"
+            },
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            complete: function() {
+                window.location.href = "{{ url('admin/dashboard') }}";
+            }
+        });
+    }
 
     function previewBusinessLogo(input) {
         if (input.files && input.files[0]) {
@@ -2365,35 +2460,64 @@
 
   </script>
 
-  @if(Auth::check() && Auth::user()->type == 'user' && (empty(Auth::user()->phone) || session('needs_google_onboarding')))
+  @if(Auth::check() && Auth::user()->type == 'user' && (empty(Auth::user()->phone) || empty(Auth::user()->onboarding_completed) || session('needs_google_onboarding') || session('first_time_login')))
   <!-- ====================================================================
-       GOOGLE LOGIN ONBOARDING POPUP MODAL
+       2-STEP ONBOARDING POPUP MODAL (DETAILS & INTEGRATIONS)
        ==================================================================== -->
-  <div class="modal fade" id="googleOnboardingModal" tabindex="-1" role="dialog" aria-labelledby="googleOnboardingModalTitle" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered" style="max-width: 500px;">
-      <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 20px 40px rgba(15,23,42,0.18); overflow: hidden;">
+  <div class="modal fade" id="googleOnboardingModal" tabindex="-1" role="dialog" aria-labelledby="onboardingModalTitle" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 530px; margin: 1.5rem auto;">
+      <div class="modal-content" style="border-radius: 22px; border: 1px solid rgba(226, 232, 240, 0.9); box-shadow: 0 25px 60px -12px rgba(15, 23, 42, 0.25); overflow: hidden; background: #ffffff;">
         
-        <!-- Header -->
-        <div class="modal-header" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-bottom: 1px solid #e2e8f0; padding: 22px 26px 16px 26px;">
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <div style="width: 44px; height: 44px; border-radius: 12px; background: #fff1f2; border: 1px solid #fecdd3; display: flex; align-items: center; justify-content: center; color: #e11d48; font-size: 22px; flex-shrink: 0;">
-              <i class="ti ti-building-store"></i>
+        <!-- Header with Stepper Progress -->
+        <div class="modal-header d-block" style="background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); border-bottom: 1px solid #f1f5f9; padding: 22px 24px 16px 24px;">
+          
+          <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px;">
+            <div id="modalHeaderIcon" style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%); border: 1px solid #fecdd3; display: flex; align-items: center; justify-content: center; color: #e11d48; font-size: 22px; flex-shrink: 0; box-shadow: 0 4px 10px rgba(225, 29, 72, 0.1);">
+              <i class="ti ti-rocket"></i>
             </div>
-            <div>
-              <h5 class="modal-title" id="googleOnboardingModalTitle" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 1.15rem; color: #0f172a; margin: 0;">
+            <div style="flex: 1;">
+              <h5 class="modal-title" id="onboardingModalTitle" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 1.15rem; color: #0f172a; margin: 0; letter-spacing: -0.01em;">
                 Complete Business Profile
               </h5>
-              <p style="font-size: 0.8rem; color: #64748b; margin: 2px 0 0 0;">Please set up your store details to activate your review QR codes.</p>
+              <p id="onboardingModalSubtitle" style="font-size: 0.8rem; color: #64748b; margin: 2px 0 0 0;">
+                Please set up your store details to activate your review QR codes.
+              </p>
             </div>
           </div>
+
+          <!-- 2-Step Visual Indicator -->
+          <div style="display: flex; align-items: center; justify-content: space-between; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 7px 12px;">
+            <!-- Step 1 Pill -->
+            <div id="stepPill1" class="step-pill active" style="display: flex; align-items: center; gap: 7px; cursor: default;">
+              <span class="step-badge" style="width: 22px; height: 22px; border-radius: 50%; background: #e11d48; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 0.74rem; font-weight: 800;">1</span>
+              <span class="step-text" style="font-size: 0.8rem; font-weight: 700; color: #0f172a;">Store Details</span>
+            </div>
+
+            <!-- Connector Line -->
+            <div style="flex: 1; height: 3px; background: #f1f5f9; margin: 0 10px; border-radius: 2px; position: relative;">
+              <div id="stepLineProgress" style="height: 100%; width: 100%; background: #e2e8f0; transition: background 0.3s ease;"></div>
+            </div>
+
+            <!-- Step 2 Pill -->
+            <div id="stepPill2" class="step-pill" style="display: flex; align-items: center; gap: 7px; cursor: default;">
+              <span class="step-badge" style="width: 22px; height: 22px; border-radius: 50%; background: #f1f5f9; color: #64748b; display: flex; align-items: center; justify-content: center; font-size: 0.74rem; font-weight: 800; border: 1px solid #cbd5e1;">2</span>
+              <span class="step-text" style="font-size: 0.8rem; font-weight: 600; color: #64748b;">Review Integrations</span>
+            </div>
+          </div>
+
         </div>
 
-        <!-- Form Body -->
-        <div class="modal-body" style="padding: 24px 26px;">
+        <!-- ================= STEP 1: PROFILE DETAILS ================= -->
+        <div id="onboardingStep1Container" class="modal-body" style="padding: 20px 24px;">
+          
+          <div id="step1Alert" style="display: none; background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; padding: 10px 14px; margin-bottom: 14px; color: #991b1b; font-size: 0.82rem; font-weight: 600;">
+            <i class="ti ti-alert-triangle me-1"></i> <span id="step1AlertText">Please check your inputs.</span>
+          </div>
+
           <form method="POST" action="{{ route('google.complete_onboarding') }}" enctype="multipart/form-data" id="googleOnboardingForm">
             @csrf
 
-            <!-- 1. Business / Store Name (Mandatory) -->
+            <!-- 1. Business / Store Name -->
             <div class="mb-3">
               <label for="onboardingBusinessName" style="font-weight: 700; font-size: 0.86rem; color: #1e293b; margin-bottom: 6px; display: block;">
                 Business / Store Name <span style="color: #e11d48;">*</span>
@@ -2410,21 +2534,23 @@
                   placeholder="e.g. Apex Dental Clinic, Royal TVS" 
                   value="{{ Auth::user()->name != 'Google User' ? Auth::user()->name : '' }}" 
                   required 
-                  style="height: 48px; padding-left: 44px; border-radius: 12px; border: 1.5px solid #cbd5e1; font-size: 0.92rem; color: #0f172a;"
+                  style="height: 46px; padding-left: 44px; border-radius: 12px; border: 1.5px solid #cbd5e1; font-size: 0.92rem; color: #0f172a;"
                   autofocus
                 />
               </div>
             </div>
 
-            <!-- 2. Email Address (Google Account - Locked) -->
+            <!-- 2. Email Address -->
             <div class="mb-3">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                 <label for="onboardingEmail" style="font-weight: 700; font-size: 0.86rem; color: #1e293b; margin: 0;">
                   Email Address <span style="color: #e11d48;">*</span>
                 </label>
+                @if(!empty(Auth::user()->google_id) || Auth::user()->user_create_type == 'google')
                 <span style="font-size: 0.72rem; font-weight: 600; color: #475569; background: #f1f5f9; padding: 2px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px;">
-                  <i class="ti ti-lock" style="font-size: 0.8rem; color: #64748b;"></i> Google Account (Cannot change)
+                  <i class="ti ti-lock" style="font-size: 0.8rem; color: #64748b;"></i> Google Account (Locked)
                 </span>
+                @endif
               </div>
               <div style="position: relative; display: flex; align-items: center;">
                 <span style="position: absolute; left: 14px; color: #94a3b8; font-size: 1.15rem; pointer-events: none; display: flex; align-items: center;">
@@ -2437,24 +2563,21 @@
                   class="form-control" 
                   placeholder="contact@business.com" 
                   value="{{ Auth::user()->email }}" 
-                  readonly 
-                  tabindex="-1"
+                  @if(!empty(Auth::user()->google_id) || Auth::user()->user_create_type == 'google') readonly tabindex="-1" style="height: 46px; padding-left: 44px; padding-right: 40px; border-radius: 12px; border: 1.5px solid #e2e8f0; font-size: 0.92rem; color: #475569; background-color: #f8fafc; cursor: not-allowed;" @else style="height: 46px; padding-left: 44px; border-radius: 12px; border: 1.5px solid #cbd5e1; font-size: 0.92rem; color: #0f172a;" @endif 
                   required 
-                  style="height: 48px; padding-left: 44px; padding-right: 40px; border-radius: 12px; border: 1.5px solid #e2e8f0; font-size: 0.92rem; color: #475569; background-color: #f8fafc; cursor: not-allowed;"
                 />
-                <span style="position: absolute; right: 14px; color: #94a3b8; font-size: 1.1rem; pointer-events: none; display: flex; align-items: center;" title="Email cannot be changed for Google login">
+                @if(!empty(Auth::user()->google_id) || Auth::user()->user_create_type == 'google')
+                <span style="position: absolute; right: 14px; color: #94a3b8; font-size: 1.1rem; pointer-events: none; display: flex; align-items: center;">
                   <i class="ti ti-lock"></i>
                 </span>
+                @endif
               </div>
-              <small style="color: #94a3b8; font-size: 0.74rem; margin-top: 4px; display: block;">
-                Signed in with Google. Email address is permanent and cannot be modified.
-              </small>
             </div>
 
-            <!-- 3. WhatsApp / Contact Number (Mandatory) -->
+            <!-- 3. Phone / WhatsApp Number with updated placeholder -->
             <div class="mb-3">
               <label for="onboardingPhone" style="font-weight: 700; font-size: 0.86rem; color: #1e293b; margin-bottom: 6px; display: block;">
-                WhatsApp / Contact Number <span style="color: #e11d48;">*</span>
+                WhatsApp / Phone Number <span style="color: #e11d48;">*</span>
               </label>
               <div style="position: relative; display: flex; align-items: center;">
                 <span style="position: absolute; left: 14px; color: #25d366; font-size: 1.25rem; pointer-events: none; display: flex; align-items: center;">
@@ -2465,46 +2588,43 @@
                   name="phone" 
                   id="onboardingPhone" 
                   class="form-control" 
-                  placeholder="e.g. 9876543210 or +91 98765 43210" 
+                  placeholder="Enter your phone number" 
                   value="{{ Auth::user()->phone }}" 
                   required 
                   maxlength="16"
                   inputmode="tel"
                   autocomplete="tel"
-                  style="height: 48px; padding-left: 44px; border-radius: 12px; border: 1.5px solid #cbd5e1; font-size: 0.92rem; color: #0f172a; transition: border-color 0.2s ease, box-shadow 0.2s ease;"
+                  style="height: 46px; padding-left: 44px; border-radius: 12px; border: 1.5px solid #cbd5e1; font-size: 0.92rem; color: #0f172a; transition: border-color 0.2s ease, box-shadow 0.2s ease;"
                 />
               </div>
               <small id="phoneValidationMsg" style="display: none; color: #e11d48; font-size: 0.76rem; font-weight: 600; margin-top: 6px;">
-                <i class="ti ti-alert-circle me-1"></i>Please enter a valid 10-digit Indian mobile number (e.g. 9876543210 or +91 98765 43210).
+                <i class="ti ti-alert-circle me-1"></i>Please enter a valid 10-digit Indian mobile number.
               </small>
             </div>
 
-            <!-- 4. Business Logo (Optional - Logo is NOT Mandatory) -->
+            <!-- 4. Business Logo (Optional) -->
             <div class="mb-4">
               <label style="font-weight: 700; font-size: 0.86rem; color: #1e293b; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
                 <span>Business Logo</span>
-                <span style="font-size: 0.75rem; font-weight: 600; color: #64748b; background: #f1f5f9; padding: 2px 8px; border-radius: 6px;">Optional</span>
+                <span style="font-size: 0.74rem; font-weight: 600; color: #64748b; background: #f1f5f9; padding: 2px 8px; border-radius: 6px;">Optional</span>
               </label>
 
-              <!-- Upload Area -->
               <div 
-                style="border: 2px dashed #cbd5e1; border-radius: 12px; padding: 16px; text-align: center; background: #f8fafc; cursor: pointer; transition: all 0.2s ease; position: relative;"
+                style="border: 2px dashed #cbd5e1; border-radius: 12px; padding: 12px; text-align: center; background: #f8fafc; cursor: pointer; transition: all 0.2s ease; position: relative;"
                 onclick="document.getElementById('businessLogoInput').click()"
               >
-                <!-- Prompt State -->
                 <div id="logoUploadPrompt">
-                  <div style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff; border: 1px solid #e2e8f0; display: inline-flex; align-items: center; justify-content: center; color: #64748b; font-size: 1.25rem; margin-bottom: 6px;">
+                  <div style="width: 36px; height: 36px; border-radius: 50%; background: #ffffff; border: 1px solid #e2e8f0; display: inline-flex; align-items: center; justify-content: center; color: #64748b; font-size: 1.15rem; margin-bottom: 4px;">
                     <i class="ti ti-photo-plus"></i>
                   </div>
-                  <div style="font-weight: 700; font-size: 0.85rem; color: #0f172a;">Click to upload business logo</div>
-                  <div style="font-size: 0.74rem; color: #94a3b8; margin-top: 2px;">PNG, JPG, WebP up to 5MB (Optional)</div>
+                  <div style="font-weight: 700; font-size: 0.82rem; color: #0f172a;">Click to upload business logo</div>
+                  <div style="font-size: 0.71rem; color: #94a3b8; margin-top: 1px;">PNG, JPG, WebP up to 5MB (Optional)</div>
                 </div>
 
-                <!-- Preview State -->
                 <div id="logoPreviewBox" style="display: none;">
-                  <img id="logoPreviewImg" src="#" alt="Logo Preview" style="max-height: 64px; max-width: 140px; object-fit: contain; border-radius: 8px; border: 1px solid #e2e8f0; padding: 4px; background: #ffffff; margin-bottom: 6px;" />
+                  <img id="logoPreviewImg" src="#" alt="Logo Preview" style="max-height: 56px; max-width: 130px; object-fit: contain; border-radius: 8px; border: 1px solid #e2e8f0; padding: 4px; background: #ffffff; margin-bottom: 6px;" />
                   <div>
-                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="event.stopPropagation(); removeSelectedLogo();" style="font-size: 0.75rem; border-radius: 6px; padding: 2px 10px;">
+                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="event.stopPropagation(); removeSelectedLogo();" style="font-size: 0.74rem; border-radius: 6px; padding: 2px 8px;">
                       <i class="ti ti-trash"></i> Remove Logo
                     </button>
                   </div>
@@ -2521,18 +2641,160 @@
               </div>
             </div>
 
-            <!-- Submit Action -->
+            <!-- Submit to Step 2 Button -->
             <button 
               type="submit" 
+              id="onboardingStep1Btn"
               class="btn w-100" 
-              style="background: #e11d48; color: #ffffff; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 0.96rem; height: 48px; border-radius: 12px; border: none; box-shadow: 0 4px 12px rgba(225, 29, 72, 0.28); transition: all 0.2s ease;"
+              style="background: #e11d48; color: #ffffff; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 0.95rem; height: 46px; border-radius: 12px; border: none; box-shadow: 0 4px 14px rgba(225, 29, 72, 0.28); transition: all 0.2s ease;"
               onmouseover="this.style.background='#be123c'"
               onmouseout="this.style.background='#e11d48'"
             >
-              <span>Save &amp; Continue to Dashboard</span>
+              <span>Continue to Integrations</span>
               <i class="ti ti-arrow-right ms-1"></i>
             </button>
           </form>
+        </div>
+
+
+        <!-- ================= STEP 2: INTEGRATION DETAILS & REDIRECT ================= -->
+        <div id="onboardingStep2Container" class="modal-body" style="padding: 20px 24px; display: none;">
+          
+          <div style="text-align: center; margin-bottom: 16px;">
+            <span style="display: inline-block; padding: 3px 10px; border-radius: 20px; background: #f0fdf4; border: 1px solid #bbf7d0; color: #16a34a; font-size: 0.76rem; font-weight: 700;">
+              <i class="ti ti-circle-check me-1"></i> Profile Saved Successfully
+            </span>
+            <h6 style="font-weight: 800; font-size: 1.05rem; color: #0f172a; margin: 8px 0 3px 0;">
+              Connect Your Review Platforms
+            </h6>
+            <p style="font-size: 0.79rem; color: #64748b; margin: 0; line-height: 1.4;">
+              Link your public channels to turn happy customers into glowing Google &amp; social reviews.
+            </p>
+          </div>
+
+          <!-- Integrations List Cards -->
+          <div style="display: flex; flex-direction: column; gap: 9px; margin-bottom: 16px; max-height: 290px; overflow-y: auto; padding-right: 4px;">
+            
+            <!-- 1. Google Reviews -->
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 12px; border: 1px solid #e2e8f0; background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+              <div style="display: flex; align-items: center; gap: 11px;">
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: #eff6ff; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                  <!-- Google G SVG -->
+                  <svg width="18" height="18" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17Z"/>
+                    <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.34 24 12 24Z"/>
+                    <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15Z"/>
+                    <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98Z"/>
+                  </svg>
+                </div>
+                <div>
+                  <div style="font-weight: 700; font-size: 0.86rem; color: #0f172a; display: flex; align-items: center; gap: 6px;">
+                    Google Reviews
+                    <span style="background: #dcfce7; color: #15803d; font-size: 0.66rem; font-weight: 700; padding: 1px 5px; border-radius: 4px;">Top Priority</span>
+                  </div>
+                  <div style="font-size: 0.72rem; color: #64748b;">Instant 5-star prefill &amp; Google Maps sync</div>
+                </div>
+              </div>
+              <span style="font-size: 0.74rem; font-weight: 700; color: #2563eb;">Configure &rarr;</span>
+            </div>
+
+            <!-- 2. WhatsApp Direct Hub -->
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 12px; border: 1px solid #e2e8f0; background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+              <div style="display: flex; align-items: center; gap: 11px;">
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: #ecfdf5; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; color: #10b981; flex-shrink: 0;">
+                  <i class="ti ti-brand-whatsapp"></i>
+                </div>
+                <div>
+                  <div style="font-weight: 700; font-size: 0.86rem; color: #0f172a; display: flex; align-items: center; gap: 6px;">
+                    WhatsApp Review Hub
+                    <span style="background: #e0f2fe; color: #0369a1; font-size: 0.66rem; font-weight: 700; padding: 1px 5px; border-radius: 4px;">High Open Rate</span>
+                  </div>
+                  <div style="font-size: 0.72rem; color: #64748b;">Automated 1-click review invites for clients</div>
+                </div>
+              </div>
+              <span style="font-size: 0.74rem; font-weight: 700; color: #2563eb;">Configure &rarr;</span>
+            </div>
+
+            <!-- 3. Facebook & Instagram -->
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 12px; border: 1px solid #e2e8f0; background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+              <div style="display: flex; align-items: center; gap: 11px;">
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: #fdf2f8; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: #e11d48; flex-shrink: 0;">
+                  <i class="ti ti-brand-instagram"></i>
+                </div>
+                <div>
+                  <div style="font-weight: 700; font-size: 0.86rem; color: #0f172a;">
+                    Facebook &amp; Instagram
+                  </div>
+                  <div style="font-size: 0.72rem; color: #64748b;">Social recommendations &amp; video testimonials</div>
+                </div>
+              </div>
+              <span style="font-size: 0.74rem; font-weight: 700; color: #2563eb;">Configure &rarr;</span>
+            </div>
+
+            <!-- 4. Smart QR Code Standees -->
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 12px; border: 1px solid #e2e8f0; background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+              <div style="display: flex; align-items: center; gap: 11px;">
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: #f5f3ff; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: #7c3aed; flex-shrink: 0;">
+                  <i class="ti ti-qrcode"></i>
+                </div>
+                <div>
+                  <div style="font-weight: 700; font-size: 0.86rem; color: #0f172a;">
+                    Smart QR Codes &amp; Standees
+                  </div>
+                  <div style="font-size: 0.72rem; color: #64748b;">Ready-to-print dynamic table &amp; counter QR stands</div>
+                </div>
+              </div>
+              <span style="font-size: 0.74rem; font-weight: 700; color: #2563eb;">Configure &rarr;</span>
+            </div>
+
+          </div>
+
+          <!-- Smart Negative Shield Feature Box -->
+          <div style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 1px solid #bbf7d0; border-radius: 12px; padding: 9px 12px; margin-bottom: 18px; display: flex; align-items: center; gap: 10px;">
+            <div style="width: 28px; height: 28px; border-radius: 50%; background: #ffffff; border: 1px solid #86efac; display: flex; align-items: center; justify-content: center; color: #16a34a; font-size: 0.95rem; flex-shrink: 0;">
+              <i class="ti ti-shield-check"></i>
+            </div>
+            <div style="font-size: 0.74rem; color: #166534; line-height: 1.35;">
+              <strong>Negative Review Shield:</strong> Reviews under 4 stars route to private resolution, protecting your public Google score.
+            </div>
+          </div>
+
+          <!-- Primary Integration Button -->
+          <a 
+            href="{{ url('admin/review_links?source=onboarding&tour=1') }}" 
+            class="btn w-100 mb-2" 
+            style="background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: #ffffff; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 0.95rem; height: 46px; border-radius: 12px; border: none; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"
+            onmouseover="this.style.boxShadow='0 6px 18px rgba(37, 99, 235, 0.4)'"
+            onmouseout="this.style.boxShadow='0 4px 14px rgba(37, 99, 235, 0.3)'"
+          >
+            <i class="ti ti-plug-connected me-2" style="font-size: 1.1rem;"></i>
+            <span>Connect Integrations Now</span>
+            <i class="ti ti-arrow-right ms-2"></i>
+          </a>
+
+          <!-- Skip & Back Navigation Links -->
+          <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 6px;">
+            <button 
+              type="button" 
+              class="btn btn-sm btn-link p-0" 
+              onclick="goToOnboardingStep(1)" 
+              style="font-size: 0.8rem; font-weight: 600; color: #64748b; text-decoration: none; display: flex; align-items: center; gap: 4px;"
+            >
+              <i class="ti ti-arrow-left"></i> Edit Details
+            </button>
+
+            <button 
+              type="button" 
+              id="skipOnboardingBtn"
+              class="btn btn-sm btn-link p-0" 
+              onclick="skipOnboardingToDashboard()" 
+              style="font-size: 0.82rem; font-weight: 600; color: #64748b; text-decoration: underline; display: flex; align-items: center; gap: 4px;"
+            >
+              <span>Skip for Now &amp; Go to Dashboard</span>
+              <i class="ti ti-chevron-right"></i>
+            </button>
+          </div>
+
         </div>
 
       </div>

@@ -839,7 +839,7 @@
                 name="phone" 
                 id="signupPhone" 
                 class="auth-input-control" 
-                placeholder="+91 98765 43210" 
+                placeholder="Enter your phone number" 
                 required 
                 value="{{ old('phone') }}"
                 autocomplete="tel"
