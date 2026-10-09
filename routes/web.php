@@ -48,6 +48,7 @@ Route::get('signup', [FrontendController::class, 'site_signup_direct'])->name('s
 Route::get('refresh-captcha', [FrontendController::class, 'refresh_captcha'])->name('captcha.refresh');
 Route::get('/site/{user_name}',[FrontendController::class,'site_singup']);
 Route::post('singup_post',[FrontendController::class,'singup_post']);
+Route::get('api/legal-content', [FrontendController::class, 'get_legal_content'])->name('api.legal_content');
 
 // Customer Review & Frontend Routes
 Route::get('/u/{user_name}',[FrontendController::class,'index']);
@@ -95,6 +96,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
     Route::get('/show-qrcode', [UserController::class,'showQRCode'])->name('show-qrcode');
     Route::get('/view_noti/{id}', [NotificationController::class,'view_notification'])->name('view_noti');
     Route::post('/star_page_status', [UserController::class,'star_page_status']);
+
+    // Legal & Policy Settings (SuperAdmin)
+    Route::get('settings/legal', [UserController::class, 'legal_settings'])->name('admin.settings.legal');
+    Route::post('settings/legal', [UserController::class, 'update_legal_settings'])->name('admin.settings.legal.update');
 
 
     // ----------------- Admin Controller ------------------------

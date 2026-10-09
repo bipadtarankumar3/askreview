@@ -938,7 +938,7 @@
             <label class="custom-checkbox-wrapper" for="acceptTermsCheckbox">
               <input type="checkbox" name="accept" id="acceptTermsCheckbox" class="custom-checkbox-input" required checked />
               <span class="custom-checkbox-label">
-                I agree to the <a href="javascript:void(0)" class="auth-link">Terms of Service</a> &amp; <a href="javascript:void(0)" class="auth-link">Privacy Policy</a>
+                I agree to the <a href="javascript:void(0)" onclick="return showTermsModal(event);" class="auth-link open-terms-modal" data-legal-modal="terms" style="text-decoration: underline; font-weight: 600;">Terms &amp; Conditions</a> &amp; <a href="javascript:void(0)" onclick="return showPrivacyModal(event);" class="auth-link open-privacy-modal" data-legal-modal="privacy" style="text-decoration: underline; font-weight: 600;">Privacy Policy</a>
               </span>
             </label>
           </div>
@@ -966,6 +966,8 @@
     </div>
 
   </div>
+
+  @include('partials.legal_modals')
 
   <!-- jQuery & Toastr Scripts -->
   <script src="{{ asset('adminAssets/libs/jquery/dist/jquery.min.js') }}"></script>

@@ -849,10 +849,20 @@
           <span>256-Bit SSL Encrypted • ISO 27001 Certified</span>
         </div>
 
+        <!-- Legal Policy Links (Terms & Privacy) -->
+        <div class="text-center mt-3 pt-1" style="font-size: 0.82rem; color: #94a3b8; line-height: 1.5;">
+          By signing in, you agree to our 
+          <a href="javascript:void(0)" onclick="return showTermsModal(event);" class="open-terms-modal" data-legal-modal="terms" style="color: #4f46e5; text-decoration: underline; font-weight: 600; cursor: pointer;">Terms &amp; Conditions</a> 
+          and 
+          <a href="javascript:void(0)" onclick="return showPrivacyModal(event);" class="open-privacy-modal" data-legal-modal="privacy" style="color: #4f46e5; text-decoration: underline; font-weight: 600; cursor: pointer;">Privacy Policy</a>.
+        </div>
+
       </div>
     </div>
 
   </div>
+
+  @include('partials.legal_modals')
 
   <!-- jQuery & Toastr Scripts -->
   <script src="{{ asset('adminAssets/libs/jquery/dist/jquery.min.js') }}"></script>

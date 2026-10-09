@@ -20,6 +20,7 @@ use App\Models\Question;
 use App\Models\QuestionAnswer;
 use App\Models\QuestionResult;
 use App\Models\MyForm;
+use App\Models\Setting;
 use App\Models\feedback_form_submit;
 use App\Models\Integration;
 use App\Models\SocialReview;
@@ -1152,5 +1153,24 @@ class FrontendController extends Controller
         }
 
         abort(404, 'Video file not found.');
+    }
+
+    public function get_legal_content(Request $request)
+    {
+        $type = $request->query('type', 'terms');
+        $superAdminController = new UserController();
+        if ($type === 'privacy') {
+            $content = Setting::get('privacy_policy', $superAdminController->getDefaultPrivacy());
+            $title = 'Privacy Policy';
+        } else {
+            $content = Setting::get('terms_and_conditions', $superAdminController->getDefaultTerms());
+            $title = 'Terms & Conditions';
+        }
+
+        return response()->json([
+            'status' => true,
+            'title' => $title,
+            'content' => $content,
+        ]);
     }
 }

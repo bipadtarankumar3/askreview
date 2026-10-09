@@ -24,6 +24,7 @@ use App\Models\TemplateCategory;
 use App\Models\video_testimonial;
 use App\Models\Integration;
 use App\Models\ReviewLinksAnalytics;
+use App\Models\Setting;
 use Illuminate\Support\Facades\URL;
 
 use Illuminate\Support\Facades\Auth;
@@ -1231,6 +1232,89 @@ class UserController extends Controller
         }
         return redirect('/');
     }
+
+    public function legal_settings()
+    {
+        if (Auth::check() && Auth::user()->type == 'super_admin') {
+            $terms = Setting::get('terms_and_conditions', $this->getDefaultTerms());
+            $privacy = Setting::get('privacy_policy', $this->getDefaultPrivacy());
+            $lastUpdated = Setting::get('legal_last_updated', date('Y-m-d H:i:s'));
+            return view('admin.settings.legal', compact('terms', 'privacy', 'lastUpdated'));
+        }
+        return redirect('admin/dashboard');
+    }
+
+    public function update_legal_settings(Request $request)
+    {
+        if (Auth::check() && Auth::user()->type == 'super_admin') {
+            $request->validate([
+                'terms_and_conditions' => 'required',
+                'privacy_policy' => 'required',
+            ]);
+
+            Setting::set('terms_and_conditions', $request->terms_and_conditions);
+            Setting::set('privacy_policy', $request->privacy_policy);
+            Setting::set('legal_last_updated', date('Y-m-d H:i:s'));
+
+            $notification = array(
+                'messege' => 'Terms & Privacy Policy updated successfully!',
+                'alert-type' => 'success'
+            );
+            return back()->with($notification);
+        }
+        return redirect('admin/dashboard');
+    }
+
+    public function getDefaultTerms()
+    {
+        return '<h4>1. Introduction & Acceptance of Terms</h4>
+<p>Welcome to <strong>AskReview</strong>. By accessing our platform, registering an account, or using any of our review collection, QR code, and customer engagement services, you acknowledge that you have read, understood, and agreed to be bound by these Terms and Conditions.</p>
+
+<h4>2. Free Trial & Subscriptions</h4>
+<p>Each newly registered business user receives an initial <strong>7-Day Free Trial</strong> starting on the date of registration. During the trial period, users have full access to core features. Following trial expiration, continued active access requires subscription renewal as authorized by the platform administrator.</p>
+
+<h4>3. User Responsibilities & Acceptable Use</h4>
+<ul>
+    <li>You agree to provide accurate and truthful business and contact details during registration.</li>
+    <li>You must not use AskReview to collect fraudulent, fake, coercive, or defamatory reviews.</li>
+    <li>You are solely responsible for maintaining the confidentiality of your account credentials.</li>
+</ul>
+
+<h4>4. Service Availability & Modifications</h4>
+<p>We reserve the right to modify, enhance, or discontinue any feature with reasonable notice. Administrators and Super Administrators retain the authority to manage account status, expiry dates, and platform limits.</p>
+
+<h4>5. Contact & Support</h4>
+<p>For questions or support regarding these terms, please contact our administrative team through the AskReview support desk.</p>';
+    }
+
+    public function getDefaultPrivacy()
+    {
+        return '<h4>1. Information We Collect</h4>
+<p>AskReview collects information necessary to create and operate your customer review platform, including:</p>
+<ul>
+    <li><strong>Account Information:</strong> Business name, email address, phone number, and account credentials.</li>
+    <li><strong>Profile & Media Data:</strong> Business logo, review destination URLs, and custom page text.</li>
+    <li><strong>Customer Feedback Data:</strong> Feedback submitted through private review forms and customer contact submissions.</li>
+</ul>
+
+<h4>2. How We Use Your Information</h4>
+<p>We use your information exclusively to:</p>
+<ul>
+    <li>Provide, operate, and maintain your AskReview review portals and QR codes.</li>
+    <li>Send transactional notifications, account alerts, and registration confirmations.</li>
+    <li>Prevent fraudulent activity, spam, and unauthorized access.</li>
+</ul>
+
+<h4>3. Data Security & Storage</h4>
+<p>We implement industry-standard 256-bit SSL encryption, salted hashing, and secure server environments to safeguard your sensitive business and customer information.</p>
+
+<h4>4. Third-Party Integrations</h4>
+<p>AskReview allows you to link directly to external review platforms (such as Google Reviews, Facebook, and Justdial). When customers navigate to external platforms, their interactions are governed by the respective platform\'s privacy policies.</p>
+
+<h4>5. Your Rights & Data Control</h4>
+<p>You may view, update, or request deletion of your account details anytime through your dashboard or by contacting the AskReview administrator.</p>';
+    }
+
 
 
     protected function applyDbMailConfig()

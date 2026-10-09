@@ -967,6 +967,12 @@
                     <span class="hide-menu">Credit Manage</span>
                   </a>
                 </li>
+                <li class="sidebar-item">
+                  <a class="sidebar-link" href="{{URL::to('admin/settings/legal')}}" aria-expanded="false">
+                    <span><i class="ti ti-file-text"></i></span>
+                    <span class="hide-menu">Terms &amp; Privacy</span>
+                  </a>
+                </li>
 
                 <li class="nav-small-cap">
                   <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
@@ -1371,7 +1377,7 @@
     aria-labelledby="offcanvasWithBothOptionsLabel">
     <nav class="sidebar-nav scroll-sidebar">
       <div class="offcanvas-header justify-content-between">
-        <img src="https://demos.adminmart.com/premium/bootstrap/modernize-bootstrap/package/dist/images/logos/favicon.ico" alt="" class="img-fluid">
+        <span class="fw-bold fs-5 text-primary"><i class="ti ti-brand-slack me-1"></i>AskReview</span>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
       <div class="offcanvas-body profile-dropdown mobile-navbar" data-simplebar="" data-simplebar>
@@ -1386,8 +1392,8 @@
             <ul aria-expanded="false" class="collapse first-level my-3">
               <li class="sidebar-item py-2">
                 <a href="#" class="d-flex align-items-center">
-                  <div class="bg-light rounded-1 me-3 p-6 d-flex align-items-center justify-content-center">
-                    <img src="https://demos.adminmart.com/premium/bootstrap/modernize-bootstrap/package/dist/images/svgs/icon-dd-chat.svg" alt="" class="img-fluid" width="24" height="24">
+                  <div class="bg-light rounded-1 me-3 p-6 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                    <i class="ti ti-message-dots text-primary fs-6"></i>
                   </div>
                   <div class="d-inline-block">
                     <h6 class="mb-1 bg-hover-primary">Chat Application</h6>
@@ -1397,9 +1403,8 @@
               </li>
               <li class="sidebar-item py-2">
                 <a href="#" class="d-flex align-items-center">
-                  <div class="bg-light rounded-1 me-3 p-6 d-flex align-items-center justify-content-center">
-                    <img src="https://demos.adminmart.com/premium/bootstrap/modernize-bootstrap/package/dist/images/svgs/icon-dd-invoice.svg" alt="" class="img-fluid" width="24"
-                      height="24">
+                  <div class="bg-light rounded-1 me-3 p-6 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                    <i class="ti ti-file-invoice text-info fs-6"></i>
                   </div>
                   <div class="d-inline-block">
                     <h6 class="mb-1 bg-hover-primary">Invoice App</h6>
@@ -1409,9 +1414,8 @@
               </li>
               <li class="sidebar-item py-2">
                 <a href="#" class="d-flex align-items-center">
-                  <div class="bg-light rounded-1 me-3 p-6 d-flex align-items-center justify-content-center">
-                    <img src="https://demos.adminmart.com/premium/bootstrap/modernize-bootstrap/package/dist/images/svgs/icon-dd-mobile.svg" alt="" class="img-fluid" width="24"
-                      height="24">
+                  <div class="bg-light rounded-1 me-3 p-6 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                    <i class="ti ti-phone text-success fs-6"></i>
                   </div>
                   <div class="d-inline-block">
                     <h6 class="mb-1 bg-hover-primary">Contact Application</h6>
@@ -1421,9 +1425,8 @@
               </li>
               <li class="sidebar-item py-2">
                 <a href="#" class="d-flex align-items-center">
-                  <div class="bg-light rounded-1 me-3 p-6 d-flex align-items-center justify-content-center">
-                    <img src="https://demos.adminmart.com/premium/bootstrap/modernize-bootstrap/package/dist/images/svgs/icon-dd-message-box.svg" alt="" class="img-fluid" width="24"
-                      height="24">
+                  <div class="bg-light rounded-1 me-3 p-6 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                    <i class="ti ti-mail text-warning fs-6"></i>
                   </div>
                   <div class="d-inline-block">
                     <h6 class="mb-1 bg-hover-primary">Email App</h6>
@@ -1433,8 +1436,8 @@
               </li>
               <li class="sidebar-item py-2">
                 <a href="#" class="d-flex align-items-center">
-                  <div class="bg-light rounded-1 me-3 p-6 d-flex align-items-center justify-content-center">
-                    <img src="https://demos.adminmart.com/premium/bootstrap/modernize-bootstrap/package/dist/images/svgs/icon-dd-cart.svg" alt="" class="img-fluid" width="24" height="24">
+                  <div class="bg-light rounded-1 me-3 p-6 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                    <i class="ti ti-user text-danger fs-6"></i>
                   </div>
                   <div class="d-inline-block">
                     <h6 class="mb-1 bg-hover-primary">User Profile</h6>
@@ -1444,8 +1447,8 @@
               </li>
               <li class="sidebar-item py-2">
                 <a href="#" class="d-flex align-items-center">
-                  <div class="bg-light rounded-1 me-3 p-6 d-flex align-items-center justify-content-center">
-                    <img src="https://demos.adminmart.com/premium/bootstrap/modernize-bootstrap/package/dist/images/svgs/icon-dd-date.svg" alt="" class="img-fluid" width="24" height="24">
+                  <div class="bg-light rounded-1 me-3 p-6 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                    <i class="ti ti-calendar text-primary fs-6"></i>
                   </div>
                   <div class="d-inline-block">
                     <h6 class="mb-1 bg-hover-primary">Calendar App</h6>
@@ -1455,9 +1458,8 @@
               </li>
               <li class="sidebar-item py-2">
                 <a href="#" class="d-flex align-items-center">
-                  <div class="bg-light rounded-1 me-3 p-6 d-flex align-items-center justify-content-center">
-                    <img src="https://demos.adminmart.com/premium/bootstrap/modernize-bootstrap/package/dist/images/svgs/icon-dd-lifebuoy.svg" alt="" class="img-fluid" width="24"
-                      height="24">
+                  <div class="bg-light rounded-1 me-3 p-6 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                    <i class="ti ti-lifebuoy text-secondary fs-6"></i>
                   </div>
                   <div class="d-inline-block">
                     <h6 class="mb-1 bg-hover-primary">Contact List Table</h6>
@@ -1467,9 +1469,8 @@
               </li>
               <li class="sidebar-item py-2">
                 <a href="#" class="d-flex align-items-center">
-                  <div class="bg-light rounded-1 me-3 p-6 d-flex align-items-center justify-content-center">
-                    <img src="https://demos.adminmart.com/premium/bootstrap/modernize-bootstrap/package/dist/images/svgs/icon-dd-application.svg" alt="" class="img-fluid" width="24"
-                      height="24">
+                  <div class="bg-light rounded-1 me-3 p-6 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                    <i class="ti ti-notes text-dark fs-6"></i>
                   </div>
                   <div class="d-inline-block">
                     <h6 class="mb-1 bg-hover-primary">Notes Application</h6>
@@ -2075,8 +2076,10 @@
     });
   </script>
   <!-- current page js files -->
+  @if(Request::is('admin/dashboard') || Request::is('admin'))
   <script src="{{asset('adminAssets/libs/apexcharts/dist/apexcharts.min.js')}}"></script>
   <script src="{{asset('adminAssets/js/dashboard4.js')}}"></script>
+  @endif
   {{-- <script src="{{asset('adminAssets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script> --}}
 
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
@@ -2098,13 +2101,12 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
 
- 
-
-<script src="{{ asset('/sw.js') }}"></script>
 <script>
-    if (!navigator.serviceWorker.controller) {
-        navigator.serviceWorker.register("/sw.js").then(function (reg) {
-            console.log("Service worker has been registered for scope: " + reg.scope);
+    if ('serviceWorker' in navigator && !navigator.serviceWorker.controller) {
+        navigator.serviceWorker.register("{{ asset('sw.js') }}").then(function (reg) {
+            // registered
+        }).catch(function (err) {
+            // Optional PWA registration
         });
     }
 </script>
