@@ -111,7 +111,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
     Route::post('submit_admin_user', [UserController::class,'submit_admin_user']);
     Route::get('edit_admin/{id}', [UserController::class,'edit_admin']);
     Route::get('delete_admin/{id}', [UserController::class,'delete_admin']);
-    Route::get('my_wallets_list', [WalletsController::class,'my_wallets_list']);
+    Route::any('my_wallets_list', [WalletsController::class,'my_wallets_list']);
     Route::get('my_user_payment_list', [WalletsController::class,'my_user_payment_list']);
     // ----------------- Admin Controller End------------------------
 

@@ -458,6 +458,29 @@ class FrontendController extends Controller
         } catch (\Exception $e) {
         }
 
+        // Deduct 1 token from parent admin if they are an admin
+        try {
+            $adminUserForToken = User::find($user_id);
+            if ($adminUserForToken && $adminUserForToken->type == 'admin') {
+                if ($adminUserForToken->user_create_limit > 0) {
+                    $adminUserForToken->user_create_limit = max(0, $adminUserForToken->user_create_limit - 1);
+                    $adminUserForToken->save();
+                }
+
+                \App\Models\Wallets::create([
+                    'user_id' => $adminUserForToken->id,
+                    'amount' => 1,
+                    'credit_debit' => 'debit',
+                    'note' => 'Token deducted for user signup: ' . $user_create->name . ' (' . $user_create->email . ')',
+                    'amount_credit_debit' => $user_create->name,
+                    'created_by' => $user_create->id,
+                    'sub_user_id' => $user_create->id,
+                ]);
+            }
+        } catch (\Exception $tokenErr) {
+            \Log::error('Signup token deduction error: ' . $tokenErr->getMessage());
+        }
+
         // Send email notifications to the new user and that admin
         try {
             $this->setMailConfig();

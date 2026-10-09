@@ -315,8 +315,31 @@ class UserController extends Controller
                 'active_status' => 'active',
                 'user_id' => $newUser->id
             ]);
-        } catch (\Exception $e) {
-            // MyForm created if table available
+        } catch (\Exception $formErr) {
+            \Log::error('Google signup MyForm create error: ' . $formErr->getMessage());
+        }
+
+        // Deduct 1 token from parent admin if they are an admin
+        try {
+            $adminUserForToken = User::find($parentUserId);
+            if ($adminUserForToken && $adminUserForToken->type == 'admin') {
+                if ($adminUserForToken->user_create_limit > 0) {
+                    $adminUserForToken->user_create_limit = max(0, $adminUserForToken->user_create_limit - 1);
+                    $adminUserForToken->save();
+                }
+
+                Wallets::create([
+                    'user_id' => $adminUserForToken->id,
+                    'amount' => 1,
+                    'credit_debit' => 'debit',
+                    'note' => 'Token deducted for Google signup: ' . $newUser->name . ' (' . $newUser->email . ')',
+                    'amount_credit_debit' => $newUser->name,
+                    'created_by' => $newUser->id,
+                    'sub_user_id' => $newUser->id,
+                ]);
+            }
+        } catch (\Exception $tokenErr) {
+            \Log::error('Google signup token deduction error: ' . $tokenErr->getMessage());
         }
 
         // Send email notifications to the new user and that admin
@@ -883,17 +906,24 @@ class UserController extends Controller
                     
                 }
 
-                // $my_form = User::find(Auth::user()->id);
-                // $my_form->user_create_limit = $my_form->user_create_limit-1;
-                // $my_form->save();
+                // Deduct 1 token from admin and record in wallet statement
+                if (Auth::user()->type == 'admin') {
+                    $adminUser = User::find(Auth::user()->id);
+                    if ($adminUser) {
+                        $adminUser->user_create_limit = max(0, $adminUser->user_create_limit - 1);
+                        $adminUser->save();
+                    }
 
-                // $Wallets = new Wallets();
-                // $Wallets->user_id = Auth::user()->id;
-                // $Wallets->amount = 1;
-                // $Wallets->note = 'You have user 1 blanced.';
-                // $Wallets->credit_debit = 'debit';
-                // $Wallets->amount_credit_debit = Auth::user()->name;
-                // $Wallets->save();
+                    $Wallets = new Wallets();
+                    $Wallets->user_id = Auth::user()->id;
+                    $Wallets->amount = 1;
+                    $Wallets->note = 'Token deducted for new user creation: ' . $user->name . ' (' . $user->email . ')';
+                    $Wallets->credit_debit = 'debit';
+                    $Wallets->amount_credit_debit = $user->name;
+                    $Wallets->created_by = $user->id;
+                    $Wallets->sub_user_id = $user->id;
+                    $Wallets->save();
+                }
 
 
                 $notification = array(
@@ -1176,9 +1206,11 @@ class UserController extends Controller
                 $Wallets = new Wallets();
                 $Wallets->user_id = Auth::user()->id;
                 $Wallets->amount = 1;
-                $Wallets->note = 'You have user 1 blanced.';
+                $Wallets->note = 'Token deducted for 1-year extension: ' . $user->name . ' (' . $user->email . ')';
                 $Wallets->credit_debit = 'debit';
                 $Wallets->amount_credit_debit = $user->name;
+                $Wallets->created_by = $user->id;
+                $Wallets->sub_user_id = $user->id;
                 $Wallets->save();
 
             }
