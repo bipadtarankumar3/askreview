@@ -398,6 +398,16 @@ class UserController extends Controller
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
 
+            $authUser = Auth::user();
+            if ($authUser->type == 'user' && (empty($authUser->expiry_date) || $authUser->expiry_date == '0000-00-00')) {
+                $userModel = User::find($authUser->id);
+                if ($userModel) {
+                    $userModel->expiry_date = date('Y-m-d', strtotime('+7 days'));
+                    $userModel->seven_day_trial = 'YES';
+                    $userModel->save();
+                }
+            }
+
             if (Auth::user()->type == 'super_admin') {
                 return redirect('admin/dashboard');
             }
@@ -578,9 +588,9 @@ class UserController extends Controller
                 if ($request->status != '') {
                     $user->status = $request->status;
                 }
-                // if ($request->expiry_date != '') {
-                //     $user->expiry_date = $request->expiry_date;
-                // }
+                if ($request->expiry_date != '') {
+                    $user->expiry_date = date('Y-m-d', strtotime($request->expiry_date));
+                }
 
                 if ($request->note != '') {
                     $user->note = $request->note;
@@ -726,7 +736,8 @@ class UserController extends Controller
                     'phone' => $request->phone,
                     'type' => 'user',
                     'status' => $request->status,
-                    'expiry_date' =>date('Y-m-d', strtotime($present_date.' +7 days')) ,
+                    'expiry_date' => !empty($request->expiry_date) ? date('Y-m-d', strtotime($request->expiry_date)) : date('Y-m-d', strtotime($present_date.' +7 days')),
+                    'seven_day_trial' => empty($request->expiry_date) ? 'YES' : 'NO',
                     'note' => $request->note,
                     'wp_key' => $request->wp_key,
                     'template_category_id' => $request->template_category_id,
@@ -1100,6 +1111,68 @@ class UserController extends Controller
             return back()->with($notification);
             
         }
+    }
+
+    public function update_user_expiry_date(Request $request){
+        if(Auth::check() && (Auth::user()->type == 'admin' || Auth::user()->type == 'super_admin')){
+            $request->validate([
+                'user_id' => 'required',
+                'expiry_date' => 'required|date',
+            ]);
+
+            $query = User::where('id', $request->user_id);
+            if (Auth::user()->type != 'super_admin') {
+                $query->where('user_id', Auth::user()->id);
+            }
+            $targetUser = $query->first();
+
+            if (!$targetUser) {
+                if ($request->ajax()) {
+                    return response()->json(['status' => false, 'message' => 'User not found or permission denied.'], 404);
+                }
+                $notification = array(
+                    'messege' => 'User not found or permission denied.',
+                    'alert-type' => 'error'
+                );
+                return back()->with($notification);
+            }
+
+            $newDate = date('Y-m-d', strtotime($request->expiry_date));
+            $targetUser->expiry_date = $newDate;
+            
+            if ($request->filled('seven_day_trial')) {
+                $targetUser->seven_day_trial = $request->seven_day_trial;
+            } else {
+                // If the new date is in the future, if it was expired
+                if ($newDate > date('Y-m-d') && $targetUser->seven_day_trial == 'EXPIRED') {
+                    $targetUser->seven_day_trial = 'NO';
+                }
+            }
+
+            $targetUser->save();
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Expiry date updated successfully for ' . $targetUser->name,
+                    'expiry_date' => $targetUser->expiry_date,
+                    'formatted_date' => date('d M Y', strtotime($targetUser->expiry_date)),
+                    'raw_date' => $targetUser->expiry_date,
+                    'user_id' => $targetUser->id
+                ]);
+            }
+
+            $notification = array(
+                'messege' => 'Expiry date updated successfully!',
+                'alert-type' => 'success'
+            );
+            return back()->with($notification);
+        }
+
+        if ($request->ajax()) {
+            return response()->json(['status' => false, 'message' => 'Unauthorized access.'], 403);
+        }
+        return redirect('/');
     }
 
 

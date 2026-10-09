@@ -63,25 +63,27 @@
                 </div>
                 <div class="row">
                   
-                  <div class="col-sm-12 col-md-6">
+                  <div class="col-sm-12 col-md-4">
                     <div class="mb-3">
                       <label for="inputlname" class="control-label col-form-label">Email  <span style="color: red;">*</span></label>
                       <input type="email" name="email"  @if (isset($user)) value="{{$user->email}}"  @endif class="form-control" id="inputEmail3" placeholder="Email Here" required>
                     </div>
                   </div>
                   
-                  <div class="col-sm-12 col-md-6">
+                  <div class="col-sm-12 col-md-4">
                     <div class="mb-3">
                       <label for="password" class="control-label col-form-label">Password</label>
                       <input type="password" name="password"  @if (!isset($user)) required @endif class="form-control" id="password" placeholder="Password Here" >
                     </div>
                   </div>
-                  {{-- <div class="col-sm-12 col-md-3">
+
+                  <div class="col-sm-12 col-md-4">
                     <div class="mb-3">
-                      <label for="inputEmail3" class="control-label col-form-label">Expiry Date <span style="color: red;">*</span></label>
-                      <input type="date" name="expiry_date"  @if (isset($user)) value="{{$user->expiry_date}}" readonly @endif class="form-control" id="date" placeholder="Expiry Date Here" required>
+                      <label for="expiry_date" class="control-label col-form-label">Expiry Date <span style="color: red;">*</span></label>
+                      <input type="date" name="expiry_date" value="{{ isset($user) && $user->expiry_date ? date('Y-m-d', strtotime($user->expiry_date)) : date('Y-m-d', strtotime('+7 days')) }}" class="form-control" id="expiry_date" placeholder="Expiry Date Here" required>
+                      <small class="text-muted">Default is 7-day trial. Admin can modify anytime.</small>
                     </div>
-                  </div> --}}
+                  </div>
                 </div>
                 <div class="row">
                   

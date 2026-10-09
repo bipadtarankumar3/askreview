@@ -54,7 +54,21 @@
                                     <td>{{$item->name}}</td>
                                     <td>{{$item->email}}</td>
                                     <td>{{$item->phone}}</td>
-                                    <td>{{$item->expiry_date}}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center justify-content-between gap-1" style="min-width: 120px;">
+                                            <span class="user-expiry-text-{{$item->id}} fw-semibold">{{$item->expiry_date}}</span>
+                                            <button type="button" 
+                                                    class="btn btn-sm btn-outline-primary py-0 px-1 btn-edit-expiry" 
+                                                    style="font-size: 11px; border-radius: 4px;" 
+                                                    data-id="{{$item->id}}" 
+                                                    data-name="{{$item->name}}" 
+                                                    data-expiry="{{$item->expiry_date ? date('Y-m-d', strtotime($item->expiry_date)) : date('Y-m-d')}}"
+                                                    data-trial="{{$item->seven_day_trial}}"
+                                                    title="Change Expiry Date">
+                                                <i class="fas fa-calendar-alt"></i>
+                                            </button>
+                                        </div>
+                                    </td>
                                     <td>{{$item->note}}</td>
                                     <td><img src="{{$item->logo}}" width="100px" alt=""></td>
                                     <td>{{$item->status}}</td>
@@ -65,10 +79,7 @@
                                 </tr>
                                 <!-- end row --> 
                             @endforeach
-
-                            
-                            
-                        </tfoot>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -78,7 +89,8 @@
             ---------------- -->
     </div>
 </div>
-</div>
+
+@include('admin.user.change_expiry_modal')
 
 @endsection
 

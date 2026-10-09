@@ -86,6 +86,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
     Route::get('edit_sub_user/{id}', [UserController::class,'edit_sub_user']);
     Route::get('delete_sub_user/{id}', [UserController::class,'delete_sub_user']);
     Route::get('sub_user_add_expiry_date/{id}', [UserController::class,'sub_user_add_expiry_date']);
+    Route::post('update_user_expiry_date', [UserController::class,'update_user_expiry_date'])->name('admin.update_user_expiry_date');
     Route::get('expiry_sub_user', [UserController::class,'expiry_sub_user']);
     Route::get('dashboard_visit/{id}', [UserController::class,'dashboard_visit']);
     Route::get('view_qr', [UserController::class,'view_qr']);
