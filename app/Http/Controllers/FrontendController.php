@@ -14,6 +14,7 @@ use DB;
 use Config;
 use Mail;
 use App\Mail\SpinnerFormMail;
+use App\Mail\SignupNotificationMail;
 use App\Models\ip_skip;
 use App\Models\Question;
 use App\Models\QuestionAnswer;
@@ -450,6 +451,61 @@ class FrontendController extends Controller
                 'user_id' => $user_create->id
             ]);
         } catch (\Exception $e) {
+        }
+
+        // Send email notifications to the new user and that admin
+        try {
+            $this->setMailConfig();
+
+            $adminUser = User::find($user_id);
+            if (!$adminUser) {
+                $adminUser = $superAdmin;
+            }
+
+            $mailData = [
+                'name' => $user_create->name,
+                'name_url' => $user_create->name_url,
+                'email' => $user_create->email,
+                'phone' => $user_create->phone,
+                'expiry_date' => date('d M Y', strtotime($future_date)),
+                'created_at' => date('d M Y, h:i A'),
+                'user_unique_id' => $formatted_number,
+                'admin_name' => $adminUser ? $adminUser->name : 'Admin',
+                'admin_email' => $adminUser ? $adminUser->email : '',
+                'login_url' => url('login'),
+                'review_url' => url('u/' . $user_create->name_url),
+                'admin_user_list_url' => url('admin/sub_user_list'),
+            ];
+
+            // 1. Send Welcome Email to newly registered user
+            if (!empty($user_create->email)) {
+                try {
+                    Mail::to($user_create->email)->send(new SignupNotificationMail('USER', $mailData));
+                } catch (\Throwable $userMailErr) {
+                    \Log::error('Signup user welcome email error: ' . $userMailErr->getMessage());
+                }
+            }
+
+            // 2. Send Notification Email to that Admin
+            if ($adminUser && !empty($adminUser->email)) {
+                try {
+                    Mail::to($adminUser->email)->send(new SignupNotificationMail('ADMIN', $mailData));
+                } catch (\Throwable $adminMailErr) {
+                    \Log::error('Signup admin alert email error: ' . $adminMailErr->getMessage());
+                }
+            }
+
+            // If that admin is a reseller, also notify super admin if distinct
+            if ($superAdmin && !empty($superAdmin->email) && (!$adminUser || $superAdmin->id !== $adminUser->id)) {
+                try {
+                    Mail::to($superAdmin->email)->send(new SignupNotificationMail('ADMIN', $mailData));
+                } catch (\Throwable $superAdminMailErr) {
+                    \Log::error('Signup super admin alert email error: ' . $superAdminMailErr->getMessage());
+                }
+            }
+
+        } catch (\Throwable $e) {
+            \Log::error('Signup email notification error: ' . $e->getMessage());
         }
 
         session()->forget('signup_captcha');

@@ -34,6 +34,7 @@ use Config;
 use Mail;
 use App\Mail\adminForgotPassMail;
 use App\Mail\OtpVerifyMail;
+use App\Mail\SignupNotificationMail;
 
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Response;
@@ -314,6 +315,62 @@ class UserController extends Controller
             ]);
         } catch (\Exception $e) {
             // MyForm created if table available
+        }
+
+        // Send email notifications to the new user and that admin
+        try {
+            $this->setMailConfig();
+
+            $adminUser = User::find($parentUserId);
+            $superAdmin = User::where('type', 'super_admin')->first();
+            if (!$adminUser) {
+                $adminUser = $superAdmin;
+            }
+
+            $mailData = [
+                'name' => $newUser->name,
+                'name_url' => $newUser->name_url,
+                'email' => $newUser->email,
+                'phone' => $newUser->phone,
+                'expiry_date' => date('d M Y', strtotime($futureDate)),
+                'created_at' => date('d M Y, h:i A'),
+                'user_unique_id' => $formattedNumber,
+                'admin_name' => $adminUser ? $adminUser->name : 'Admin',
+                'admin_email' => $adminUser ? $adminUser->email : '',
+                'login_url' => url('login'),
+                'review_url' => url('u/' . $newUser->name_url),
+                'admin_user_list_url' => url('admin/sub_user_list'),
+            ];
+
+            // 1. Send Welcome Email to newly registered user
+            if (!empty($newUser->email)) {
+                try {
+                    Mail::to($newUser->email)->send(new SignupNotificationMail('USER', $mailData));
+                } catch (\Throwable $userMailErr) {
+                    \Log::error('Google signup user welcome email error: ' . $userMailErr->getMessage());
+                }
+            }
+
+            // 2. Send Notification Email to that Admin
+            if ($adminUser && !empty($adminUser->email)) {
+                try {
+                    Mail::to($adminUser->email)->send(new SignupNotificationMail('ADMIN', $mailData));
+                } catch (\Throwable $adminMailErr) {
+                    \Log::error('Google signup admin alert email error: ' . $adminMailErr->getMessage());
+                }
+            }
+
+            // If that admin is a reseller, also notify super admin if distinct
+            if ($superAdmin && !empty($superAdmin->email) && (!$adminUser || $superAdmin->id !== $adminUser->id)) {
+                try {
+                    Mail::to($superAdmin->email)->send(new SignupNotificationMail('ADMIN', $mailData));
+                } catch (\Throwable $superAdminMailErr) {
+                    \Log::error('Google signup super admin alert email error: ' . $superAdminMailErr->getMessage());
+                }
+            }
+
+        } catch (\Throwable $e) {
+            \Log::error('Google signup email notification error: ' . $e->getMessage());
         }
 
         Session::put('needs_google_onboarding', true);
