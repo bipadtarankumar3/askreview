@@ -72,6 +72,7 @@ class ServiceController extends Controller
                 'price' => $request->price,
                 'double_qr_access' => $request->double_qr_access ?? 'N',
                 'video_access' => $request->video_access ?? 'N',
+                'scratch_card_access' => $request->scratch_card_access ?? 'N',
                 'status' => $request->status,
             ];
 
@@ -181,6 +182,11 @@ class ServiceController extends Controller
                     }
                     if ($Service->video_access == 'Y') {
                         $userUpdate['video_access'] = 'YES';
+                    }
+                    if (($Service->scratch_card_access ?? 'N') == 'Y') {
+                        $userUpdate['scratch_card_access'] = 'YES';
+                    } else {
+                        $userUpdate['scratch_card_access'] = 'NO';
                     }
                     User::where('id', Auth::user()->id)->update($userUpdate);
 

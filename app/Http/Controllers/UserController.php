@@ -788,6 +788,9 @@ class UserController extends Controller
                 if ($request->double_qr_access != '') {
                     $user->double_qr_access = $request->double_qr_access;
                 }
+                if ($request->scratch_card_access != '') {
+                    $user->scratch_card_access = $request->scratch_card_access;
+                }
                 
                 $user->save();
 
@@ -860,6 +863,7 @@ class UserController extends Controller
                     'template_category_id' => $request->template_category_id,
                     'video_access' => $request->video_access,
                     'double_qr_access' => $request->double_qr_access ?? 'NO',
+                    'scratch_card_access' => $request->scratch_card_access ?? 'NO',
                     'front_page_text' => '',
                     'default_background' => 'Yes',
                     'facebook_share' => 'Yes',
@@ -1135,6 +1139,9 @@ class UserController extends Controller
 
                 if ($request->double_qr_access != '') {
                     $user->double_qr_access = $request->double_qr_access;
+                }
+                if ($request->scratch_card_access != '') {
+                    $user->scratch_card_access = $request->scratch_card_access;
                 }
                 
                 $user->save();
@@ -1929,6 +1936,9 @@ class UserController extends Controller
 
                 if ($request->double_qr_access != '') {
                     $user->double_qr_access = $request->double_qr_access;
+                }
+                if ($request->scratch_card_access != '') {
+                    $user->scratch_card_access = $request->scratch_card_access;
                 }
 
                 if (isset($request->file) && !empty($request->file)) {

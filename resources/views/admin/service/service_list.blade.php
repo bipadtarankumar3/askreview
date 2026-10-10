@@ -128,6 +128,15 @@
                                     </select>
                                 </div>
 
+                                <div class="form-group mb-3">
+                                  <label for="scratch_card_access" class="form-label fw-bold">Scratch Card Access:</label>
+                                    <select name="scratch_card_access" id="scratch_card_access" class="form-control form-select">
+                                        <option value="N" @if(!empty($id) && ($editData->scratch_card_access ?? 'N') == 'N') selected @endif>No</option>
+                                        <option value="Y" @if(!empty($id) && ($editData->scratch_card_access ?? 'N') == 'Y') selected @endif>Yes</option>
+                                    </select>
+                                    <small class="text-muted d-block mt-1">Allow customers to scratch &amp; win rewards on the review page.</small>
+                                </div>
+
                                 <div class="form-group mb-4">
                                   <label for="status" class="form-label fw-bold">Status:</label>
                                     <select name="status" id="status" class="form-control form-select">
@@ -164,6 +173,7 @@
                                             <th>Price</th>
                                             <th>Double QR</th>
                                             <th>Video Access</th>
+                                            <th>Scratch Card</th>
                                             <th>Status</th>
                                             <th>Action</th>
                                         </tr>
@@ -196,11 +206,11 @@
                                                 <td>
                                                     @if (($item->double_qr_access ?? 'N') == 'Y')
                                                         <span class="badge" style="background: #10b981; color: #fff; font-weight: 700; padding: 4px 10px; border-radius: 6px;">
-                                                            <i class="fas fa-check me-1"></i> Yes
+                                                             <i class="fas fa-check me-1"></i> Yes
                                                         </span>
                                                     @else
                                                         <span class="badge" style="background: #f43f5e; color: #fff; font-weight: 700; padding: 4px 10px; border-radius: 6px;">
-                                                            <i class="fas fa-times me-1"></i> No
+                                                             <i class="fas fa-times me-1"></i> No
                                                         </span>
                                                     @endif
                                                 </td>
@@ -209,6 +219,17 @@
                                                         <span class="badge bg-success">Yes</span>
                                                     @else
                                                         <span class="badge bg-secondary">No</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if (($item->scratch_card_access ?? 'N') == 'Y')
+                                                        <span class="badge" style="background: #10b981; color: #fff; font-weight: 700; padding: 4px 10px; border-radius: 6px;">
+                                                             <i class="fas fa-check me-1"></i> Yes
+                                                        </span>
+                                                    @else
+                                                        <span class="badge" style="background: #f43f5e; color: #fff; font-weight: 700; padding: 4px 10px; border-radius: 6px;">
+                                                             <i class="fas fa-times me-1"></i> No
+                                                        </span>
                                                     @endif
                                                 </td>
                                                 <td>

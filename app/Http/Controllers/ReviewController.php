@@ -255,6 +255,9 @@ class ReviewController extends Controller
 
             $array['admin_user'] = User::where('id',Auth::user()->user_id)->orderBy('id','desc')->first();
 
+            $array['has_scratch_card_access'] = \App\Http\Controllers\ScratchCardController::hasAccess(Auth::user());
+            $array['activeScratchCard'] = \App\Models\ScratchCard::where('user_id', Auth::user()->id)->where('status', 'active')->first();
+
             return view('user.review_links.list',$array);
         }
     }

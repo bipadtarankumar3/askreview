@@ -144,6 +144,15 @@
                   </div>
                   <div class="col-sm-12 col-md-4">
                     <div class="mb-3">
+                      <label for="scratch_card_access" class="control-label col-form-label">Scratch Card Access</label>
+                      <select name="scratch_card_access" id="scratch_card_access" class="form-control" required>
+                        <option value="NO" style="background-color: red;color:white" @if (isset($user)) @if(($user->scratch_card_access ?? 'NO') =='NO' ) selected @endif @else selected @endif>NO</option>
+                        <option value="YES" style="background-color: green;color:white" @if (isset($user)) @if(($user->scratch_card_access ?? '') =='YES' ) selected @endif @endif>YES</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 col-md-4">
+                    <div class="mb-3">
                       <label for="status" class="control-label col-form-label">Status <span style="color: red;">*</span></label>
                       <select name="status" id="status" class="form-control" required>
                        

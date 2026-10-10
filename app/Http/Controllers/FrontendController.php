@@ -266,6 +266,16 @@ class FrontendController extends Controller
                     $array['integrationList'] = Integration::where('user_id', $user->id)->orderBy('button_order', 'asc')->get();
                 }
 
+                // Scratch Card Functionality
+                $scratchAccess = \App\Http\Controllers\ScratchCardController::hasAccess($userDate);
+                $array['scratch_card_access_show'] = $scratchAccess;
+                $array['activeScratchCard'] = null;
+                if ($scratchAccess) {
+                    $array['activeScratchCard'] = \App\Models\ScratchCard::where('user_id', $userDate->id)
+                        ->where('status', 'active')
+                        ->first();
+                }
+
 
                 if (isset($_GET['from']) && $_GET['from'] == 'qr') {
                     $qr = QrTrack::where('ip_address', request()->ip())

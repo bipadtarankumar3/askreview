@@ -1117,6 +1117,20 @@
                     <span class="hide-menu">Integrations</span>
                   </a>
                 </li>
+                <li class="sidebar-item">
+                  <a class="sidebar-link {{ Request::is('admin/scratch_cards*') ? 'active' : '' }}" href="{{URL::to('admin/scratch_cards')}}" aria-expanded="false">
+                    <span><i class="ti ti-ticket"></i></span>
+                    <span class="hide-menu">Scratch Cards</span>
+                    @php
+                      $userScratchAccess = \App\Http\Controllers\ScratchCardController::hasAccess(Auth::user());
+                    @endphp
+                    @if($userScratchAccess)
+                      <span class="badge bg-success ms-auto" style="font-size: 0.65rem; padding: 2px 7px;">ACTIVE</span>
+                    @else
+                      <span class="badge bg-secondary ms-auto" style="font-size: 0.65rem; padding: 2px 7px;"><i class="ti ti-lock"></i> PRO</span>
+                    @endif
+                  </a>
+                </li>
 
                 @php
                   $isAnalyticsActive = Request::is('admin/qr_analytics*') || Request::is('admin/links_analytics*');

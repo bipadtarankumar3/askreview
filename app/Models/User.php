@@ -38,4 +38,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Check if user has Scratch Card feature access
+     */
+    public function hasScratchCardAccess()
+    {
+        return \App\Http\Controllers\ScratchCardController::hasAccess($this);
+    }
 }

@@ -2020,6 +2020,26 @@
                             @endif
                         @endif
 
+                        @if (!empty($activeScratchCard))
+                            <div class="platform-btn-link scratch-card-btn" onclick="open_scratch_card_modal()" style="border: 1.5px solid #fcd34d; background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 50%, #ffffff 100%); box-shadow: 0 4px 15px rgba(245, 158, 11, 0.12); cursor: pointer; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+                                <div class="platform-icon-wrap" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: #ffffff; box-shadow: 0 4px 10px rgba(245, 158, 11, 0.35);">
+                                    <i class="fa-solid fa-gift fa-lg"></i>
+                                </div>
+                                <div class="platform-info-text">
+                                    <div class="platform-name d-flex align-items-center gap-1.5" style="color: #92400e; font-weight: 700;">
+                                        <span>{{ $activeScratchCard->title ?: 'Scratch & Win Reward' }}</span>
+                                        <span style="background: linear-gradient(135deg, #ef4444, #f59e0b); color: #fff; font-size: 0.62rem; font-weight: 800; padding: 2px 7px; border-radius: 9999px; letter-spacing: 0.03em; box-shadow: 0 2px 5px rgba(239, 68, 68, 0.3);">
+                                            <i class="fa-solid fa-sparkles"></i> LUCKY OFFER
+                                        </span>
+                                    </div>
+                                    <p class="platform-hint" style="color: #b45309; font-weight: 500;">Scratch card &amp; reveal exclusive surprise offer!</p>
+                                </div>
+                                <div class="platform-chevron-wrap">
+                                    <i class="fa-solid fa-chevron-right" style="color: #d97706;"></i>
+                                </div>
+                            </div>
+                        @endif
+
                         <!-- PWA Install Button -->
                         <div id="install_button" class="text-center">
                             <button type="button" id="installButton" class="install-pwa-banner" style="display: none;">
@@ -2973,6 +2993,8 @@
             }
         @endif
     </script>
+
+    @include('frontend.components.scratch_card_modal')
 
 </body>
 </html>

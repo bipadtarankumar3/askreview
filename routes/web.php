@@ -17,6 +17,7 @@ use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\QrController;
+use App\Http\Controllers\ScratchCardController;
 
 
 
@@ -59,8 +60,9 @@ Route::post('/u/private_feedback',[FrontendController::class,'private_feedback']
 Route::post('/u/spinner_form_check/post',[FrontendController::class,'spinner_form_check']);
 Route::post('/u/spinner_round_check',[FrontendController::class,'spinner_round_check']);
 Route::get('/u/success_submit/{user_name}',[FrontendController::class,'success_submit']);
-Route::get('/dummy',[FrontendController::class,'dummy']);
-Route::post('/review_links_analytics',[FrontendController::class,'review_links_analytics']);
+Route::post('/u/review_links_analytics',[FrontendController::class,'review_links_analytics']);
+Route::post('/u/scratch_card/submit', [ScratchCardController::class, 'submitCustomerLead'])->name('scratch_card.submit');
+Route::post('/u/scratch_card/track_scratch', [ScratchCardController::class, 'trackScratch'])->name('scratch_card.track');
 
 Route::any('otp_verify_page',[UserController::class,'otp_verify_page']);
 Route::any('otp_verify',[UserController::class,'otp_verify']);
@@ -297,6 +299,15 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
     Route::post('save_double_qr_settings', [QrController::class,'save_double_qr_settings']);
     Route::any('print_double_qr', [QrController::class,'print_double_qr']);
 
+    // ----------------- Scratch Card Routes ------------------------
+    Route::get('scratch_cards', [ScratchCardController::class, 'index'])->name('scratch_cards.index');
+    Route::post('scratch_cards/store', [ScratchCardController::class, 'store'])->name('scratch_cards.store');
+    Route::post('scratch_cards/activate/{id}', [ScratchCardController::class, 'activate'])->name('scratch_cards.activate');
+    Route::post('scratch_cards/deactivate/{id}', [ScratchCardController::class, 'deactivate'])->name('scratch_cards.deactivate');
+    Route::get('scratch_cards/delete/{id}', [ScratchCardController::class, 'destroy'])->name('scratch_cards.delete');
+    Route::post('scratch_cards/update_lead_status', [ScratchCardController::class, 'updateLeadStatus'])->name('scratch_cards.update_lead_status');
+    Route::get('scratch_cards/export_leads', [ScratchCardController::class, 'exportLeads'])->name('scratch_cards.export_leads');
+    Route::get('scratch_cards/analytics/{id}', [ScratchCardController::class, 'cardAnalytics'])->name('scratch_cards.analytics');
 
 });
 

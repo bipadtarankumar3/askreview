@@ -910,6 +910,65 @@
                 @endforeach
             @endif
 
+            @php
+                $hasScratchCardAccess = ($has_scratch_card_access ?? false) || (Auth::check() && Auth::user()->hasScratchCardAccess());
+                $activeCard = $activeScratchCard ?? null;
+            @endphp
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 integration-filter-item"
+                 data-category="shield"
+                 data-name="scratch & win reward"
+                 data-status="{{ $hasScratchCardAccess ? ($activeCard ? 'connected' : 'inactive') : 'unconnected' }}">
+                <div class="modern-integration-card card-pro-feature {{ $activeCard ? 'card-connected' : '' }}" style="background: linear-gradient(180deg, #ffffff 0%, #fffdf5 100%); border: 1.5px solid {{ $activeCard ? '#f59e0b' : '#fef3c7' }};">
+                    <!-- Top Bar: Status Badge -->
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="badge" style="background: #fef3c7; color: #b45309; font-weight: 700; border-radius: 8px; font-size: 0.72rem; padding: 4px 8px;">
+                            <i class="fa-solid fa-sparkles me-1"></i> Interactive
+                        </span>
+
+                        @if ($hasScratchCardAccess)
+                            @if ($activeCard)
+                                <span class="status-badge-pill status-connected" style="background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0;" title="Active scratch card is live on your review page">
+                                    <span class="pulse-dot-green"></span> Live Active
+                                </span>
+                            @else
+                                <span class="status-badge-pill status-inactive" style="background: #f1f5f9; color: #64748b;" title="No scratch card is currently marked active">
+                                    <i class="ti ti-circle-x"></i> Inactive
+                                </span>
+                            @endif
+                        @else
+                            <span class="status-badge-pill status-unconnected" style="background: #fef3c7; color: #92400e; border: 1px solid #fde68a;" title="Feature locked. Contact admin or upgrade plan">
+                                <i class="fa fa-crown text-warning"></i> PRO Locked
+                            </span>
+                        @endif
+                    </div>
+
+                    <!-- Squircle Logo Badge -->
+                    <div class="brand-logo-squircle" style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border: 1.5px solid #fde68a;">
+                        <span class="pro-corner-crown" title="Pro Feature" style="position: absolute; top: -6px; right: -6px; width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b, #d97706); color: #ffffff; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(245, 158, 11, 0.45); border: 2px solid #ffffff; z-index: 5;">
+                            <i class="fa fa-gift" style="font-size: 11px !important; color: #ffffff !important; line-height: 1 !important;"></i>
+                        </span>
+                        <i class="fa-solid fa-gift" style="color: #d97706; font-size: 32px;"></i>
+                    </div>
+
+                    <!-- Title & Subtitle -->
+                    <h5 class="brand-title">Scratch &amp; Win Reward</h5>
+                    <p class="brand-desc">Interactive gamified scratch card to surprise customers with coupon codes and capture high-intent leads.</p>
+
+                    <!-- Bottom Action Row -->
+                    <div class="card-bottom-row mt-auto pt-2">
+                        @if ($hasScratchCardAccess)
+                            <a href="{{ url('admin/scratch_cards') }}" class="btn-configure-action text-decoration-none w-100 justify-content-center" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #ffffff; border: none; box-shadow: 0 3px 10px rgba(245, 158, 11, 0.3);">
+                                <i class="ti ti-settings"></i> {{ $activeCard ? 'Manage Scratch Cards' : 'Create & Activate Card' }}
+                            </a>
+                        @else
+                            <a href="{{ url('admin/scratch_cards') }}" class="btn-connect-action text-decoration-none w-100 justify-content-center" style="background: #f8fafc; color: #64748b; border: 1px dashed #cbd5e1;">
+                                <i class="fa fa-lock me-1"></i> Unlock Scratch Card
+                            </a>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
         @else
             <!-- Fallback empty state -->
             <div class="col-12 py-5 text-center">
