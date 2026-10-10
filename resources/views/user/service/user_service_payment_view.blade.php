@@ -111,6 +111,15 @@
                                 <span>Unlimited QR scans with zero traffic limits</span>
                             </li>
                             <li class="d-flex align-items-start gap-2">
+                                @if (($Service->double_qr_access ?? 'N') == 'Y')
+                                    <span style="color: #2563eb; font-size: 1.1rem; line-height: 1;"><i class="ti ti-qrcode"></i></span>
+                                    <span style="color: #1d4ed8; font-weight: 700;">Double QR Code Standee Feature Included</span>
+                                @else
+                                    <span style="color: #94a3b8; font-size: 1.1rem; line-height: 1;"><i class="ti ti-x"></i></span>
+                                    <span style="color: #94a3b8; text-decoration: line-through;">Double QR Standee Access (Premium Only)</span>
+                                @endif
+                            </li>
+                            <li class="d-flex align-items-start gap-2">
                                 @if ($Service->video_access == 'Y')
                                     <span style="color: #16a34a; font-size: 1.1rem; line-height: 1;"><i class="ti ti-video"></i></span>
                                     <span style="color: #15803d; font-weight: 700;">Customer Video Testimonial Collection &amp; Download</span>

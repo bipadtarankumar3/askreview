@@ -78,6 +78,27 @@
         box-shadow: 0 4px 12px rgba(0,0,0,0.06);
     }
 
+    .qr-showcase-box-dark {
+        background: linear-gradient(135deg, #090d16 0%, #1e293b 100%);
+        border: 2px solid #334155;
+        border-radius: 16px;
+        padding: 20px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 18px;
+        box-shadow: 0 4px 16px rgba(15, 23, 42, 0.18);
+    }
+    .qr-showcase-box-dark svg, .qr-showcase-box-dark img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        background: #ffffff;
+        padding: 10px;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    }
+
     .link-copy-container {
         background: #f8fafc;
         border: 1px solid #e2e8f0;
@@ -178,10 +199,27 @@
         @php
             $qrUrl = URL::to("u/".Auth::user()->name_url)."?from=qr";
         @endphp
+        @php
+            $activeStyle = $active_style ?? (Auth::user()->qr_style ?? 'style1');
+        @endphp
         <div class="d-flex align-items-center flex-wrap gap-2 flex-shrink-0">
-            <a href="{{ URL::to('admin/view_qr') }}" class="btn btn-sm d-inline-flex align-items-center gap-2" style="background: linear-gradient(135deg, #e11d48 0%, #be123c 100%); color: #ffffff; border-radius: 10px; font-weight: 700; padding: 8px 16px; border: none; box-shadow: 0 4px 12px rgba(225, 29, 72, 0.25); text-decoration: none;">
+            @if (!empty($has_double_qr))
+                <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 fw-semibold rounded-pill d-inline-flex align-items-center gap-1.5">
+                    <i class="fa fa-crown text-warning"></i> 2 QR Options Unlocked
+                </span>
+            @else
+                <button type="button" class="btn btn-sm d-inline-flex align-items-center gap-2" style="background: #fef3c7; color: #92400e; border: 1px solid #fde68a; border-radius: 10px; font-weight: 700; padding: 8px 14px;" onclick="promptDoubleQrUpgrade()">
+                    <i class="fa fa-crown text-warning fs-5"></i>
+                    <span>Unlock Option 2 <span class="badge bg-warning text-dark ms-1" style="font-size: 0.65rem;">PRO</span></span>
+                </button>
+            @endif
+            <a href="{{ URL::to('admin/view_qr?style='.$activeStyle) }}" class="btn btn-sm d-inline-flex align-items-center gap-2" style="background: linear-gradient(135deg, #e11d48 0%, #be123c 100%); color: #ffffff; border-radius: 10px; font-weight: 700; padding: 8px 16px; border: none; box-shadow: 0 4px 12px rgba(225, 29, 72, 0.25); text-decoration: none;">
                 <i class="ti ti-qrcode fs-5"></i>
-                <span>Download QR</span>
+                <span>View Standee</span>
+            </a>
+            <a href="{{ URL::to('admin/print_qr_code?style='.$activeStyle) }}" class="btn btn-sm btn-outline-dark d-inline-flex align-items-center gap-2" style="border-radius: 10px; font-weight: 600; padding: 8px 14px; text-decoration: none;">
+                <i class="ti ti-printer fs-5"></i>
+                <span>Print Standee</span>
             </a>
             <button type="button" class="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-2" style="border-radius: 10px; font-weight: 600; padding: 8px 14px;" onclick="copyQrLink('{{ $qrUrl }}')">
                 <i class="ti ti-copy fs-5"></i>
@@ -285,43 +323,162 @@
     <div class="row">
         <!-- Left Column: QR Code Showcase & Analyzed Quick Metrics -->
         <div class="col-lg-4 col-xl-3">
-            <!-- QR Card -->
+            @php
+                $qr2Url = !empty($doubleQrSettings->url) ? $doubleQrSettings->url : $qrUrl;
+                $qr2Name = !empty($doubleQrSettings->name) ? $doubleQrSettings->name : 'Pay via UPI';
+                $qr2Type = !empty($doubleQrSettings->review_links) ? $doubleQrSettings->review_links : 'upi';
+            @endphp
+
+            <!-- QR Showcase Card with Option 1 & Option 2 (Single QR Per Option) -->
             <div class="chart-card card mb-4">
-                <div class="card-header">
-                    <h6 class="fw-bold text-dark mb-0"><i class="fa fa-qrcode text-primary me-2"></i>My QR Code</h6>
-                    <span class="badge bg-success-subtle text-success small">Active</span>
+                <div class="card-header pb-2 pt-3">
+                    <ul class="nav nav-pills w-100 gap-1" id="qrOptionTabs" role="tablist">
+                        <li class="nav-item flex-fill" role="presentation">
+                            <button class="nav-link {{ $activeStyle !== 'style2' ? 'active' : '' }} w-100 py-2 px-2 fw-bold text-center rounded-2 position-relative" id="option1-tab" data-bs-toggle="pill" data-bs-target="#option1Pane" type="button" role="tab" style="font-size: 0.85rem;">
+                                <i class="ti ti-qrcode me-1"></i> Option 1
+                                @if($activeStyle !== 'style2')
+                                    <span class="badge bg-success ms-1" style="font-size: 0.65rem; padding: 2px 6px;">Active</span>
+                                @endif
+                            </button>
+                        </li>
+                        <li class="nav-item flex-fill" role="presentation">
+                            <button class="nav-link {{ $activeStyle === 'style2' ? 'active' : '' }} w-100 py-2 px-2 fw-bold text-center rounded-2 position-relative" id="option2-tab" data-bs-toggle="pill" data-bs-target="#option2Pane" type="button" role="tab" style="font-size: 0.85rem;">
+                                <i class="fa fa-crown text-warning me-1"></i> Option 2
+                                @if($activeStyle === 'style2')
+                                    <span class="badge bg-success ms-1" style="font-size: 0.65rem; padding: 2px 6px;">Active</span>
+                                @elseif(!empty($has_double_qr))
+                                    <span class="badge bg-warning text-dark ms-1" style="font-size: 0.65rem; padding: 2px 6px;">PRO</span>
+                                @else
+                                    <i class="fa fa-lock ms-1 text-muted" style="font-size: 0.72rem;"></i>
+                                @endif
+                            </button>
+                        </li>
+                    </ul>
                 </div>
                 <div class="card-body">
-                    <div class="qr-showcase-box" id="qrCodeContainer">
-                        {!! QrCode::size(210)->generate($qrUrl) !!}
-                    </div>
+                    <div class="tab-content" id="qrOptionTabContent">
+                        <!-- PANE 1: OPTION 1 QR -->
+                        <div class="tab-pane fade {{ $activeStyle !== 'style2' ? 'show active' : '' }}" id="option1Pane" role="tabpanel">
+                            <div class="qr-showcase-box" id="qrCodeContainerOption1">
+                                {!! QrCode::size(210)->generate($qrUrl) !!}
+                            </div>
 
-                    <label class="small text-muted fw-semibold mb-1">Target Review URL:</label>
-                    <div class="link-copy-container">
-                        <input type="text" readonly id="qrLinkText" value="{{ $qrUrl }}" class="link-copy-input">
-                        <button type="button" class="btn btn-sm btn-link p-0 text-primary text-decoration-none" onclick="copyQrLink('{{ $qrUrl }}')" title="Copy to clipboard">
-                            <i class="fa fa-copy"></i>
-                        </button>
-                    </div>
+                            @if($activeStyle !== 'style2')
+                                <div class="p-2 rounded-2 bg-success-subtle text-success text-center fw-bold small mb-3 border border-success-subtle d-flex align-items-center justify-content-center gap-1.5">
+                                    <i class="fa fa-check-circle"></i> Option 1 is Currently Active
+                                </div>
+                            @else
+                                <button type="button" class="btn btn-outline-primary btn-sm w-100 fw-bold mb-3 d-flex align-items-center justify-content-center gap-1.5" onclick="activateQrOption('style1')">
+                                    <i class="fa fa-toggle-on"></i> Make Option 1 Active
+                                </button>
+                            @endif
 
-                    <div class="d-grid gap-2">
-                        <a href="{{ URL::to('admin/view_qr') }}" class="btn btn-sm py-2 fw-bold text-white shadow-sm d-flex align-items-center justify-content-center gap-2" style="background: linear-gradient(135deg, #e11d48 0%, #be123c 100%); border-radius: 10px; border: none; box-shadow: 0 4px 12px rgba(225, 29, 72, 0.22); text-decoration: none;">
-                            <i class="ti ti-qrcode fs-5"></i>
-                            <span>Download QR</span>
-                        </a>
-                        <div class="row g-2">
-                            <div class="col-6">
-                                <button type="button" class="btn btn-outline-primary btn-sm w-100 fw-semibold d-flex align-items-center justify-content-center gap-1.5" style="border-radius: 8px; padding: 7px 10px;" onclick="downloadQrPng()">
-                                    <i class="ti ti-download"></i>
-                                    <span>PNG Image</span>
+                            <label class="small text-muted fw-semibold mb-1">Target Review URL:</label>
+                            <div class="link-copy-container mb-3">
+                                <input type="text" readonly id="qrLinkText" value="{{ $qrUrl }}" class="link-copy-input">
+                                <button type="button" class="btn btn-sm btn-link p-0 text-primary text-decoration-none" onclick="copyQrLink('{{ $qrUrl }}')" title="Copy to clipboard">
+                                    <i class="fa fa-copy"></i>
                                 </button>
                             </div>
-                            <div class="col-6">
-                                <button type="button" class="btn btn-outline-secondary btn-sm w-100 fw-semibold d-flex align-items-center justify-content-center gap-1.5" style="border-radius: 8px; padding: 7px 10px;" onclick="downloadQrSvg()">
-                                    <i class="ti ti-file-code"></i>
-                                    <span>Vector (SVG)</span>
-                                </button>
+
+                            <div class="d-grid gap-2">
+                                <a href="{{ URL::to('admin/view_qr?style=style1') }}" class="btn btn-sm py-2 fw-bold text-white shadow-sm d-flex align-items-center justify-content-center gap-2" style="background: linear-gradient(135deg, #e11d48 0%, #be123c 100%); border-radius: 10px; border: none; box-shadow: 0 4px 12px rgba(225, 29, 72, 0.22); text-decoration: none;">
+                                    <i class="ti ti-qrcode fs-5"></i>
+                                    <span>Download Standee (Option 1)</span>
+                                </a>
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <button type="button" class="btn btn-outline-primary btn-sm w-100 fw-semibold d-flex align-items-center justify-content-center gap-1.5" style="border-radius: 8px; padding: 7px 10px;" onclick="downloadQrPng()">
+                                            <i class="ti ti-download"></i>
+                                            <span>PNG Image</span>
+                                        </button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm w-100 fw-semibold d-flex align-items-center justify-content-center gap-1.5" style="border-radius: 8px; padding: 7px 10px;" onclick="downloadQrSvg()">
+                                            <i class="ti ti-file-code"></i>
+                                            <span>Vector (SVG)</span>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
+                        </div>
+
+                        <!-- PANE 2: OPTION 2 QR (PREMIUM) -->
+                        <div class="tab-pane fade {{ $activeStyle === 'style2' ? 'show active' : '' }}" id="option2Pane" role="tabpanel">
+                            @if (empty($has_double_qr))
+                                <!-- Locked State for Basic / Non-Premium Users -->
+                                <div class="text-center p-3 rounded-3" style="background: linear-gradient(180deg, #faf5ff 0%, #f3e8ff 100%); border: 2px dashed #c084fc;">
+                                    <div class="mb-2" style="width: 52px; height: 52px; margin: 0 auto; border-radius: 16px; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); display: flex; align-items: center; justify-content: center; color: #b45309; font-size: 24px; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);">
+                                        <i class="fa fa-crown"></i>
+                                    </div>
+                                    <div class="badge bg-warning text-dark fw-bold mb-2 px-2.5 py-1" style="font-size: 0.7rem; letter-spacing: 0.5px;">
+                                        ⭐ PREMIUM EXCLUSIVE
+                                    </div>
+                                    <h6 class="fw-bold mb-1" style="color: #4c1d95; font-size: 1rem;">Option 2: Modern Luxury Standee</h6>
+                                    <p class="text-muted small mb-3" style="font-size: 0.78rem;">
+                                        Unlock our executive dark acrylic QR standee template and seamlessly switch between multiple QR options anytime.
+                                    </p>
+                                    <div class="text-start mb-3 p-3 rounded-3" style="background: #ffffff; border: 1px solid #e9d5ff; font-size: 0.76rem; color: #4b5563;">
+                                        <div class="d-flex align-items-center gap-2 mb-2 text-dark fw-bold">
+                                            <i class="fa fa-check-circle text-success"></i> Modern Dark Acrylic Standee Template
+                                        </div>
+                                        <div class="d-flex align-items-center gap-2 mb-2 text-dark fw-bold">
+                                            <i class="fa fa-check-circle text-success"></i> 2 QR Options Generated for Your Brand
+                                        </div>
+                                        <div class="d-flex align-items-center gap-2 text-dark fw-bold">
+                                            <i class="fa fa-check-circle text-success"></i> Instant 1-Click QR Design Switching
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-sm w-100 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2 py-2.5" style="background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); color: #ffffff; border-radius: 10px; border: none;" onclick="promptDoubleQrUpgrade()">
+                                        <i class="fa fa-crown text-warning"></i>
+                                        <span>Upgrade to Premium Plan</span>
+                                    </button>
+                                </div>
+                            @else
+                                <!-- Active Option 2 for Premium Users -->
+                                <div class="qr-showcase-box-dark" id="qrCodeContainerOption2">
+                                    {!! QrCode::size(210)->generate($qrUrl) !!}
+                                </div>
+
+                                @if($activeStyle === 'style2')
+                                    <div class="p-2 rounded-2 bg-success-subtle text-success text-center fw-bold small mb-3 border border-success-subtle d-flex align-items-center justify-content-center gap-1.5">
+                                        <i class="fa fa-check-circle"></i> Option 2 is Currently Active
+                                    </div>
+                                @else
+                                    <button type="button" class="btn btn-outline-primary btn-sm w-100 fw-bold mb-3 d-flex align-items-center justify-content-center gap-1.5" onclick="activateQrOption('style2')">
+                                        <i class="fa fa-toggle-on"></i> Make Option 2 Active
+                                    </button>
+                                @endif
+
+                                <label class="small text-muted fw-semibold mb-1">Target Review URL:</label>
+                                <div class="link-copy-container mb-3">
+                                    <input type="text" readonly value="{{ $qrUrl }}" class="link-copy-input">
+                                    <button type="button" class="btn btn-sm btn-link p-0 text-primary text-decoration-none" onclick="copyQrLink('{{ $qrUrl }}')" title="Copy to clipboard">
+                                        <i class="fa fa-copy"></i>
+                                    </button>
+                                </div>
+
+                                <div class="d-grid gap-2">
+                                    <a href="{{ URL::to('admin/view_qr?style=style2') }}" class="btn btn-sm py-2 fw-bold text-white shadow-sm d-flex align-items-center justify-content-center gap-2" style="background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); border-radius: 10px; border: none; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25); text-decoration: none;">
+                                        <i class="ti ti-qrcode fs-5"></i>
+                                        <span>Download Standee (Option 2)</span>
+                                    </a>
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-outline-primary btn-sm w-100 fw-semibold d-flex align-items-center justify-content-center gap-1.5" style="border-radius: 8px; padding: 7px 10px;" onclick="downloadQrPng()">
+                                                <i class="ti ti-download"></i>
+                                                <span>PNG Image</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-outline-secondary btn-sm w-100 fw-semibold d-flex align-items-center justify-content-center gap-1.5" style="border-radius: 8px; padding: 7px 10px;" onclick="downloadQrSvg()">
+                                                <i class="ti ti-file-code"></i>
+                                                <span>Vector (SVG)</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -603,6 +760,7 @@
     <span id="analyticsToastMsg">Link copied to clipboard!</span>
 </div>
 
+
 @endsection
 
 @section('js')
@@ -649,7 +807,10 @@
 
     // Download QR Code as PNG
     function downloadQrPng() {
-        var svgEl = document.querySelector('#qrCodeContainer svg');
+        var svgEl = document.querySelector('.tab-pane.active svg') || 
+                    document.querySelector('#qrCodeContainerOption1 svg') || 
+                    document.querySelector('#qrCodeContainerOption2 svg') || 
+                    document.querySelector('#qrCodeContainer svg');
         if (!svgEl) {
             alert('QR Code element not found.');
             return;
@@ -689,7 +850,10 @@
 
     // Download QR Code as SVG
     function downloadQrSvg() {
-        var svgEl = document.querySelector('#qrCodeContainer svg');
+        var svgEl = document.querySelector('.tab-pane.active svg') || 
+                    document.querySelector('#qrCodeContainerOption1 svg') || 
+                    document.querySelector('#qrCodeContainerOption2 svg') || 
+                    document.querySelector('#qrCodeContainer svg');
         if (!svgEl) return;
         var svgData = new XMLSerializer().serializeToString(svgEl);
         var svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
@@ -949,5 +1113,41 @@
             }
         });
     });
+
+    // Option QR Helpers & Switcher
+    function promptDoubleQrUpgrade() {
+        if (typeof get_plans === "function") {
+            get_plans();
+        } else {
+            window.location.href = "{{ URL::to('admin/user_service') }}";
+        }
+    }
+
+    function activateQrOption(style) {
+        $.ajax({
+            url: "{{ URL::to('admin/activate_qr_style') }}",
+            method: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                style: style
+            },
+            success: function(res) {
+                if (res.status === "success") {
+                    showToast(res.message);
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 600);
+                }
+            },
+            error: function(xhr) {
+                if (xhr.status === 403 && xhr.responseJSON && xhr.responseJSON.premium_required) {
+                    promptDoubleQrUpgrade();
+                } else {
+                    var msg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : "Error activating QR option";
+                    alert(msg);
+                }
+            }
+        });
+    }
 </script>
 @endsection

@@ -25,6 +25,8 @@ use App\Models\video_testimonial;
 use App\Models\Integration;
 use App\Models\ReviewLinksAnalytics;
 use App\Models\Setting;
+use App\Models\Payment;
+use App\Models\Service;
 use Illuminate\Support\Facades\URL;
 
 use Illuminate\Support\Facades\Auth;
@@ -782,6 +784,10 @@ class UserController extends Controller
                         Integration::where('user_id', $user->id)->where('type', 'record')->update(['status' => 'inactive']);
                     }
                 }
+
+                if ($request->double_qr_access != '') {
+                    $user->double_qr_access = $request->double_qr_access;
+                }
                 
                 $user->save();
 
@@ -853,6 +859,7 @@ class UserController extends Controller
                     'wp_key' => $request->wp_key,
                     'template_category_id' => $request->template_category_id,
                     'video_access' => $request->video_access,
+                    'double_qr_access' => $request->double_qr_access ?? 'NO',
                     'front_page_text' => '',
                     'default_background' => 'Yes',
                     'facebook_share' => 'Yes',
@@ -1124,6 +1131,10 @@ class UserController extends Controller
                     } elseif ($request->video_access == 'NO') {
                         Integration::where('user_id', $user->id)->where('type', 'record')->update(['status' => 'inactive']);
                     }
+                }
+
+                if ($request->double_qr_access != '') {
+                    $user->double_qr_access = $request->double_qr_access;
                 }
                 
                 $user->save();
@@ -1649,21 +1660,54 @@ class UserController extends Controller
     }
 
     public function view_qr(Request $request){
-
         if(Auth::check()){
-            
- 
-            return view('admin/view_qr');
-            
+            $user = Auth::user();
+            $has_double_qr = false;
+            if ($user->double_qr_access === 'YES' || $user->type === 'admin') {
+                $has_double_qr = true;
+            } else {
+                $activePayment = Payment::select('payments.*', 'services.plan_type', 'services.double_qr_access')
+                    ->join('services', 'services.id', 'payments.service_id')
+                    ->where('payments.user_id', $user->id)
+                    ->orderBy('payments.id', 'desc')
+                    ->first();
+                if ($activePayment && ($activePayment->double_qr_access === 'Y' || in_array($activePayment->plan_type, ['premium', 'pro']))) {
+                    $has_double_qr = true;
+                }
+            }
+
+            $style = $request->query('style', $user->qr_style ?: 'style1');
+            if ($style === 'style2' && !$has_double_qr) {
+                $style = 'style1';
+            }
+
+            return view('admin/view_qr', compact('style', 'has_double_qr'));
         }
     }
 
     public function print_qr_code(Request $request){
-
         if(Auth::check()){
+            $user = Auth::user();
+            $has_double_qr = false;
+            if ($user->double_qr_access === 'YES' || $user->type === 'admin') {
+                $has_double_qr = true;
+            } else {
+                $activePayment = Payment::select('payments.*', 'services.plan_type', 'services.double_qr_access')
+                    ->join('services', 'services.id', 'payments.service_id')
+                    ->where('payments.user_id', $user->id)
+                    ->orderBy('payments.id', 'desc')
+                    ->first();
+                if ($activePayment && ($activePayment->double_qr_access === 'Y' || in_array($activePayment->plan_type, ['premium', 'pro']))) {
+                    $has_double_qr = true;
+                }
+            }
 
-            return view('admin/print_qr_code');
-            
+            $style = $request->query('style', $user->qr_style ?: 'style1');
+            if ($style === 'style2' && !$has_double_qr) {
+                $style = 'style1';
+            }
+
+            return view('admin/print_qr_code', compact('style', 'has_double_qr'));
         }
     }
     public function showQRCode(Request $request){
@@ -1880,6 +1924,10 @@ class UserController extends Controller
                     }
                 }
 
+                if ($request->double_qr_access != '') {
+                    $user->double_qr_access = $request->double_qr_access;
+                }
+
                 if (isset($request->file) && !empty($request->file)) {
                     if ($request->hasFile('file')) {
                         $file = $request->file('file');
@@ -1970,6 +2018,7 @@ class UserController extends Controller
                     'wp_share' => 'Yes',
                     'user_id' => Auth::user()->id,
                     'video_access' => $request->video_access,
+                    'double_qr_access' => $request->double_qr_access ?? 'NO',
                     'user_id' => Auth::user()->id,
                     'logo' => $document_link
                 ]);

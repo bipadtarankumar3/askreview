@@ -110,6 +110,16 @@
                     </div>
                   </div> 
 
+                  <div class="col-sm-12 col-md-4">
+                    <div class="mb-3">
+                      <label for="double_qr_access" class="control-label col-form-label">Double QR Access</label>
+                      <select name="double_qr_access" id="double_qr_access" class="form-control" required>
+                        <option value="NO" style="background-color: red;color:white" @if (isset($user)) @if(($user->double_qr_access ?? 'NO') =='NO' ) selected @endif @else selected @endif>NO</option>
+                        <option value="YES" style="background-color: green;color:white" @if (isset($user)) @if(($user->double_qr_access ?? '') =='YES' ) selected @endif @endif>YES</option>
+                      </select>
+                    </div>
+                  </div> 
+
                   {{-- <div class="col-sm-12 col-md-4">
                     <div class="mb-3">
                       <label for="user_create_limit" class="control-label col-form-label">User Create Limit</label>

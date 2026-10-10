@@ -65,17 +65,29 @@ class ServiceController extends Controller
 
         if(Auth::check()){
 
+            $data = [
+                'title' => $request->title,
+                'plan_type' => $request->plan_type ?? 'basic',
+                'subscription_date' => $request->subscription_date,
+                'price' => $request->price,
+                'double_qr_access' => $request->double_qr_access ?? 'N',
+                'video_access' => $request->video_access ?? 'N',
+                'status' => $request->status,
+            ];
 
-            Service::where('id',$request->id)->update([
-                'title'=>$request->title,
-                'subscription_date'=>$request->subscription_date,
-                'video_access'=>$request->video_access,
-                'status'=>$request->status,
-                'price'=>$request->price
-            ]);
+            if (!empty($request->id)) {
+                Service::where('id', $request->id)->update($data);
+                $msg = 'Service updated successfully';
+            } else {
+                $data['user_id'] = Auth::user()->id;
+                $data['service_type'] = 'user';
+                Service::create($data);
+                $msg = 'Service created successfully';
+            }
+
             $notification = array(
-                'messege'=>'Service updated Successfull',
-                'alert-type'=>'success'
+                'messege' => $msg,
+                'alert-type' => 'success'
             );
             return redirect('admin/service')->with($notification);
         }
@@ -157,11 +169,20 @@ class ServiceController extends Controller
                         'to_date' =>$to_date,
                     ]);
 
-                    User::where('id',Auth::user()->id)->update([
-                        'expiry_date' =>$to_date,
-                        'seven_day_trial' =>null,
-                        'status' =>'active'
-                    ]);
+                    $userUpdate = [
+                        'expiry_date' => $to_date,
+                        'seven_day_trial' => null,
+                        'status' => 'active'
+                    ];
+                    if ($Service->double_qr_access == 'Y' || in_array($Service->plan_type, ['premium', 'pro'])) {
+                        $userUpdate['double_qr_access'] = 'YES';
+                    } else {
+                        $userUpdate['double_qr_access'] = 'NO';
+                    }
+                    if ($Service->video_access == 'Y') {
+                        $userUpdate['video_access'] = 'YES';
+                    }
+                    User::where('id', Auth::user()->id)->update($userUpdate);
 
                     if (Auth::user()->user_id) {
                         $my_form = User::find(Auth::user()->user_id);

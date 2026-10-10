@@ -1945,6 +1945,26 @@
                           <span>Scan QR Codes Unlimited Times</span>
                         </li>
 
+                        <!-- Double QR Access Feature -->
+                        <li class="d-flex align-items-start gap-2 mt-1">
+                          @if (($item->double_qr_access ?? 'N') == 'Y')
+                            <div class="w-100 d-flex align-items-center justify-content-between p-2 rounded-2" style="background: #eff6ff; border: 1px solid #bfdbfe;">
+                              <div class="d-flex align-items-center gap-2">
+                                <span style="color: #2563eb; font-size: 1.05rem;"><i class="ti ti-qrcode"></i></span>
+                                <span style="color: #1d4ed8; font-weight: 700; font-size: 0.84rem;">
+                                  Double QR Code Standee Feature
+                                </span>
+                              </div>
+                              <span class="badge" style="background: #3b82f6; color: #fff; font-size: 0.65rem; font-weight: 700; border-radius: 999px;">Included</span>
+                            </div>
+                          @else
+                            <div class="d-flex align-items-center gap-2" style="color: #94a3b8; font-size: 0.84rem;">
+                              <span style="color: #cbd5e1; font-size: 1rem;"><i class="ti ti-x"></i></span>
+                              <span style="text-decoration: line-through;">Double QR Standee Access</span>
+                            </div>
+                          @endif
+                        </li>
+
                         <!-- Video Access Feature -->
                         <li class="d-flex align-items-start gap-2 mt-1">
                           @if ($item->video_access == 'Y')

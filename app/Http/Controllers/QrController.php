@@ -12,6 +12,9 @@ use Session;
 use App\Models\User;
 use App\Models\QrTrack;
 use App\Models\ReviewLinksAnalytics;
+use App\Models\Payment;
+use App\Models\Service;
+use App\Models\Integration;
 use Illuminate\Support\Facades\Auth;
 use PDF;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -265,9 +268,164 @@ class QrController extends Controller
                 ->take(15)
                 ->get();
 
+            // 9. Double QR Facility Permission & Settings
+            $user = Auth::user();
+            $has_double_qr = false;
+            if ($user->double_qr_access === 'YES') {
+                $has_double_qr = true;
+            } else {
+                $activePayment = Payment::select('payments.*', 'services.plan_type', 'services.double_qr_access')
+                    ->join('services', 'services.id', 'payments.service_id')
+                    ->where('payments.user_id', $userId)
+                    ->orderBy('payments.id', 'desc')
+                    ->first();
+                if ($activePayment && ($activePayment->double_qr_access === 'Y' || in_array($activePayment->plan_type, ['premium', 'pro']))) {
+                    $has_double_qr = true;
+                }
+            }
+            if ($user->type === 'admin') {
+                $has_double_qr = true;
+            }
+            $array['has_double_qr'] = $has_double_qr;
+            $array['active_style'] = $user->qr_style ?: 'style1';
+
+            // Secondary QR settings from integrations
+            $array['doubleQrSettings'] = Integration::where('user_id', $userId)->where('type', 'double_qr')->first();
+
+            // Google review link from existing integration if available
+            $googleInt = Integration::where('user_id', $userId)->where('type', 'google')->first();
+            $array['googleReviewUrl'] = $googleInt && !empty($googleInt->review_links) ? $googleInt->review_links : '';
+
             return view('user.analytics.qr_analytics', $array);
         }
 
         return redirect("login")->withSuccess('You are not allowed to access');
+    }
+
+    public function activate_qr_style(Request $request)
+    {
+        if (Auth::check()) {
+            $user = Auth::user();
+            $style = $request->input('style', 'style1');
+
+            if (!in_array($style, ['style1', 'style2'])) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Invalid QR style selected.'
+                ], 422);
+            }
+
+            // Check if user has double QR access for style2
+            if ($style === 'style2') {
+                $hasAccess = ($user->double_qr_access === 'YES' || $user->type === 'admin');
+                if (!$hasAccess) {
+                    $activePayment = Payment::select('payments.*', 'services.plan_type', 'services.double_qr_access')
+                        ->join('services', 'services.id', 'payments.service_id')
+                        ->where('payments.user_id', $user->id)
+                        ->orderBy('payments.id', 'desc')
+                        ->first();
+                    if ($activePayment && ($activePayment->double_qr_access === 'Y' || in_array($activePayment->plan_type, ['premium', 'pro']))) {
+                        $hasAccess = true;
+                    }
+                }
+
+                if (!$hasAccess) {
+                    return response()->json([
+                        'status' => 'error',
+                        'premium_required' => true,
+                        'message' => 'Option 2 is an exclusive Premium Plan feature. Please upgrade your plan to unlock multiple QR options!'
+                    ], 403);
+                }
+            }
+
+            User::where('id', $user->id)->update(['qr_style' => $style]);
+
+            $optionName = $style === 'style2' ? 'Option 2' : 'Option 1';
+
+            return response()->json([
+                'status' => 'success',
+                'active_style' => $style,
+                'message' => $optionName . ' activated successfully as your active QR code!'
+            ]);
+        }
+
+        return response()->json(['status' => 'error', 'message' => 'Unauthorized'], 401);
+    }
+
+    public function save_double_qr_settings(Request $request)
+    {
+        if (Auth::check()) {
+            $userId = Auth::user()->id;
+            $user = Auth::user();
+
+            $hasAccess = ($user->double_qr_access === 'YES' || $user->type === 'admin');
+            if (!$hasAccess) {
+                $activePayment = Payment::select('payments.*', 'services.plan_type', 'services.double_qr_access')
+                    ->join('services', 'services.id', 'payments.service_id')
+                    ->where('payments.user_id', $userId)
+                    ->orderBy('payments.id', 'desc')
+                    ->first();
+                if ($activePayment && ($activePayment->double_qr_access === 'Y' || in_array($activePayment->plan_type, ['premium', 'pro']))) {
+                    $hasAccess = true;
+                }
+            }
+
+            if (!$hasAccess) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Double QR Standee is an exclusive Premium Plan feature. Please upgrade to unlock.'
+                ], 403);
+            }
+
+            Integration::updateOrCreate(
+                ['user_id' => $userId, 'type' => 'double_qr'],
+                [
+                    'name' => $request->name ?? 'Pay / Connect',
+                    'url' => $request->url ?? '',
+                    'review_links' => $request->preset_type ?? 'upi'
+                ]
+            );
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Double QR configuration saved successfully!'
+            ]);
+        }
+        return response()->json(['status' => 'error', 'message' => 'Unauthorized'], 401);
+    }
+
+    public function print_double_qr(Request $request)
+    {
+        if (Auth::check()) {
+            $userId = Auth::user()->id;
+            $user = Auth::user();
+
+            $hasAccess = ($user->double_qr_access === 'YES' || $user->type === 'admin');
+            if (!$hasAccess) {
+                $activePayment = Payment::select('payments.*', 'services.plan_type', 'services.double_qr_access')
+                    ->join('services', 'services.id', 'payments.service_id')
+                    ->where('payments.user_id', $userId)
+                    ->orderBy('payments.id', 'desc')
+                    ->first();
+                if ($activePayment && ($activePayment->double_qr_access === 'Y' || in_array($activePayment->plan_type, ['premium', 'pro']))) {
+                    $hasAccess = true;
+                }
+            }
+
+            if (!$hasAccess) {
+                $notification = array(
+                    'messege' => 'Double QR Standee is an exclusive Premium feature. Please upgrade your plan to unlock it.',
+                    'alert-type' => 'error'
+                );
+                return redirect('admin/qr_analytics')->with($notification);
+            }
+
+            $array['doubleQrSettings'] = Integration::where('user_id', $userId)->where('type', 'double_qr')->first();
+            $array['user'] = $user;
+
+            return view('admin.print_double_qr_code', $array);
+        }
+
+        return redirect('login');
     }
 }

@@ -65,64 +65,122 @@
 </style>
 </head>
 
-<body>
+<body>@php
+    $currentStyle = $style ?? (Auth::user()->qr_style ?? 'style1');
+    $url = URL::to("u/".Auth::user()->name_url);
+@endphp
 
-<div class="container-fluid">
+<div class="container-fluid py-3">
     <div class="row">
-        <div class="col-md-4"></div>
-        <div class="col-md-4 text-center">
-              <a href="#" onclick="printDiv('qr_box')"  class="btn btn-success my-2 float-center" style="font-size: 20px"><i class="fa-solid fa-print"></i> Print</a>
-              <a href="{{URL::to('admin/view_qr')}}"  class="btn btn-secondary my-2 float-center" style="font-size: 20px"><i class="fa-solid fa-arrow-left"></i> Back</a>
-  
+        <div class="col-md-3"></div>
+        <div class="col-md-6 text-center d-flex align-items-center justify-content-center gap-2 flex-wrap">
+              <a href="{{URL::to('admin/view_qr?style='.$currentStyle)}}" class="btn btn-secondary my-2 float-center" style="font-size: 16px"><i class="fa-solid fa-arrow-left"></i> Back</a>
+              
+              <div class="btn-group my-2" role="group">
+                  <a href="{{ URL::to('admin/print_qr_code?style=style1') }}" class="btn btn-sm {{ $currentStyle === 'style1' ? 'btn-primary active fw-bold' : 'btn-outline-primary' }}">
+                      Option 1
+                  </a>
+                  @if(!empty($has_double_qr))
+                      <a href="{{ URL::to('admin/print_qr_code?style=style2') }}" class="btn btn-sm {{ $currentStyle === 'style2' ? 'btn-primary active fw-bold' : 'btn-outline-primary' }}">
+                          Option 2 <span class="badge bg-warning text-dark ms-1" style="font-size: 0.65rem; padding: 2px 5px;"><i class="fa fa-crown"></i> PRO</span>
+                      </a>
+                  @endif
+              </div>
+
+              <a href="#" onclick="printDiv('qr_box')" class="btn btn-success my-2 float-center" style="font-size: 16px"><i class="fa-solid fa-print"></i> Print Standee</a>
         </div>
-        <div class="col-md-4"></div>
+        <div class="col-md-3"></div>
     </div>
- <div class="row my-4 ">
-    <div   class="col-12 col-md-4"></div>
-    <div class="col-12 col-md-4"  >
-        
-        <div style="text-align: center;border: 1px solid black;" class="qr_box" id="qr_box" >
-            <div style="background-image:url('{{asset('frontend/images/qr_back.jpg')}}')">
-            
-            <div class="qr_text_section" style="height: 110px;
-            text-align: center;
-            align-items: center;
-            justify-content: center;
-            display: flex;
-            background-color: #3074f1;
-            color: white;
-            border-radius: 0px 0px 100% 100%;
-            padding: 50px;">
-                <h2 style="font-weight: 800;font-size: 35px;margin-top:10px;">Tell Us About Your Experience</h2>
-            </div>
-            <div class="qr_logo_section my-4" style="height: 180px;">
-                <img src="{{Auth::user()->logo}}" alt="">
-            </div>
-            <div class="qr_section">
-                @php
-                    $url = URL::to("u/".Auth::user()->name_url);
-                @endphp
-                {!! QrCode::size(200)->generate($url."?from=qr") !!}
-            </div>
-            <div class="qr_desc_section my-4" style="padding: 0px 50px 0px 50px;">
-                <h2>
-                    <b> Scan the QR Code to leave us a Review on </b>
-                </h2>
-            </div>
-            <div class="qr_desc_google my-4" style="height: 91px;" >
-                <img src="{{asset('frontend/images/gog_rev.png')}}" alt="" style="height: 80px;
-                width: 55%;" >
-            </div>
-            <div class="qr_desc_power_by" style="margin-top:0.7rem;height: 23px;">
-                <img src="{{asset('frontend/images/power_by.png')}}" style="height: 20px;" alt="">
-                <img src="{{asset('frontend/images/ask.png')}}" style="height: 29px;" alt="">
-            </div>
-            <div class="yellow_box"></div>
-        </div>
+
+    <div class="row my-4">
+        <div class="col-12 col-md-4"></div>
+        <div class="col-12 col-md-4">
+            @if($currentStyle === 'style2')
+                <!-- STYLE 2: MODERN DARK ACRYLIC STANDEE PRINT -->
+                <div class="qr_box_modern" id="qr_box" style="text-align: center; background: #090d16 !important; border-radius: 20px; border: 2px solid #334155; overflow: hidden; color: #ffffff !important; position: relative; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;">
+                    <!-- Top Gradient Accent -->
+                    <div style="background: linear-gradient(90deg, #e11d48 0%, #7c3aed 50%, #2563eb 100%) !important; height: 8px; -webkit-print-color-adjust: exact !important;"></div>
+                    
+                    <!-- Header -->
+                    <div style="padding: 24px 20px 14px 20px;">
+                        <div style="display: inline-flex; align-items: center; gap: 4px; color: #fbbf24 !important; font-size: 22px; margin-bottom: 6px; -webkit-print-color-adjust: exact !important;">
+                            <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                        </div>
+                        <h2 style="color: #ffffff !important; font-weight: 900; font-size: 26px; letter-spacing: 1.5px; text-transform: uppercase; margin: 0; line-height: 1.2;">
+                            Review Us On Google
+                        </h2>
+                        <p style="color: #94a3b8 !important; font-size: 13px; margin: 5px 0 0 0; font-weight: 500;">
+                            Your 5-star review helps our business grow!
+                        </p>
+                    </div>
+
+                    <!-- Business Logo -->
+                    <div style="margin: 6px auto; width: 130px; height: 130px; border-radius: 20px; background: #ffffff !important; padding: 10px; display: flex; align-items: center; justify-content: center; border: 2px solid rgba(255,255,255,0.2); -webkit-print-color-adjust: exact !important;">
+                        <img src="{{ Auth::user()->logo }}" alt="{{ Auth::user()->name }}" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                    </div>
+                    
+                    <div style="margin-top: 8px; margin-bottom: 10px;">
+                        <span style="color: #f8fafc !important; font-weight: 700; font-size: 16px;">{{ Auth::user()->name }}</span>
+                    </div>
+
+                    <!-- Framed QR Code -->
+                    <div style="background: #ffffff !important; margin: 10px 30px 15px 30px; padding: 18px; border-radius: 20px; text-align: center; -webkit-print-color-adjust: exact !important;">
+                        {!! QrCode::size(210)->generate($url."?from=qr") !!}
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 10px; color: #0f172a !important; font-weight: 700; font-size: 13px;">
+                            <i class="fa fa-camera text-primary"></i>
+                            <span>Point camera & tap the link</span>
+                        </div>
+                    </div>
+
+                    <!-- Google Review Badge -->
+                    <div style="padding: 6px 20px 14px 20px;">
+                        <img src="{{ asset('frontend/images/gog_rev.png') }}" alt="Google Reviews" style="height: 60px;">
+                    </div>
+
+                    <!-- Footer NFC & Powered By -->
+                    <div style="padding: 14px 20px; background: #0f172a !important; border-top: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; -webkit-print-color-adjust: exact !important;">
+                        <div style="display: flex; align-items: center; gap: 6px; color: #94a3b8 !important; font-size: 12px; font-weight: 600;">
+                            <i class="fa fa-wifi" style="transform: rotate(90deg); color: #38bdf8 !important;"></i>
+                            <span>Touch-Free Review</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 4px;">
+                            <span style="color: #64748b !important; font-size: 11px; text-transform: uppercase;">Powered by</span>
+                            <img src="{{ asset('frontend/images/ask.png') }}" alt="AskReview" style="height: 22px;">
+                        </div>
+                    </div>
+                </div>
+
+            @else
+                <!-- STYLE 1: CLASSIC BLUE CURVE STANDEE PRINT -->
+                <div style="text-align: center; border: 1px solid black;" class="qr_box" id="qr_box">
+                    <div style="background-image:url('{{asset('frontend/images/qr_back.jpg')}}'); background-color: #ffffff;">
+                        <div class="qr_text_section" style="height: 110px; text-align: center; align-items: center; justify-content: center; display: flex; background-color: #3074f1 !important; color: white !important; border-radius: 0px 0px 100% 100%; padding: 50px; -webkit-print-color-adjust: exact !important;">
+                            <h2 style="font-weight: 800; font-size: 35px; margin-top: 10px; color: white !important;">Tell Us About Your Experience</h2>
+                        </div>
+                        <div class="qr_logo_section my-4" style="height: 180px;">
+                            <img src="{{Auth::user()->logo}}" alt="">
+                        </div>
+                        <div class="qr_section">
+                            {!! QrCode::size(200)->generate($url."?from=qr") !!}
+                        </div>
+                        <div class="qr_desc_section my-4" style="padding: 0px 50px 0px 50px;">
+                            <h2>
+                                <b> Scan the QR Code to leave us a Review on </b>
+                            </h2>
+                        </div>
+                        <div class="qr_desc_google my-4" style="height: 91px;">
+                            <img src="{{asset('frontend/images/gog_rev.png')}}" alt="" style="height: 80px; width: 55%;">
+                        </div>
+                        <div class="qr_desc_power_by" style="margin-top:0.7rem; height: 23px;">
+                            <img src="{{asset('frontend/images/power_by.png')}}" style="height: 20px;" alt="">
+                            <img src="{{asset('frontend/images/ask.png')}}" style="height: 29px;" alt="">
+                        </div>
+                        <div class="yellow_box" style="height: 5px; background-color: yellow !important; -webkit-print-color-adjust: exact !important;"></div>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
-    <div   class="col-12 col-md-4"></div>
- </div>
 </div>
 
 

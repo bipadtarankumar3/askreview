@@ -292,6 +292,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
 
     Route::any('links_analytics', [QrController::class,'links_analytics']);
     Route::any('qr_analytics', [QrController::class,'qr_analytics']);
+    Route::post('activate_qr_style', [QrController::class,'activate_qr_style']);
+    Route::post('save_double_qr_settings', [QrController::class,'save_double_qr_settings']);
+    Route::any('print_double_qr', [QrController::class,'print_double_qr']);
 
 
 });

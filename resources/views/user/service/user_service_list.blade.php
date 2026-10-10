@@ -46,15 +46,23 @@
                                 </div>
                                 <div class="card-body">
                                     <ul>
-                                        <li>1 Year Extend Expiry Date</li>
-                                        <li>Video Access : 
-                                            @if ($item->video_access == 'Y')
-                                                Yes
+                                        <li><strong>Validity:</strong> {{$item->subscription_date ?? 1}} Year Extend Expiry Date</li>
+                                        <li><strong>Plan Tier:</strong> {{ ucfirst($item->plan_type ?? 'basic') }}</li>
+                                        <li><strong>Double QR Access:</strong> 
+                                            @if (($item->double_qr_access ?? 'N') == 'Y')
+                                                <span class="text-success fw-bold">Yes</span>
                                             @else
-                                                No
+                                                <span class="text-muted">No</span>
                                             @endif
                                         </li>
-                                        <li>Price : {{$item->price}}</li>
+                                        <li><strong>Video Access:</strong> 
+                                            @if ($item->video_access == 'Y')
+                                                <span class="text-success fw-bold">Yes</span>
+                                            @else
+                                                <span class="text-muted">No</span>
+                                            @endif
+                                        </li>
+                                        <li><strong>Price:</strong> ₹{{$item->price}}</li>
                                     </ul>
                                 </div>
                                 <div class="text-center mb-4">
