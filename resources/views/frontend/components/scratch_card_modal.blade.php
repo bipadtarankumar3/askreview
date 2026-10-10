@@ -215,6 +215,14 @@
     </div>
 </div>
 
+<!-- Scratch & Win Audio Elements -->
+<audio id="scratchSoundAudio" preload="auto">
+    <source src="{{ asset('mp3/scratch.mp3') }}" type="audio/mpeg">
+</audio>
+<audio id="scratchWinSoundAudio" preload="auto">
+    <source src="{{ asset('mp3/won.mp3') }}" type="audio/mpeg">
+</audio>
+
 <!-- Canvas Confetti Library for Modern Win Effect -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
@@ -561,122 +569,71 @@
 
 <script>
     var scratchAudio = {
-        ctx: null,
-        noiseNode: null,
-        gainNode: null,
-        filterNode: null,
+        audio: null,
+        winAudio: null,
         isPlaying: false,
+        stopTimer: null,
         init: function() {
-            try {
-                var AudioContext = window.AudioContext || window.webkitAudioContext;
-                if (!AudioContext) return;
-                this.ctx = new AudioContext();
-            } catch(e) {}
+            if (!this.audio) {
+                this.audio = document.getElementById('scratchSoundAudio');
+                if (!this.audio) {
+                    this.audio = new Audio("{{ asset('mp3/scratch.mp3') }}");
+                }
+                if (this.audio) {
+                    this.audio.loop = true;
+                    this.audio.volume = 0.85;
+                }
+            }
+            if (!this.winAudio) {
+                this.winAudio = document.getElementById('scratchWinSoundAudio');
+                if (!this.winAudio) {
+                    this.winAudio = new Audio("{{ asset('mp3/won.mp3') }}");
+                }
+                if (this.winAudio) {
+                    this.winAudio.volume = 0.95;
+                }
+            }
         },
         start: function() {
-            if (!this.ctx) this.init();
-            if (!this.ctx) return;
-            if (this.ctx.state === 'suspended') {
-                this.ctx.resume();
-            }
-            if (this.isPlaying) return;
+            this.init();
+            if (!this.audio) return;
 
-            try {
-                var bufferSize = this.ctx.sampleRate * 1;
-                var buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
-                var data = buffer.getChannelData(0);
-                for (var i = 0; i < bufferSize; i++) {
-                    data[i] = (Math.random() * 2 - 1) * Math.sin(i * 0.05);
+            if (this.audio.paused) {
+                var promise = this.audio.play();
+                if (promise !== undefined) {
+                    promise.catch(function(e) {});
                 }
+            }
+            this.isPlaying = true;
 
-                this.noiseNode = this.ctx.createBufferSource();
-                this.noiseNode.buffer = buffer;
-                this.noiseNode.loop = true;
-
-                this.filterNode = this.ctx.createBiquadFilter();
-                this.filterNode.type = 'bandpass';
-                this.filterNode.frequency.setValueAtTime(2400, this.ctx.currentTime);
-                this.filterNode.Q.setValueAtTime(2.0, this.ctx.currentTime);
-
-                this.gainNode = this.ctx.createGain();
-                this.gainNode.gain.setValueAtTime(0.2, this.ctx.currentTime);
-
-                this.noiseNode.connect(this.filterNode);
-                this.filterNode.connect(this.gainNode);
-                this.gainNode.connect(this.ctx.destination);
-
-                this.noiseNode.start();
-                this.isPlaying = true;
-            } catch(e) {}
+            // Automatically pause sound if user pauses scratching movement
+            clearTimeout(this.stopTimer);
+            var self = this;
+            this.stopTimer = setTimeout(function() {
+                self.stop();
+            }, 180);
         },
         stop: function() {
-            if (!this.isPlaying || !this.gainNode || !this.ctx) return;
-            try {
-                var now = this.ctx.currentTime;
-                this.gainNode.gain.linearRampToValueAtTime(0.001, now + 0.05);
-                var self = this;
-                setTimeout(function() {
-                    if (self.noiseNode) {
-                        try { self.noiseNode.stop(); self.noiseNode.disconnect(); } catch(e){}
-                        self.noiseNode = null;
-                    }
-                    self.isPlaying = false;
-                }, 60);
-            } catch(e) {
-                this.isPlaying = false;
+            clearTimeout(this.stopTimer);
+            if (this.audio && !this.audio.paused) {
+                try {
+                    this.audio.pause();
+                } catch(e) {}
             }
+            this.isPlaying = false;
         },
         playWinMusic: function() {
-            if (!this.ctx) this.init();
-            if (!this.ctx) return;
-            if (this.ctx.state === 'suspended') {
-                this.ctx.resume();
-            }
             this.stop();
-
-            try {
-                var now = this.ctx.currentTime;
-                // Celebratory triumph arpeggio chords: C5, E5, G5, C6, E6
-                var notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
-                var times = [0, 0.12, 0.24, 0.38, 0.52];
-
-                for (var i = 0; i < notes.length; i++) {
-                    var osc = this.ctx.createOscillator();
-                    var gain = this.ctx.createGain();
-
-                    osc.type = (i === notes.length - 1) ? 'triangle' : 'sine';
-                    osc.frequency.setValueAtTime(notes[i], now + times[i]);
-
-                    gain.gain.setValueAtTime(0.001, now + times[i]);
-                    gain.gain.linearRampToValueAtTime(0.28, now + times[i] + 0.03);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + times[i] + 0.7);
-
-                    osc.connect(gain);
-                    gain.connect(this.ctx.destination);
-
-                    osc.start(now + times[i]);
-                    osc.stop(now + times[i] + 0.8);
-                }
-
-                // Add harmonic sparkle chords
-                setTimeout(() => {
-                    if (!this.ctx) return;
-                    var chord = [783.99, 1046.50, 1567.98];
-                    var tNow = this.ctx.currentTime;
-                    chord.forEach(freq => {
-                        var osc2 = this.ctx.createOscillator();
-                        var g2 = this.ctx.createGain();
-                        osc2.type = 'triangle';
-                        osc2.frequency.setValueAtTime(freq, tNow);
-                        g2.gain.setValueAtTime(0.18, tNow);
-                        g2.gain.exponentialRampToValueAtTime(0.001, tNow + 1.2);
-                        osc2.connect(g2);
-                        g2.connect(this.ctx.destination);
-                        osc2.start(tNow);
-                        osc2.stop(tNow + 1.3);
-                    });
-                }, 520);
-            } catch(e) {}
+            this.init();
+            if (this.winAudio) {
+                try {
+                    this.winAudio.currentTime = 0;
+                    var promise = this.winAudio.play();
+                    if (promise !== undefined) {
+                        promise.catch(function(e) {});
+                    }
+                } catch(e) {}
+            }
         }
     };
 
@@ -706,8 +663,17 @@
     }
 
     function open_scratch_card_modal() {
+        scratchAudio.init();
         var modalEl = document.getElementById('scratchCardModal');
         if (!modalEl) return;
+
+        if (!modalEl._hasScratchAudioListener) {
+            modalEl.addEventListener('hidden.bs.modal', function() {
+                scratchAudio.stop();
+            });
+            modalEl._hasScratchAudioListener = true;
+        }
+
         var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
         modal.show();
 
@@ -718,6 +684,7 @@
     }
 
     function close_scratch_card_modal() {
+        scratchAudio.stop();
         var modalEl = document.getElementById('scratchCardModal');
         if (modalEl) {
             var modal = bootstrap.Modal.getInstance(modalEl);
