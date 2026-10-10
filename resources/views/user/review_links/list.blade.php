@@ -353,6 +353,28 @@
         position: relative;
         transition: transform 0.2s ease;
     }
+    .pro-corner-crown {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.45);
+        border: 2px solid #ffffff;
+        z-index: 5;
+    }
+    .pro-corner-crown i {
+        font-size: 11px !important;
+        color: #ffffff !important;
+        line-height: 1 !important;
+        display: inline-block !important;
+    }
     .modern-integration-card:hover .brand-logo-squircle {
         transform: scale(1.05);
     }
@@ -361,8 +383,8 @@
         height: 44px;
         object-fit: contain;
     }
-    .brand-logo-squircle i {
-        font-size: 38px;
+    .brand-logo-squircle > i {
+        font-size: 34px;
     }
 
     /* Card Details */
@@ -777,16 +799,16 @@
 
                             <!-- Squircle Logo Badge -->
                             <div class="brand-logo-squircle" style="background: {{ $meta['tint'] }}; border: 1.5px solid {{ $meta['border'] }};">
+                                @if ($isProCard)
+                                    <span class="pro-corner-crown" title="Pro Feature" style="position: absolute; top: -6px; right: -6px; width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b, #d97706); color: #ffffff; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(245, 158, 11, 0.45); border: 2px solid #ffffff; z-index: 5;">
+                                        <i class="fa fa-crown" style="font-size: 11px !important; color: #ffffff !important; line-height: 1 !important;"></i>
+                                    </span>
+                                @endif
+
                                 @if ($item->type == 'record')
-                                    <div style="position: relative; display: inline-flex; align-items: center; justify-content: center;">
-                                        <i class="fa-solid fa-video" style="color: #7c3aed; font-size: 30px;"></i>
-                                        <span style="position: absolute; top: -7px; right: -8px; font-size: 13px; color: #f59e0b;" title="Pro Feature"><i class="fa fa-crown"></i></span>
-                                    </div>
+                                    <i class="fa-solid fa-video" style="color: #7c3aed; font-size: 32px;"></i>
                                 @elseif ($item->type == 'private')
-                                    <div style="position: relative; display: inline-flex; align-items: center; justify-content: center;">
-                                        <i class="fa-solid fa-shield-halved" style="color: #7c3aed; font-size: 30px;"></i>
-                                        <span style="position: absolute; top: -7px; right: -8px; font-size: 13px; color: #f59e0b;" title="Pro Feature"><i class="fa fa-crown"></i></span>
-                                    </div>
+                                    <i class="fa-solid fa-shield-halved" style="color: #7c3aed; font-size: 32px;"></i>
                                 @elseif (!empty($item->button_icon))
                                     <img src="{{ $item->button_icon }}" alt="{{ $meta['title'] }}" loading="lazy">
                                 @elseif (!empty($meta['default_icon']))
