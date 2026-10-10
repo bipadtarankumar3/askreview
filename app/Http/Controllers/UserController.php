@@ -1151,17 +1151,20 @@ class UserController extends Controller
 
     public function star_page_status(Request $request){
         $id = Auth::user()->id;
-            // dd($request->star_page);
-        $star_page = ($request->star_page == 'on')?'YES':'NO';
+        $val = $request->input('star_page');
+        $star_page = ($val === 'YES' || $val === 'on' || $val === '1') ? 'YES' : 'NO';
 
         $user = User::find($id);
-        $user->star_page =$star_page;
+        $user->star_page = $star_page;
         $user->save();
 
-        
+        $msg = ($star_page === 'YES')
+            ? '5★ Review Funnel activated! (Protects your Google rating)'
+            : 'Direct Platform Links mode activated! (Direct links)';
+
         $notification = array(
-            'messege'=>'Star Page Updated successfully',
-            'alert-type'=>'success'
+            'messege' => $msg,
+            'alert-type' => 'success'
         );
         return back()->with($notification);
     }

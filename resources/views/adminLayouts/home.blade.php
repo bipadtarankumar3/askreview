@@ -1233,23 +1233,379 @@
                   </div>
                 @endif
 
-                <!-- Star Page Toggle -->
-                <form action="{{ URL::to('admin/star_page_status') }}" method="POST" class="mb-0">
-                  @csrf
-                  <div class="d-flex align-items-center gap-2 px-2" style="height: 32px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 9999px;">
-                    <input class="form-check-input" type="checkbox" name="star_page" role="switch" id="star_page"
-                      @if(Auth::user()->star_page == 'YES') checked @endif
-                      onchange="this.form.submit()"
-                      style="cursor: pointer; width: 28px; height: 15px; margin: 0; flex-shrink: 0;">
-                    <label for="star_page" class="mb-0" style="font-size: 0.76rem; font-weight: 700; cursor: pointer; white-space: nowrap; line-height: 1;">
-                      @if(Auth::user()->star_page == 'YES')
-                        <span style="color: #d97706;"><i class="fa-solid fa-star" style="font-size: 0.68rem;"></i> 5★</span>
-                      @else
-                        <span style="color: #94a3b8;"><i class="fa-regular fa-star" style="font-size: 0.68rem;"></i> Direct</span>
-                      @endif
-                    </label>
+                <!-- Customer QR Experience Flow Mode Selector (Fully Responsive Luxury UI) -->
+                <style>
+                  .qr-flow-btn {
+                    height: 32px !important;
+                    border-radius: 9999px !important;
+                    font-size: 0.76rem !important;
+                    font-weight: 700 !important;
+                    display: inline-flex !important;
+                    align-items: center !important;
+                    gap: 6px !important;
+                    padding: 0 13px !important;
+                    border: 1px solid transparent !important;
+                    outline: none !important;
+                    text-decoration: none !important;
+                    cursor: pointer !important;
+                    white-space: nowrap !important;
+                    flex-shrink: 0 !important;
+                    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+                  }
+                  .qr-flow-btn.mode-funnel {
+                    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%) !important;
+                    border-color: #fde68a !important;
+                    color: #92400e !important;
+                    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.16) !important;
+                  }
+                  .qr-flow-btn.mode-funnel:hover, .qr-flow-btn.mode-funnel:focus {
+                    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
+                    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.28) !important;
+                    transform: translateY(-1px);
+                  }
+                  .qr-flow-btn.mode-direct {
+                    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%) !important;
+                    border-color: #bfdbfe !important;
+                    color: #1e40af !important;
+                    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.14) !important;
+                  }
+                  .qr-flow-btn.mode-direct:hover, .qr-flow-btn.mode-direct:focus {
+                    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
+                    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.24) !important;
+                    transform: translateY(-1px);
+                  }
+                  .qr-flow-dropdown {
+                    min-width: 330px !important;
+                    width: 375px !important;
+                    max-width: calc(100vw - 20px) !important;
+                    border-radius: 22px !important;
+                    border: 1px solid rgba(226, 232, 240, 0.9) !important;
+                    background: #ffffff !important;
+                    box-shadow: 0 25px 60px -12px rgba(15, 23, 42, 0.25), 0 0 0 1px rgba(241, 245, 249, 0.9) !important;
+                    padding: 0 !important;
+                    overflow: hidden !important;
+                    margin-top: 8px !important;
+                  }
+                  .qr-flow-card {
+                    border-radius: 14px;
+                    padding: 12px 13px;
+                    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+                    cursor: pointer;
+                    position: relative;
+                  }
+                  .qr-flow-card.active-funnel {
+                    background: linear-gradient(145deg, #fffbeb 0%, #fff7ed 100%) !important;
+                    border: 2px solid #f59e0b !important;
+                    box-shadow: 0 6px 20px -3px rgba(245, 158, 11, 0.22) !important;
+                  }
+                  .qr-flow-card.active-direct {
+                    background: linear-gradient(145deg, #eff6ff 0%, #f0fdfa 100%) !important;
+                    border: 2px solid #3b82f6 !important;
+                    box-shadow: 0 6px 20px -3px rgba(59, 130, 246, 0.22) !important;
+                  }
+                  .qr-flow-card.inactive {
+                    background: #f8fafc !important;
+                    border: 1.5px solid #e2e8f0 !important;
+                  }
+                  .qr-flow-card.inactive:hover {
+                    background: #ffffff !important;
+                    border-color: #cbd5e1 !important;
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
+                  }
+                  .qr-flow-card-title {
+                    font-size: 0.86rem !important;
+                    font-weight: 800 !important;
+                    color: #0f172a !important;
+                    white-space: nowrap !important;
+                    line-height: 1.2 !important;
+                  }
+                  .qr-flow-tag-recommended {
+                    background: #fef3c7 !important;
+                    color: #92400e !important;
+                    font-size: 0.62rem !important;
+                    font-weight: 700 !important;
+                    padding: 2px 7px !important;
+                    border-radius: 9999px !important;
+                    border: 1px solid #fde68a !important;
+                    white-space: nowrap !important;
+                    display: inline-block !important;
+                    line-height: 1 !important;
+                  }
+                  .qr-flow-tag-direct {
+                    background: #dbeafe !important;
+                    color: #1e40af !important;
+                    font-size: 0.62rem !important;
+                    font-weight: 700 !important;
+                    padding: 2px 7px !important;
+                    border-radius: 9999px !important;
+                    border: 1px solid #bfdbfe !important;
+                    white-space: nowrap !important;
+                    display: inline-block !important;
+                    line-height: 1 !important;
+                  }
+                  .qr-flow-badge-active {
+                    background: linear-gradient(135deg, #10b981, #059669) !important;
+                    color: #ffffff !important;
+                    font-size: 0.66rem !important;
+                    font-weight: 800 !important;
+                    border-radius: 9999px !important;
+                    padding: 3px 9px !important;
+                    white-space: nowrap !important;
+                    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.35) !important;
+                    display: inline-flex !important;
+                    align-items: center !important;
+                    gap: 3px !important;
+                    line-height: 1.2 !important;
+                  }
+                  .qr-flow-badge-active-blue {
+                    background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+                    color: #ffffff !important;
+                    font-size: 0.66rem !important;
+                    font-weight: 800 !important;
+                    border-radius: 9999px !important;
+                    padding: 3px 9px !important;
+                    white-space: nowrap !important;
+                    box-shadow: 0 2px 6px rgba(59, 130, 246, 0.35) !important;
+                    display: inline-flex !important;
+                    align-items: center !important;
+                    gap: 3px !important;
+                    line-height: 1.2 !important;
+                  }
+                  .qr-flow-badge-action {
+                    background: #ffffff !important;
+                    border: 1px solid #cbd5e1 !important;
+                    color: #475569 !important;
+                    font-size: 0.66rem !important;
+                    font-weight: 700 !important;
+                    border-radius: 9999px !important;
+                    padding: 3px 10px !important;
+                    white-space: nowrap !important;
+                    display: inline-block !important;
+                    line-height: 1.2 !important;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+                    transition: all 0.15s ease !important;
+                  }
+                  .qr-flow-card:hover .qr-flow-badge-action {
+                    background: #0f172a !important;
+                    color: #ffffff !important;
+                    border-color: #0f172a !important;
+                  }
+                  .qr-flow-points {
+                    display: flex !important;
+                    flex-direction: column !important;
+                    gap: 3px !important;
+                    padding-left: 1px !important;
+                  }
+                  .qr-flow-point {
+                    display: flex !important;
+                    align-items: flex-start !important;
+                    gap: 6px !important;
+                    font-size: 0.72rem !important;
+                    font-weight: 600 !important;
+                    line-height: 1.35 !important;
+                  }
+                  .qr-flow-point.point-green { color: #166534 !important; }
+                  .qr-flow-point.point-amber { color: #9a3412 !important; }
+                  .qr-flow-point.point-blue { color: #1e40af !important; }
+                  .qr-flow-point.point-indigo { color: #4338ca !important; }
+                  .qr-flow-point i { margin-top: 2px !important; flex-shrink: 0 !important; }
+                  .qr-flow-preview-btn {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    width: 100%;
+                    padding: 10px 16px;
+                    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+                    color: #ffffff !important;
+                    font-weight: 700;
+                    font-size: 0.78rem;
+                    border-radius: 12px;
+                    text-decoration: none !important;
+                    transition: all 0.2s ease;
+                    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.28);
+                  }
+                  .qr-flow-preview-btn:hover {
+                    transform: translateY(-1px);
+                    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.38);
+                    color: #ffffff !important;
+                    filter: brightness(1.08);
+                  }
+
+                  /* Responsive Mobile Adjustments */
+                  @media (max-width: 576px) {
+                    .qr-flow-btn {
+                      padding: 0 9px !important;
+                      font-size: 0.72rem !important;
+                    }
+                    .qr-flow-dropdown {
+                      width: calc(100vw - 20px) !important;
+                      min-width: 0 !important;
+                      max-width: 360px !important;
+                      right: -6px !important;
+                      border-radius: 18px !important;
+                    }
+                    .qr-flow-card {
+                      padding: 10px 12px !important;
+                    }
+                    .qr-flow-card-title {
+                      font-size: 0.82rem !important;
+                    }
+                    .qr-flow-point {
+                      font-size: 0.69rem !important;
+                    }
+                  }
+                </style>
+
+                <div class="dropdown">
+                  <button type="button" id="dropQrFlowMode" data-bs-toggle="dropdown" aria-expanded="false" 
+                    class="qr-flow-btn @if(Auth::user()->star_page == 'YES') mode-funnel @else mode-direct @endif"
+                    title="Click to configure QR landing page experience"
+                  >
+                    @if(Auth::user()->star_page == 'YES')
+                      <span class="d-inline-block rounded-circle" style="width: 7px; height: 7px; background: #f59e0b; box-shadow: 0 0 8px #f59e0b;"></span>
+                      <i class="fa-solid fa-star" style="font-size: 0.74rem; color: #d97706;"></i>
+                      <span class="d-none d-sm-inline">5★ Funnel Mode</span>
+                      <span class="d-inline d-sm-none">5★ Funnel</span>
+                      <i class="ti ti-chevron-down opacity-60 ms-0.5" style="font-size: 0.72rem;"></i>
+                    @else
+                      <span class="d-inline-block rounded-circle" style="width: 7px; height: 7px; background: #2563eb; box-shadow: 0 0 8px #2563eb;"></span>
+                      <i class="fa-solid fa-bolt" style="font-size: 0.74rem; color: #2563eb;"></i>
+                      <span class="d-none d-sm-inline">Direct Links</span>
+                      <span class="d-inline d-sm-none">Direct</span>
+                      <i class="ti ti-chevron-down opacity-60 ms-0.5" style="font-size: 0.72rem;"></i>
+                    @endif
+                  </button>
+
+                  <!-- Dropdown Menu -->
+                  <div class="dropdown-menu dropdown-menu-end qr-flow-dropdown shadow-lg" aria-labelledby="dropQrFlowMode">
+                    
+                    <!-- Dark Executive Header -->
+                    <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 15px 16px; color: #ffffff; position: relative;">
+                      <div class="d-flex align-items-center justify-content-between mb-1">
+                        <div class="d-flex align-items-center gap-2">
+                          <div style="width: 30px; height: 30px; border-radius: 9px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.15); display: flex; align-items: center; justify-content: center; color: #38bdf8; flex-shrink: 0;">
+                            <i class="ti ti-qrcode" style="font-size: 1.1rem;"></i>
+                          </div>
+                          <span style="font-size: 0.9rem; font-weight: 800; color: #ffffff; letter-spacing: -0.01em;">Customer QR Flow</span>
+                        </div>
+                        <span style="background: rgba(255, 255, 255, 0.12); color: #93c5fd; font-size: 0.62rem; font-weight: 700; border-radius: 9999px; padding: 2px 8px; border: 1px solid rgba(255, 255, 255, 0.15); white-space: nowrap;">
+                          LANDING MODE
+                        </span>
+                      </div>
+                      <p class="mb-0" style="font-size: 0.72rem; color: #94a3b8; line-height: 1.35;">
+                        Choose what customers see when scanning your QR code:
+                      </p>
+                    </div>
+
+                    <!-- Options Body -->
+                    <div class="p-2.5 p-sm-3" style="display: flex; flex-direction: column; gap: 9px; background: #ffffff;">
+                      
+                      <!-- Option 1: 5-Star Smart Funnel -->
+                      <form action="{{ URL::to('admin/star_page_status') }}" method="POST" class="m-0 p-0">
+                        @csrf
+                        <input type="hidden" name="star_page" value="YES">
+                        <div onclick="this.closest('form').submit()" role="button" 
+                          class="qr-flow-card @if(Auth::user()->star_page == 'YES') active-funnel @else inactive @endif text-start"
+                        >
+                          <div class="d-flex align-items-center justify-content-between gap-2 mb-1.5">
+                            <div class="d-flex align-items-center gap-2" style="min-width: 0;">
+                              <div style="width: 32px; height: 32px; border-radius: 50%; background: {{ Auth::user()->star_page == 'YES' ? '#fde68a' : '#e2e8f0' }}; color: {{ Auth::user()->star_page == 'YES' ? '#d97706' : '#64748b' }}; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i class="fa-solid fa-star" style="font-size: 0.82rem;"></i>
+                              </div>
+                              <div style="min-width: 0;">
+                                <div class="d-flex align-items-center gap-1.5 flex-wrap">
+                                  <span class="qr-flow-card-title">5★ Review Funnel</span>
+                                  <span class="qr-flow-tag-recommended">Recommended</span>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div style="flex-shrink: 0;">
+                              @if(Auth::user()->star_page == 'YES')
+                                <span class="qr-flow-badge-active">
+                                  <i class="fa-solid fa-check"></i> ACTIVE
+                                </span>
+                              @else
+                                <span class="qr-flow-badge-action">
+                                  Activate
+                                </span>
+                              @endif
+                            </div>
+                          </div>
+
+                          <div class="qr-flow-points">
+                            <div class="qr-flow-point point-green">
+                              <i class="fa-solid fa-circle-check text-success"></i>
+                              <span><strong>Filters bad reviews:</strong> 4–5★ go to Google Reviews</span>
+                            </div>
+                            <div class="qr-flow-point point-amber">
+                              <i class="fa-solid fa-shield-halved text-warning"></i>
+                              <span><strong>Reputation shield:</strong> 1–3★ go to private feedback</span>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+
+                      <!-- Option 2: Direct Platform Links -->
+                      <form action="{{ URL::to('admin/star_page_status') }}" method="POST" class="m-0 p-0">
+                        @csrf
+                        <input type="hidden" name="star_page" value="NO">
+                        <div onclick="this.closest('form').submit()" role="button" 
+                          class="qr-flow-card @if(Auth::user()->star_page != 'YES') active-direct @else inactive @endif text-start"
+                        >
+                          <div class="d-flex align-items-center justify-content-between gap-2 mb-1.5">
+                            <div class="d-flex align-items-center gap-2" style="min-width: 0;">
+                              <div style="width: 32px; height: 32px; border-radius: 50%; background: {{ Auth::user()->star_page != 'YES' ? '#dbeafe' : '#e2e8f0' }}; color: {{ Auth::user()->star_page != 'YES' ? '#1d4ed8' : '#64748b' }}; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i class="fa-solid fa-bolt" style="font-size: 0.82rem;"></i>
+                              </div>
+                              <div style="min-width: 0;">
+                                <div class="d-flex align-items-center gap-1.5 flex-wrap">
+                                  <span class="qr-flow-card-title">Direct Platform Links</span>
+                                  <span class="qr-flow-tag-direct">Direct</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div style="flex-shrink: 0;">
+                              @if(Auth::user()->star_page != 'YES')
+                                <span class="qr-flow-badge-active-blue">
+                                  <i class="fa-solid fa-check"></i> ACTIVE
+                                </span>
+                              @else
+                                <span class="qr-flow-badge-action">
+                                  Activate
+                                </span>
+                              @endif
+                            </div>
+                          </div>
+
+                          <div class="qr-flow-points">
+                            <div class="qr-flow-point point-blue">
+                              <i class="fa-solid fa-bolt text-primary"></i>
+                              <span><strong>Instant links:</strong> Skips star rating screen completely</span>
+                            </div>
+                            <div class="qr-flow-point point-indigo">
+                              <i class="fa-solid fa-arrow-up-right-from-square text-indigo"></i>
+                              <span>Directly shows your Google & social review links</span>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+
+                    </div>
+
+                    <!-- Live Preview Footer with Custom CTA Button -->
+                    <div style="padding: 11px 14px; background: #f8fafc; border-top: 1px solid #e2e8f0;">
+                      <a href="{{ URL::to('u/'.Auth::user()->user_name) }}" target="_blank" class="qr-flow-preview-btn">
+                        <i class="ti ti-external-link" style="font-size: 0.95rem;"></i>
+                        <span>Test & Preview Live QR Page</span>
+                      </a>
+                    </div>
+
                   </div>
-                </form>
+                </div>
 
                 <!-- Buy Plan Button -->
                 @if($days_difference <= 30)
