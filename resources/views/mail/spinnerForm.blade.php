@@ -48,6 +48,21 @@
                             </td>
                         </tr>
 
+                        <!-- Business / Account -->
+                        @if (isset($getData['business_name']) && !empty($getData['business_name']))
+                        <tr>
+                            <td style="padding: 12px 14px; border-bottom: 1px solid #f1f5f9; vertical-align: middle;">
+                                <div style="display: flex; align-items: center; color: #64748b; font-size: 13px; font-weight: 600;">
+                                    <span style="display: inline-block; width: 22px; font-size: 15px; text-align: center; margin-right: 8px;">🏢</span>
+                                    <span>Business / Account</span>
+                                </div>
+                            </td>
+                            <td style="padding: 12px 14px; border-bottom: 1px solid #f1f5f9; color: #0f172a; font-size: 14px; font-weight: 700; text-align: right;">
+                                {{ $getData['business_name'] }}
+                            </td>
+                        </tr>
+                        @endif
+
                         <!-- Name -->
                         @if (isset($getData['name']) && !empty($getData['name']))
                         <tr>
