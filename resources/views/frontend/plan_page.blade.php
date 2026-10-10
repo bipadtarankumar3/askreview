@@ -960,6 +960,452 @@
             color: #ffffff;
         }
 
+        /* ── PURE LUXURY EXECUTIVE PRIVATE RESOLUTION DESK ── */
+        .private_feedback {
+            animation: executivePortalFade 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            position: relative;
+            max-width: 440px;
+            margin: 0 auto;
+        }
+
+
+        @keyframes executivePortalFade {
+            0% {
+                opacity: 0;
+                transform: translateY(18px) scale(0.97);
+                filter: blur(4px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
+        }
+
+        /* Ambient Breathing Aura */
+        .executive-ambient-aura {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.16) 0%, rgba(139, 92, 246, 0.08) 50%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+            animation: executiveAuraBreathe 5s ease-in-out infinite alternate;
+        }
+
+        @keyframes executiveAuraBreathe {
+            0% { transform: translateX(-50%) scale(0.92); opacity: 0.6; }
+            100% { transform: translateX(-50%) scale(1.1); opacity: 0.95; }
+        }
+
+        /* Modern Frosted Back Navigation */
+        .executive-back-nav {
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 14px 7px 10px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            border-radius: 9999px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #475569;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 10;
+        }
+
+        .executive-back-nav:hover {
+            background: #ffffff;
+            color: #0f172a;
+            border-color: #cbd5e1;
+            transform: translateX(-3px);
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+        }
+
+        .executive-back-nav i {
+            font-size: 0.78rem;
+            transition: transform 0.2s ease;
+        }
+
+        .executive-back-nav:hover i {
+            transform: translateX(-2px);
+        }
+
+        /* Luxury Brand Avatar */
+        .executive-avatar-wrapper {
+            position: relative;
+            display: inline-block;
+            margin: 0.5rem auto 0.75rem;
+            z-index: 1;
+        }
+
+        .executive-avatar-core {
+            width: 76px;
+            height: 76px;
+            border-radius: 22px;
+            background: #ffffff;
+            padding: 7px;
+            box-shadow: 0 12px 30px -4px rgba(99, 102, 241, 0.22), 0 0 0 1px rgba(99, 102, 241, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: avatarFloatGlow 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes avatarFloatGlow {
+            0% {
+                box-shadow: 0 10px 24px -4px rgba(99, 102, 241, 0.18), 0 0 0 1px rgba(99, 102, 241, 0.14);
+            }
+            100% {
+                box-shadow: 0 16px 36px -4px rgba(124, 58, 237, 0.3), 0 0 0 2px rgba(167, 139, 250, 0.6);
+            }
+        }
+
+        .executive-avatar-core:hover {
+            transform: scale(1.06) rotate(-1deg);
+        }
+
+        .executive-avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 16px;
+        }
+
+        .executive-avatar-verified {
+            position: absolute;
+            bottom: -3px;
+            right: -3px;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #ffffff;
+            border: 2.5px solid #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);
+        }
+
+        /* VIP Concierge Status Pill */
+        .executive-vip-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: linear-gradient(135deg, rgba(238, 242, 255, 0.95) 0%, rgba(245, 243, 255, 0.95) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            border-radius: 9999px;
+            padding: 5px 14px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: #6d28d9;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            box-shadow: 0 3px 12px rgba(124, 58, 237, 0.08);
+            margin-bottom: 8px;
+            transition: transform 0.2s ease;
+        }
+
+        .executive-beacon {
+            position: relative;
+            width: 7px;
+            height: 7px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .executive-beacon .beacon-wave {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: #8b5cf6;
+            opacity: 0.8;
+            animation: executiveBeaconWave 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+
+        .executive-beacon .beacon-point {
+            position: relative;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #7c3aed;
+        }
+
+        @keyframes executiveBeaconWave {
+            0% { transform: scale(1); opacity: 0.85; }
+            75%, 100% { transform: scale(3); opacity: 0; }
+        }
+
+        /* Modern Heading & Subtitle */
+        .executive-heading {
+            font-size: 1.85rem;
+            font-weight: 850;
+            letter-spacing: -0.035em;
+            color: #0f172a;
+            margin-bottom: 5px;
+            line-height: 1.2;
+        }
+
+        .executive-subtitle {
+            font-size: 0.86rem;
+            color: #64748b;
+            line-height: 1.5;
+            max-width: 340px;
+            margin: 0 auto 16px;
+        }
+
+        /* Linear-Grade Frosted Guarantee Strip */
+        .executive-trust-banner {
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.95) 0%, rgba(245, 243, 255, 0.85) 100%);
+            border: 1px solid rgba(196, 181, 253, 0.45);
+            border-radius: 16px;
+            padding: 11px 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            box-shadow: 0 4px 18px -2px rgba(124, 58, 237, 0.06);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .executive-trust-icon-box {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #7c3aed 0%, #9333ea 100%);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.98rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+        }
+
+        .executive-trust-title {
+            font-size: 0.84rem;
+            font-weight: 750;
+            color: #1e1b4b;
+            margin-bottom: 2px;
+            letter-spacing: -0.01em;
+        }
+
+        .executive-trust-desc {
+            font-size: 0.74rem;
+            color: #6b7280;
+            margin: 0;
+            line-height: 1.35;
+        }
+
+        /* Modern Luxury Input Groups */
+        .executive-field-group {
+            margin-bottom: 14px;
+            text-align: left;
+        }
+
+        .executive-field-label {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #334155;
+            margin-bottom: 6px;
+            letter-spacing: -0.01em;
+        }
+
+        .executive-field-label .req-star {
+            color: #7c3aed;
+            font-weight: 800;
+        }
+
+        .executive-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .executive-input-icon {
+            position: absolute;
+            left: 14px;
+            color: #94a3b8;
+            font-size: 0.95rem;
+            pointer-events: none;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 2;
+        }
+
+        .executive-input-icon.icon-textarea {
+            top: 14px;
+        }
+
+        .executive-input-control {
+            width: 100%;
+            height: 48px;
+            padding: 0 14px 0 42px;
+            border-radius: 13px;
+            border: 1.5px solid #e2e8f0;
+            background: #ffffff;
+            font-size: 0.92rem;
+            color: #0f172a;
+            font-weight: 500;
+            font-family: inherit;
+            transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 2px 4px rgba(15, 23, 42, 0.02);
+        }
+
+        .executive-input-control::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        .executive-input-control:hover {
+            border-color: #cbd5e1;
+        }
+
+        .executive-input-control:focus {
+            outline: none;
+            border-color: #6366f1;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12), 0 8px 18px -4px rgba(99, 102, 241, 0.1);
+        }
+
+        .executive-input-wrapper:focus-within .executive-input-icon {
+            color: #6366f1;
+            transform: scale(1.12);
+        }
+
+        .executive-textarea-control {
+            width: 100%;
+            min-height: 98px;
+            padding: 12px 14px 12px 42px;
+            border-radius: 13px;
+            border: 1.5px solid #e2e8f0;
+            background: #ffffff;
+            font-size: 0.92rem;
+            color: #0f172a;
+            font-weight: 500;
+            font-family: inherit;
+            line-height: 1.55;
+            resize: vertical;
+            transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 2px 4px rgba(15, 23, 42, 0.02);
+        }
+
+        .executive-textarea-control::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        .executive-textarea-control:hover {
+            border-color: #cbd5e1;
+        }
+
+        .executive-textarea-control:focus {
+            outline: none;
+            border-color: #6366f1;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12), 0 8px 18px -4px rgba(99, 102, 241, 0.1);
+        }
+
+        /* Pure Premium Shimmer CTA Button */
+        .executive-submit-cta {
+            position: relative;
+            width: 100%;
+            height: 52px;
+            border-radius: 14px;
+            border: none;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #9333ea 100%);
+            color: #ffffff;
+            font-size: 0.98rem;
+            font-weight: 750;
+            letter-spacing: -0.01em;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 10px 28px -4px rgba(124, 58, 237, 0.45);
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            margin-top: 4px;
+            margin-bottom: 12px;
+        }
+
+        .executive-submit-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -130%;
+            width: 80%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.32), transparent);
+            transform: skewX(-22deg);
+            animation: executiveShimmerSweep 4.5s ease-in-out infinite;
+        }
+
+        @keyframes executiveShimmerSweep {
+            0%, 35% { left: -130%; }
+            70%, 100% { left: 160%; }
+        }
+
+        .executive-submit-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 36px -4px rgba(124, 58, 237, 0.6);
+            color: #ffffff;
+        }
+
+        .executive-submit-cta:active {
+            transform: translateY(1px) scale(0.985);
+        }
+
+        .executive-submit-cta .cta-icon {
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .executive-submit-cta:hover .cta-icon {
+            transform: translate(4px, -2px) scale(1.15);
+        }
+
+        /* Executive Trust Footer */
+        .executive-trust-footer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #64748b;
+            letter-spacing: -0.01em;
+        }
+
+        .executive-trust-footer .trust-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .executive-trust-footer .trust-sep {
+            color: #cbd5e1;
+        }
+
         .secondary-btn {
             background: #f1f5f9;
             color: var(--text-dark);
@@ -1347,16 +1793,19 @@
                                         @endif
                                     @elseif($item->type == 'private')
                                         @if ($user->private_feedback == 'yes')
-                                            <div class="platform-btn-link private-enquiry-btn" onclick="open_private_feedback()">
-                                                <div class="platform-icon-wrap">
-                                                    <i class="fa-regular fa-message fa-lg"></i>
+                                            <div class="platform-btn-link private-enquiry-btn" onclick="open_private_feedback()" style="border: 1.5px solid #d8b4fe; background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);">
+                                                <div class="platform-icon-wrap" style="background: linear-gradient(135deg, #7c3aed, #9333ea); color: #ffffff;">
+                                                    <i class="fa-solid fa-shield-halved fa-lg"></i>
                                                 </div>
                                                 <div class="platform-info-text">
-                                                    <div class="platform-name">Private Enquiry</div>
-                                                    <p class="platform-hint">Send a direct private message to us</p>
+                                                    <div class="platform-name d-flex align-items-center gap-1.5">
+                                                        Private Message
+                                                        <span style="background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; font-size: 0.62rem; font-weight: 800; padding: 2px 7px; border-radius: 9999px; letter-spacing: 0.03em;"><i class="fa fa-crown"></i> PRO</span>
+                                                    </div>
+                                                    <p class="platform-hint">Direct confidential message to leadership</p>
                                                 </div>
                                                 <div class="platform-chevron-wrap">
-                                                    <i class="fa-solid fa-chevron-right"></i>
+                                                    <i class="fa-solid fa-chevron-right" style="color: #7c3aed;"></i>
                                                 </div>
                                             </div>
                                         @endif
@@ -1526,16 +1975,19 @@
                                     </a>
                                 @endif
                                 @if ($user->private_feedback == 'yes')
-                                    <div class="platform-btn-link private-enquiry-btn" onclick="open_private_feedback()">
-                                        <div class="platform-icon-wrap">
-                                            <i class="fa-regular fa-message fa-lg"></i>
+                                    <div class="platform-btn-link private-enquiry-btn" onclick="open_private_feedback()" style="border: 1.5px solid #d8b4fe; background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);">
+                                        <div class="platform-icon-wrap" style="background: linear-gradient(135deg, #7c3aed, #9333ea); color: #ffffff;">
+                                            <i class="fa-solid fa-shield-halved fa-lg"></i>
                                         </div>
                                         <div class="platform-info-text">
-                                            <div class="platform-name">Private Enquiry</div>
-                                            <p class="platform-hint">Send a direct private message to us</p>
+                                            <div class="platform-name d-flex align-items-center gap-1.5">
+                                                Private Message
+                                                <span style="background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; font-size: 0.62rem; font-weight: 800; padding: 2px 7px; border-radius: 9999px; letter-spacing: 0.03em;"><i class="fa fa-crown"></i> PRO</span>
+                                            </div>
+                                            <p class="platform-hint">Direct confidential message to leadership</p>
                                         </div>
                                         <div class="platform-chevron-wrap">
-                                            <i class="fa-solid fa-chevron-right"></i>
+                                            <i class="fa-solid fa-chevron-right" style="color: #7c3aed;"></i>
                                         </div>
                                     </div>
                                 @endif
@@ -1684,48 +2136,121 @@
                     </div>
                 </form>
 
-                <!-- 4. PRIVATE ENQUIRY FORM -->
+                <!-- 4. PRIVATE ENQUIRY FORM (PURE PREMIUM EXECUTIVE UI) -->
                 <form method="post" action="{{URL::to('/u/private_feedback')}}" class="private_feedback text-start" style="display: none;">
                     @csrf
                     <input type="hidden" name="user_id" value="{{encrypt($user->id)}}">
                     <input type="hidden" name="rating_number" id="rating_number">
 
-                    <button type="button" class="nav-back-btn" onclick="close_form()" title="Back">
+                    <!-- Ambient Breathing Glow -->
+                    <div class="executive-ambient-aura"></div>
+
+                    <!-- Top Frosted Back Nav -->
+                    <button type="button" class="executive-back-nav" onclick="close_private_form()" title="Return to options">
                         <i class="fa-solid fa-arrow-left"></i>
+                        <span>Back</span>
                     </button>
 
-                    <div class="text-center mb-3">
-                        <div class="brand-avatar-box" style="margin-top: 0.5rem; margin-bottom: 0.75rem;">
-                            <img src="{{$user->logo}}" alt="{{$user->name}}" class="brand-avatar-img">
+                    <div class="text-center position-relative mb-3" style="z-index: 2;">
+                        <div class="executive-avatar-wrapper">
+                            <div class="executive-avatar-core">
+                                <img src="{{$user->logo}}" alt="{{$user->name}}" class="executive-avatar-img" style="width: 62px; height: 62px; max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 16px;">
+                            </div>
+                            <div class="executive-avatar-verified" title="Verified Direct Channel">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
                         </div>
-                        <h2 class="portal-title mb-1">Private Message</h2>
-                        <p class="portal-subtitle mb-3">{{$user->private_page_text ?: 'Send a message directly to management.'}}</p>
+
+                        <div>
+                            <div class="executive-vip-tag">
+                                <span class="executive-beacon">
+                                    <span class="beacon-wave"></span>
+                                    <span class="beacon-point"></span>
+                                </span>
+                                <span>CONFIDENTIAL &bull; DIRECT TO MANAGEMENT</span>
+                            </div>
+                        </div>
+
+                        <h2 class="executive-heading">Private Message</h2>
+                        <p class="executive-subtitle">
+                            @if (!empty($user->private_page_text) && !str_contains($user->private_page_text, 'Leave us a review'))
+                                {{$user->private_page_text}}
+                            @else
+                                Have feedback or a concern? Connect directly with senior leadership for discreet, prompt attention.
+                            @endif
+                        </p>
+
+                        <!-- Linear-style Frosted Guarantee Banner -->
+                        <div class="executive-trust-banner">
+                            <div class="executive-trust-icon-box">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <div class="text-start">
+                                <div class="executive-trust-title">Direct to Business Leadership</div>
+                                <p class="executive-trust-desc">Guaranteed 100% confidential &bull; Never published online</p>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label small font-weight-bold mb-1">Your Name</label>
-                        <input type="text" name="customer_name" required id="customer_name" class="modern-input" placeholder="Enter your full name">
+                    <!-- Form Inputs with Inset Icons & Micro-Interactions -->
+                    <div class="executive-field-group">
+                        <label class="executive-field-label">
+                            <span>Your Name</span>
+                            <span class="req-star">*</span>
+                        </label>
+                        <div class="executive-input-wrapper">
+                            <i class="fa-regular fa-user executive-input-icon"></i>
+                            <input type="text" name="customer_name" required id="customer_name" class="executive-input-control" placeholder="Enter your full name">
+                        </div>
                     </div>
 
-                    <div class="row g-2 mb-3">
+                    <div class="row g-2">
                         <div class="col-6">
-                            <label class="form-label small font-weight-bold mb-1">Phone</label>
-                            <input type="text" pattern="^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[789]\d{9}$" title="Enter valid mobile number" required name="customer_number" id="customer_number" maxlength="10" class="modern-input" placeholder="Mobile no">
+                            <div class="executive-field-group">
+                                <label class="executive-field-label">
+                                    <span>Phone</span>
+                                    <span class="req-star">*</span>
+                                </label>
+                                <div class="executive-input-wrapper">
+                                    <i class="fa-solid fa-phone executive-input-icon"></i>
+                                    <input type="text" pattern="^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[789]\d{9}$" title="Enter valid mobile number" required name="customer_number" id="customer_number" maxlength="10" class="executive-input-control" placeholder="Mobile no">
+                                </div>
+                            </div>
                         </div>
                         <div class="col-6">
-                            <label class="form-label small font-weight-bold mb-1">Email</label>
-                            <input type="email" name="customer_email" id="customer_email" class="modern-input" placeholder="Email address">
+                            <div class="executive-field-group">
+                                <label class="executive-field-label">
+                                    <span>Email</span>
+                                </label>
+                                <div class="executive-input-wrapper">
+                                    <i class="fa-regular fa-envelope executive-input-icon"></i>
+                                    <input type="email" name="customer_email" id="customer_email" class="executive-input-control" placeholder="Email address">
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="mb-4">
-                        <label class="form-label small font-weight-bold mb-1">Your Message</label>
-                        <textarea name="customer_message" id="customer_message" class="modern-input" rows="3" placeholder="How can we assist you?"></textarea>
+                    <div class="executive-field-group">
+                        <label class="executive-field-label">
+                            <span>Your Message</span>
+                            <span class="req-star">*</span>
+                        </label>
+                        <div class="executive-input-wrapper">
+                            <i class="fa-regular fa-comment-dots executive-input-icon icon-textarea"></i>
+                            <textarea name="customer_message" required id="customer_message" class="executive-textarea-control" placeholder="How can leadership assist or address your experience?"></textarea>
+                        </div>
                     </div>
 
-                    <button type="submit" class="primary-submit-btn">
-                        <i class="fa-regular fa-paper-plane me-2"></i> Send Private Message
+                    <button type="submit" class="executive-submit-cta">
+                        <span>Send Private Message</span>
+                        <i class="fa-solid fa-paper-plane cta-icon"></i>
                     </button>
+
+                    <div class="executive-trust-footer">
+                        <span class="trust-pill"><i class="fa-solid fa-lock text-success"></i> 256-Bit SSL Encrypted</span>
+                        <span class="trust-sep">&bull;</span>
+                        <span class="trust-pill"><i class="fa-solid fa-bolt text-warning"></i> Fast Executive Review</span>
+                    </div>
                 </form>
 
                 <!-- 5. VIDEO TESTIMONIAL FORM -->
@@ -1734,7 +2259,7 @@
                     <input type="hidden" name="testi_user_id" id="testi_user_id" value="{{encrypt($user->id)}}">
                     <input type="hidden" name="testi_rating_number" id="rating_number">
 
-                    <button type="button" class="nav-back-btn" onclick="close_form()" title="Back">
+                    <button type="button" class="nav-back-btn" onclick="close_video_form()" title="Back">
                         <i class="fa-solid fa-arrow-left"></i>
                     </button>
 
@@ -2231,7 +2756,17 @@
             $('.private_feedback').hide();
             $('.lessthen_three_feedback').hide();
             $('#video_testimonial_form').hide();
-            $('.logo_part').fadeIn(200);
+            $('.more_three_star').fadeIn(200);
+        }
+
+        function close_private_form() {
+            $('.private_feedback').hide();
+            $('.more_three_star').fadeIn(250);
+        }
+
+        function close_video_form() {
+            $('#video_testimonial_form').hide();
+            $('.more_three_star').fadeIn(250);
         }
 
         function customer_field_section_show() {

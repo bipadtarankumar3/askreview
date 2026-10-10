@@ -189,6 +189,45 @@ class ReviewController extends Controller
                 Integration::where('user_id', Auth::user()->id)->where('type', 'record')->update(['status' => 'inactive']);
             }
 
+            // Calculate has_private_access (Pro or Premium plan access)
+            $has_private_access = false;
+            if (Auth::user()->type === 'admin') {
+                $has_private_access = true;
+            } else {
+                $activePayment = Payment::select('payments.*', 'services.plan_type', 'services.double_qr_access')
+                    ->join('services', 'services.id', 'payments.service_id')
+                    ->where('payments.user_id', Auth::user()->id)
+                    ->orderBy('payments.id', 'desc')
+                    ->first();
+
+                if ($activePayment && in_array($activePayment->plan_type, ['premium', 'pro'])) {
+                    $has_private_access = true;
+                } elseif (Auth::user()->double_qr_access === 'YES') {
+                    $has_private_access = true;
+                }
+            }
+            $array['has_private_access'] = $has_private_access;
+
+            // Ensure private integration exists and sync status
+            $privInt = Integration::where('user_id', Auth::user()->id)->where('type', 'private')->first();
+            if (!$privInt) {
+                $maxOrder = Integration::where('user_id', Auth::user()->id)->max('button_order') ?? 6;
+                Integration::create([
+                    'type' => 'private',
+                    'user_id' => Auth::user()->id,
+                    'button_icon' => URL::to('frontend/images/private.png'),
+                    'button_name' => 'Private Enquiry',
+                    'button_order' => $maxOrder + 1,
+                    'status' => (Auth::user()->private_feedback == 'no') ? 'inactive' : 'active'
+                ]);
+            } else {
+                $currentPrivateStatus = (Auth::user()->private_feedback == 'no') ? 'inactive' : 'active';
+                if ($privInt->status !== $currentPrivateStatus) {
+                    $privInt->status = $currentPrivateStatus;
+                    $privInt->save();
+                }
+            }
+
             $array['integrationList'] = Integration::where('user_id',Auth::user()->id)->orderBy('button_order','asc')->get();
 
             $array['IntegrationGoogle'] = Integration::where('user_id',Auth::user()->id)
@@ -216,10 +255,6 @@ class ReviewController extends Controller
 
             $array['admin_user'] = User::where('id',Auth::user()->user_id)->orderBy('id','desc')->first();
 
-
-            
-
-            //dd($Spinner);
             return view('user.review_links.list',$array);
         }
     }
@@ -741,5 +776,54 @@ class ReviewController extends Controller
             return back()->with($notification);
            
         }
+    }
+
+    public function update_private_feedback_status(Request $request)
+    {
+        if (Auth::check()) {
+            $user = Auth::user();
+
+            $has_private_access = ($user->type === 'admin' || $user->double_qr_access === 'YES');
+            if (!$has_private_access) {
+                $activePayment = Payment::select('payments.*', 'services.plan_type')
+                    ->join('services', 'services.id', 'payments.service_id')
+                    ->where('payments.user_id', $user->id)
+                    ->orderBy('payments.id', 'desc')
+                    ->first();
+                if ($activePayment && in_array($activePayment->plan_type, ['premium', 'pro'])) {
+                    $has_private_access = true;
+                }
+            }
+
+            if (!$has_private_access) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Private Feedback Shield is an exclusive Pro & Premium Plan feature. Please upgrade your plan to unlock.'
+                ], 403);
+            }
+
+            $status = $request->status; // 'yes' / 'no' or 'active' / 'inactive'
+            $privateFeedback = in_array(strtolower($status), ['yes', 'active', '1']) ? 'yes' : 'no';
+            $integrationStatus = ($privateFeedback === 'yes') ? 'active' : 'inactive';
+
+            $userUpdate = ['private_feedback' => $privateFeedback];
+            if ($request->has('private_page_text') && !empty($request->private_page_text)) {
+                $userUpdate['private_page_text'] = $request->private_page_text;
+            }
+
+            User::where('id', $user->id)->update($userUpdate);
+
+            Integration::where('user_id', $user->id)->where('type', 'private')->update([
+                'status' => $integrationStatus
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'private_feedback' => $privateFeedback,
+                'message' => 'Private Feedback Shield ' . ($privateFeedback === 'yes' ? 'activated' : 'deactivated') . ' successfully!'
+            ]);
+        }
+
+        return response()->json(['status' => 'error', 'message' => 'Unauthorized'], 401);
     }
 }

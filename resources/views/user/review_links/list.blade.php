@@ -256,6 +256,32 @@
     .modern-integration-card.card-shield {
         border-top: 3px solid #8b5cf6;
     }
+    .modern-integration-card.card-pro-feature,
+    .modern-integration-card.card-pro-private {
+        background: linear-gradient(180deg, #ffffff 0%, #faf5ff 100%);
+        border: 1.5px solid #d8b4fe;
+        border-top: 3.5px solid #8b5cf6;
+        box-shadow: 0 6px 20px -3px rgba(139, 92, 246, 0.12);
+        position: relative;
+    }
+    .modern-integration-card.card-pro-feature:hover,
+    .modern-integration-card.card-pro-private:hover {
+        border-color: #a855f7;
+        box-shadow: 0 16px 36px -6px rgba(139, 92, 246, 0.22);
+    }
+    .pro-crown-badge {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: #ffffff;
+        font-size: 0.65rem;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        padding: 3px 8px;
+        border-radius: 9999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        box-shadow: 0 2px 6px rgba(245, 158, 11, 0.25);
+    }
 
     /* Drag handle badge */
     .drag-handle-badge {
@@ -658,13 +684,15 @@
                 @foreach ($integrationList as $item)
                     @php
                         $hasVideoAccess = ($video_access_show == true || (Auth::check() && Auth::user()->video_access == 'YES'));
+                        $hasPrivateAccess = ($has_private_access ?? false);
+                        $isPrivateActive = ($hasPrivateAccess && (Auth::user()->private_feedback ?? 'yes') == 'yes' && $item->status != 'inactive');
                         $isConfigured = false;
                         if ($item->type == 'google') {
                             $isConfigured = (!empty($item->review_links) || !empty($item->place_id) || !empty($item->status));
                         } elseif ($item->type == 'record') {
                             $isConfigured = $hasVideoAccess && ($item->status != 'inactive');
                         } elseif ($item->type == 'private') {
-                            $isConfigured = true; // Built-in active shield
+                            $isConfigured = $isPrivateActive;
                         } else {
                             $isConfigured = (!empty($item->review_links) || !empty($item->status));
                         }
@@ -688,9 +716,12 @@
                          data-type="{{$item->type}}"
                          data-category="{{$cardCategory}}"
                          data-name="{{ strtolower($meta['title']) }}"
-                         data-status="{{ ($item->type == 'private') ? 'shield' : ($isConfigured ? 'connected' : 'unconnected') }}">
+                         data-status="{{ ($item->type == 'private') ? ($isPrivateActive ? 'connected' : 'inactive') : ($isConfigured ? 'connected' : 'unconnected') }}">
 
-                        <div class="modern-integration-card {{ $item->type == 'private' ? 'card-shield' : ($isConfigured ? 'card-connected' : '') }}">
+                        @php
+                            $isProCard = ($item->type == 'record' || $item->type == 'private');
+                        @endphp
+                        <div class="modern-integration-card {{ $isProCard ? 'card-pro-feature' : ($isConfigured ? 'card-connected' : '') }}">
                             <!-- Top Bar: Drag Handle + Status Badge -->
                             <div class="d-flex align-items-center justify-content-between mb-2">
                                 <span class="drag-handle-badge" title="Click and drag to reorder">
@@ -698,21 +729,33 @@
                                 </span>
 
                                 @if ($item->type == 'private')
-                                    <span class="status-badge-pill status-shield">
-                                        <i class="ti ti-shield-check"></i> Built-in Shield
-                                    </span>
+                                    @if ($hasPrivateAccess)
+                                        @if ($isPrivateActive)
+                                            <span class="status-badge-pill status-connected" style="background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0;" title="Shield is active on customer review page">
+                                                <span class="pulse-dot-green"></span> Pro Shield
+                                            </span>
+                                        @else
+                                            <span class="status-badge-pill status-inactive" title="Shield is currently disabled">
+                                                <i class="ti ti-circle-x"></i> Inactive
+                                            </span>
+                                        @endif
+                                    @else
+                                        <span class="status-badge-pill status-unconnected" style="background: #fef3c7; color: #92400e; border: 1px solid #fde68a;" title="Exclusive to Pro & Premium plans">
+                                            <i class="fa fa-crown text-warning"></i> Pro / Premium
+                                        </span>
+                                    @endif
                                 @elseif ($item->type == 'record')
                                     @if ($hasVideoAccess && !$isInactive)
-                                        <span class="status-badge-pill status-connected" title="Video access enabled by Admin">
-                                            <span class="pulse-dot-green"></span> Connected &amp; Live
+                                        <span class="status-badge-pill status-connected" style="background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0;" title="Video access enabled and live">
+                                            <span class="pulse-dot-green"></span> Pro Active
                                         </span>
                                     @elseif ($isInactive)
                                         <span class="status-badge-pill status-inactive" title="Channel is disabled">
                                             <i class="ti ti-circle-x"></i> Inactive
                                         </span>
                                     @else
-                                        <span class="status-badge-pill status-unconnected" title="Video access not enabled">
-                                            <i class="ti ti-lock"></i> Not Enabled
+                                        <span class="status-badge-pill status-unconnected" style="background: #fef3c7; color: #92400e; border: 1px solid #fde68a;" title="Exclusive to Pro & Premium plans">
+                                            <i class="fa fa-crown text-warning"></i> Pro / Premium
                                         </span>
                                     @endif
                                 @elseif ($isConfigured)
@@ -735,9 +778,15 @@
                             <!-- Squircle Logo Badge -->
                             <div class="brand-logo-squircle" style="background: {{ $meta['tint'] }}; border: 1.5px solid {{ $meta['border'] }};">
                                 @if ($item->type == 'record')
-                                    <i class="fa-solid fa-video" style="color: #7c3aed; font-size: 32px;"></i>
+                                    <div style="position: relative; display: inline-flex; align-items: center; justify-content: center;">
+                                        <i class="fa-solid fa-video" style="color: #7c3aed; font-size: 30px;"></i>
+                                        <span style="position: absolute; top: -7px; right: -8px; font-size: 13px; color: #f59e0b;" title="Pro Feature"><i class="fa fa-crown"></i></span>
+                                    </div>
                                 @elseif ($item->type == 'private')
-                                    <i class="fa-solid fa-shield-halved" style="color: #9333ea; font-size: 32px;"></i>
+                                    <div style="position: relative; display: inline-flex; align-items: center; justify-content: center;">
+                                        <i class="fa-solid fa-shield-halved" style="color: #7c3aed; font-size: 30px;"></i>
+                                        <span style="position: absolute; top: -7px; right: -8px; font-size: 13px; color: #f59e0b;" title="Pro Feature"><i class="fa fa-crown"></i></span>
+                                    </div>
                                 @elseif (!empty($item->button_icon))
                                     <img src="{{ $item->button_icon }}" alt="{{ $meta['title'] }}" loading="lazy">
                                 @elseif (!empty($meta['default_icon']))
@@ -748,7 +797,12 @@
                             </div>
 
                             <!-- Platform Details -->
-                            <h5 class="card-title-platform">{{ $meta['title'] }}</h5>
+                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                <h5 class="card-title-platform mb-0">{{ $meta['title'] }}</h5>
+                                @if($isProCard)
+                                    <span class="pro-crown-badge"><i class="fa fa-crown"></i> PRO</span>
+                                @endif
+                            </div>
                             <p class="card-desc-platform">{{ $meta['desc'] }}</p>
 
                             <!-- Bottom Action Row -->
@@ -774,11 +828,11 @@
                                 @elseif ($item->type == 'record')
                                     @if ($hasVideoAccess)
                                         <div class="d-flex align-items-center gap-2 w-100">
-                                            <div class="badge py-2 px-3 rounded-pill fw-bold d-flex align-items-center justify-content-center gap-1 flex-grow-1" style="font-size: 0.8rem; background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0;">
-                                                <i class="ti ti-circle-check"></i> Active &amp; Ready
+                                            <div class="btn btn-sm flex-fill fw-bold py-1.5 d-flex align-items-center justify-content-center gap-1.5" style="border-radius: 8px; font-size: 0.78rem; background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0;">
+                                                <i class="ti ti-circle-check"></i> Pro Active
                                             </div>
-                                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="add_spinner_btn('record')" title="Video Testimonial Settings" style="border-radius: 10px; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center;">
-                                                <i class="ti ti-settings"></i>
+                                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="add_spinner_btn('record')" title="Video Testimonial Settings" style="border-radius: 8px; width: 36px; height: 32px; display: inline-flex; align-items: center; justify-content: center;">
+                                                <i class="ti ti-settings fs-5"></i>
                                             </button>
                                         </div>
                                     @else
@@ -788,9 +842,27 @@
                                     @endif
 
                                 @elseif ($item->type == 'private')
-                                    <div class="shield-badge-box">
-                                        <i class="ti ti-shield-check" style="font-size: 1rem;"></i> Automatically Protects Rating
-                                    </div>
+                                    @if ($hasPrivateAccess)
+                                        <div class="d-flex align-items-center gap-2 w-100">
+                                            @if ($isPrivateActive)
+                                                <button type="button" class="btn btn-outline-danger btn-sm flex-fill fw-bold py-1.5" style="border-radius: 8px; font-size: 0.78rem;" onclick="quickTogglePrivateFeedback('no')" title="Deactivate Private Feedback">
+                                                    <i class="fa fa-power-off me-1"></i> Deactivate
+                                                </button>
+                                            @else
+                                                <button type="button" class="btn btn-success btn-sm flex-fill fw-bold py-1.5" style="border-radius: 8px; font-size: 0.78rem;" onclick="quickTogglePrivateFeedback('yes')" title="Activate Private Feedback">
+                                                    <i class="fa fa-check me-1"></i> Activate
+                                                </button>
+                                            @endif
+                                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="open_private_feedback_modal()" title="Customize Message & Settings" style="border-radius: 8px; width: 36px; height: 32px; display: inline-flex; align-items: center; justify-content: center;">
+                                                <i class="ti ti-settings fs-5"></i>
+                                            </button>
+                                        </div>
+                                    @else
+                                        <button type="button" class="btn btn-sm w-100 fw-bold d-flex align-items-center justify-content-center gap-1.5 shadow-sm py-2" style="background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); color: #ffffff; border: none; border-radius: 8px; font-size: 0.78rem;" onclick="promptPrivateUpgrade()">
+                                            <i class="fa fa-crown text-warning"></i>
+                                            <span>Upgrade to Unlock Shield</span>
+                                        </button>
+                                    @endif
 
                                 @else
                                     @if ($isConfigured)
@@ -899,6 +971,112 @@
     </div>
 </div>
 
+<div class="modal fade" id="private_feedback_modal" tabindex="-1" role="dialog" aria-labelledby="privateFeedbackModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 780px;">
+        <div class="modal-content" style="border-radius: 24px; border: none; box-shadow: 0 25px 60px rgba(15,23,42,0.25); overflow: hidden; background: #ffffff;">
+            <div class="modal-header d-flex align-items-center justify-content-between" style="border-bottom: 1px solid #f1f5f9; padding: 22px 28px; background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);">
+                <div class="d-flex align-items-center gap-3">
+                    <div style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #7c3aed, #9333ea); display: flex; align-items: center; justify-content: center; color: #fff; box-shadow: 0 6px 16px rgba(124,58,237,0.3);">
+                        <i class="ti ti-shield-lock" style="font-size: 24px;"></i>
+                    </div>
+                    <div>
+                        <div class="d-flex align-items-center gap-2">
+                            <h5 class="modal-title fw-bold mb-0" id="privateFeedbackModalLabel" style="font-size: 1.15rem; color: #0f172a;">Private Feedback Shield Settings</h5>
+                            <span class="badge" style="background: linear-gradient(135deg, #7c3aed, #6d28d9); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 4px 8px; border-radius: 20px;"><i class="fa fa-crown text-warning me-1"></i> PRO</span>
+                        </div>
+                        <small class="text-muted" style="font-size: 0.8rem;">Intercept low customer reviews and capture private feedback</small>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="hide_modal()"></button>
+            </div>
+            <div class="modal-body p-4" style="background: #ffffff;">
+                <div class="row g-4">
+                    <div class="col-lg-7">
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-dark mb-2" style="font-size: 0.88rem;">Shield Status</label>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <label class="w-100 p-3 rounded-3 border position-relative cursor-pointer" style="cursor: pointer; transition: all 0.2s;" id="label_shield_active">
+                                        <div class="form-check m-0">
+                                            <input class="form-check-input" type="radio" name="modal_private_feedback_status" id="shield_status_yes" value="yes" {{ (Auth::user()->private_feedback ?? 'yes') == 'yes' ? 'checked' : '' }} onchange="updateShieldPreviewState()">
+                                            <label class="form-check-label fw-bold ms-1" for="shield_status_yes" style="cursor: pointer; color: #059669;">
+                                                <i class="fa fa-check-circle me-1"></i> Active
+                                            </label>
+                                        </div>
+                                        <small class="text-muted d-block mt-1 ps-4" style="font-size: 0.74rem; line-height: 1.3;">Enable shield for low ratings</small>
+                                    </label>
+                                </div>
+                                <div class="col-6">
+                                    <label class="w-100 p-3 rounded-3 border position-relative cursor-pointer" style="cursor: pointer; transition: all 0.2s;" id="label_shield_inactive">
+                                        <div class="form-check m-0">
+                                            <input class="form-check-input" type="radio" name="modal_private_feedback_status" id="shield_status_no" value="no" {{ (Auth::user()->private_feedback ?? 'yes') != 'yes' ? 'checked' : '' }} onchange="updateShieldPreviewState()">
+                                            <label class="form-check-label fw-bold ms-1" for="shield_status_no" style="cursor: pointer; color: #64748b;">
+                                                <i class="fa fa-times-circle me-1"></i> Inactive
+                                            </label>
+                                        </div>
+                                        <small class="text-muted d-block mt-1 ps-4" style="font-size: 0.74rem; line-height: 1.3;">Disable private funnel</small>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-dark mb-1" style="font-size: 0.88rem;" for="modal_private_page_text">Customer Subtitle / Message</label>
+                            <textarea class="form-control" id="modal_private_page_text" rows="3" style="border-radius: 12px; font-size: 0.88rem; padding: 12px; line-height: 1.5;" placeholder="Leave us a review, it will help us grow and better serve our customers like you." oninput="updateShieldPreviewText()">{{ Auth::user()->private_page_text ?? 'Leave us a review, it will help us grow and better serve our customers like you.' }}</textarea>
+                            <small class="text-muted" style="font-size: 0.75rem;">Shown under "Private Message" on the customer form.</small>
+                        </div>
+
+                        <div class="p-3 rounded-3" style="background: #faf5ff; border: 1px dashed #c084fc;">
+                            <div class="d-flex align-items-start gap-2">
+                                <i class="fa fa-lightbulb text-warning mt-1" style="font-size: 1rem;"></i>
+                                <div style="font-size: 0.78rem; color: #581c87; line-height: 1.45;">
+                                    <strong>How Shield Works:</strong> Unhappy ratings are caught privately before reaching public review sites like Google or Facebook.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-5">
+                        <div class="text-muted fw-bold mb-2 text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.05em;">Live Form Preview</div>
+                        <div class="p-3 rounded-4 shadow-sm" style="background: #ffffff; border: 1px solid #e2e8f0; max-width: 280px; margin: 0 auto; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                            <div class="text-center mb-3">
+                                @if (!empty(Auth::user()->logo))
+                                    <img src="{{ Auth::user()->logo }}" style="width: 50px; height: 50px; border-radius: 12px; object-fit: contain; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 8px;">
+                                @else
+                                    <div style="width: 44px; height: 44px; border-radius: 10px; background: #6366f1; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; margin-bottom: 8px;">
+                                        {{ substr(Auth::user()->name ?? 'B', 0, 1) }}
+                                    </div>
+                                @endif
+                                <h6 class="fw-bold mb-1" style="font-size: 0.95rem; color: #1e1b4b;">Private Message</h6>
+                                <p id="preview_private_text" class="text-muted mb-0" style="font-size: 0.68rem; line-height: 1.35;">{{ Auth::user()->private_page_text ?? 'Leave us a review, it will help us grow and better serve our customers like you.' }}</p>
+                            </div>
+                            <div class="mb-2">
+                                <div class="p-1 px-2 rounded-2 border bg-light text-muted" style="font-size: 0.68rem;">Your Name</div>
+                            </div>
+                            <div class="row g-1 mb-2">
+                                <div class="col-6"><div class="p-1 px-2 rounded-2 border bg-light text-muted" style="font-size: 0.65rem;">Mobile no</div></div>
+                                <div class="col-6"><div class="p-1 px-2 rounded-2 border bg-light text-muted" style="font-size: 0.65rem;">Email address</div></div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="p-1 px-2 rounded-2 border bg-light text-muted" style="font-size: 0.68rem; height: 38px;">How can we assist you?</div>
+                            </div>
+                            <div class="p-1.5 rounded-3 text-center fw-bold text-white shadow-sm" style="font-size: 0.7rem; background: linear-gradient(135deg, #4f46e5, #7c3aed);">
+                                <i class="fa fa-paper-plane me-1"></i> Send Private Message
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-between" style="border-top: 1px solid #f1f5f9; padding: 16px 28px; background: #fafafa;">
+                <button type="button" class="btn btn-light fw-bold px-4 py-2" data-bs-dismiss="modal" onclick="hide_modal()" style="border-radius: 10px; font-size: 0.85rem;">Cancel</button>
+                <button type="button" id="btn_save_private_feedback" class="btn btn-primary fw-bold px-4 py-2" onclick="savePrivateFeedbackSettings()" style="border-radius: 10px; font-size: 0.85rem; background: linear-gradient(135deg, #7c3aed, #6d28d9); border: none;">
+                    <i class="ti ti-check me-1"></i> Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('js')
@@ -907,17 +1085,132 @@
 
 <script>
     function hide_modal() {
+        var privEl = document.getElementById('private_feedback_modal');
+        var privM = privEl ? bootstrap.Modal.getInstance(privEl) : null;
+        if (privM) privM.hide();
+
         var spinEl = document.getElementById('add_spinner_modal');
-        var spinM = bootstrap.Modal.getInstance(spinEl);
+        var spinM = spinEl ? bootstrap.Modal.getInstance(spinEl) : null;
         if (spinM) spinM.hide();
 
         var addEl = document.getElementById('integration_add_modal');
-        var addM = bootstrap.Modal.getInstance(addEl);
+        var addM = addEl ? bootstrap.Modal.getInstance(addEl) : null;
         if (addM) addM.hide();
 
         var rmEl = document.getElementById('integration_remove_modal');
-        var rmM = bootstrap.Modal.getInstance(rmEl);
+        var rmM = rmEl ? bootstrap.Modal.getInstance(rmEl) : null;
         if (rmM) rmM.hide();
+    }
+
+    function open_private_feedback_modal() {
+        var el = document.getElementById('private_feedback_modal');
+        if (!el) return;
+        var m = bootstrap.Modal.getInstance(el) || new bootstrap.Modal(el);
+        m.show();
+    }
+
+    function updateShieldPreviewText() {
+        var text = $('#modal_private_page_text').val();
+        if (!text || text.trim() === '') {
+            text = 'Leave us a review, it will help us grow and better serve our customers like you.';
+        }
+        $('#preview_private_text').text(text);
+    }
+
+    function updateShieldPreviewState() {
+        var isYes = $('#shield_status_yes').is(':checked');
+        if (isYes) {
+            $('#label_shield_active').css({'border-color': '#059669', 'background': '#ecfdf5'});
+            $('#label_shield_inactive').css({'border-color': '#e2e8f0', 'background': '#ffffff'});
+        } else {
+            $('#label_shield_active').css({'border-color': '#e2e8f0', 'background': '#ffffff'});
+            $('#label_shield_inactive').css({'border-color': '#94a3b8', 'background': '#f8fafc'});
+        }
+    }
+
+    function quickTogglePrivateFeedback(status) {
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: "POST",
+            url: "{{URL::to('admin/update_private_feedback_status')}}",
+            data: { 
+                status: status,
+                _token: "{{ csrf_token() }}"
+            },
+            success: function(res) {
+                if (typeof toastr !== 'undefined') {
+                    toastr.success(res.message || "Private feedback updated.");
+                } else if (typeof swal !== 'undefined') {
+                    swal("Success", res.message || "Updated successfully", "success");
+                }
+                setTimeout(function() {
+                    location.reload(true);
+                }, 600);
+            },
+            error: function(xhr) {
+                var msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : "Failed to update.";
+                if (typeof toastr !== 'undefined') {
+                    toastr.error(msg);
+                } else if (typeof swal !== 'undefined') {
+                    swal("Access Denied", msg, "warning");
+                } else {
+                    alert(msg);
+                }
+            }
+        });
+    }
+
+    function savePrivateFeedbackSettings() {
+        var status = $('input[name="modal_private_feedback_status"]:checked').val() || 'yes';
+        var pageText = $('#modal_private_page_text').val();
+        var btn = $('#btn_save_private_feedback');
+        btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin me-1"></i> Saving...');
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: "POST",
+            url: "{{URL::to('admin/update_private_feedback_status')}}",
+            data: {
+                status: status,
+                private_page_text: pageText,
+                _token: "{{ csrf_token() }}"
+            },
+            success: function(res) {
+                btn.prop('disabled', false).html('<i class="ti ti-check me-1"></i> Save Changes');
+                hide_modal();
+                if (typeof toastr !== 'undefined') {
+                    toastr.success(res.message || "Private feedback saved.");
+                } else if (typeof swal !== 'undefined') {
+                    swal("Success", res.message || "Saved successfully", "success");
+                }
+                setTimeout(function() {
+                    location.reload(true);
+                }, 600);
+            },
+            error: function(xhr) {
+                btn.prop('disabled', false).html('<i class="ti ti-check me-1"></i> Save Changes');
+                var msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : "Failed to update.";
+                if (typeof toastr !== 'undefined') {
+                    toastr.error(msg);
+                } else if (typeof swal !== 'undefined') {
+                    swal("Access Denied", msg, "warning");
+                } else {
+                    alert(msg);
+                }
+            }
+        });
+    }
+
+    function promptPrivateUpgrade() {
+        if (typeof get_plans === 'function') {
+            get_plans();
+        } else {
+            window.location.href = "{{ URL::to('admin/membership_plans') }}";
+        }
     }
 
     var _autocompleteInitialized = false;

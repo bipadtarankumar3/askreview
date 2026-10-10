@@ -189,16 +189,6 @@
                       </select>
                     </div>
                   </div>
-                  <div class="col-sm-12 col-md-4">
-                    <div class="mb-3">
-                      <label for="private_feedback" class="control-label col-form-label">Private Feedback</label>
-                      <select name="private_feedback" id="private_feedback" class="form-control">
-                        <option value="">Please select </option>
-                        <option value="yes"  @if (isset($user) && $user->private_feedback == 'yes') selected  @endif>Yes</option>
-                        <option value="no"  @if (isset($user) && $user->private_feedback == 'no') selected  @endif>No</option>
-                      </select>
-                    </div>
-                  </div>
                   
 
 
