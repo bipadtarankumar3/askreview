@@ -28,6 +28,16 @@
 
   <div class="auth-wrapper">
     
+    <!-- Mobile Viewport Switcher Bar (Visible on mobile/tablet <= 900px) -->
+    <div class="auth-mobile-switch-bar">
+      <button type="button" class="mobile-switch-tab active" id="tabShowLogin" onclick="switchMobileAuthView('login')">
+        <i class="bi bi-person-lock"></i> <span>Sign In</span>
+      </button>
+      <button type="button" class="mobile-switch-tab" id="tabShowTour" onclick="switchMobileAuthView('tour')">
+        <i class="bi bi-phone"></i> <span>Review Tour &amp; Demo</span>
+      </button>
+    </div>
+
     <!-- ====================================================================
          LEFT PANEL: 5-Slide Multi-Channel Review Hub Carousel (Light Theme)
          ==================================================================== -->
@@ -37,6 +47,11 @@
       <!-- Centered 5-Slide QR & Multi-Review Carousel -->
       <div class="hero-carousel-wrapper">
         <div class="qr-carousel" id="authQrCarousel">
+          <!-- Slide Autoplay Progress Bar -->
+          <div class="carousel-progress-bar-track">
+            <div class="carousel-progress-bar-fill" id="carouselProgressFill"></div>
+          </div>
+
           <div class="carousel-slides" id="carouselSlides">
             
             <!-- SLIDE 1: Multi-Platform Review Hub (Matching /u/rajuranjanagency) -->
@@ -46,7 +61,7 @@
                   <i class="bi bi-grid-fill"></i> Multi-Platform Review Hub
                 </div>
                 
-                <div class="slide-graphic-container">
+                <div class="slide-graphic-container is-phone-graphic">
                   <!-- High-Fidelity Realistic Smartphone Review Hub Showcase -->
                   <svg class="slide-graphic-svg" viewBox="0 0 460 415" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
@@ -207,6 +222,13 @@
                       <text x="70" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="5.5" font-weight="700" fill="#2563eb" text-anchor="middle">Install App on Home Screen</text>
                     </g>
 
+                    <!-- Dynamic Spotlight Rectangle & Pointer for Mobile Line Tour -->
+                    <rect id="mobileLineSpotlight" x="141" y="95" width="178" height="32" rx="9" fill="rgba(225, 29, 72, 0.05)" stroke="#e11d48" stroke-width="2" style="transition: all 0.35s cubic-bezier(0.34, 1.4, 0.64, 1); pointer-events: none;"/>
+                    <g id="mobileLinePointer" transform="translate(120, 105)" style="transition: all 0.35s cubic-bezier(0.34, 1.4, 0.64, 1); pointer-events: none;">
+                      <circle cx="6" cy="6" r="6" fill="#e11d48" filter="url(#floatShadow)"/>
+                      <path d="M4 3.5 L8 6 L4 8.5" fill="#ffffff"/>
+                    </g>
+
                     <!-- Interactive Notification Toast Inside Smartphone Screen -->
                     <g id="hubToastMessage" opacity="0" transform="translate(148, 335)" style="transition: all 0.3s cubic-bezier(0.34, 1.4, 0.64, 1); pointer-events: none;">
                       <rect width="164" height="26" rx="13" fill="#0f172a" filter="url(#floatShadow)"/>
@@ -241,12 +263,45 @@
                 <h3 class="slide-title">Multi-Platform Review Hub</h3>
                 <p class="slide-desc">Give customers complete freedom: Google, Facebook, Instagram, YouTube, Video Testimonials, or Private Enquiry in one single tap.</p>
                 
+                <!-- Interactive Mobile Line Tour Box -->
+                <div class="mobile-line-tour-box" id="mobileLineTourBox">
+                  <div class="mlt-header">
+                    <div class="mlt-step-pill">
+                      <span class="mlt-dot"></span>
+                      <span id="mltStepText">Line 1 of 7 &bull; Google Reviews</span>
+                    </div>
+                    <div class="mlt-nav-arrows">
+                      <button type="button" class="mlt-arrow-btn" id="mltPrevBtn" title="Previous Line"><i class="bi bi-chevron-left"></i></button>
+                      <button type="button" class="mlt-arrow-btn" id="mltNextBtn" title="Next Line"><i class="bi bi-chevron-right"></i></button>
+                      <button type="button" class="mlt-play-btn" id="mltAutoPlayBtn" title="Auto-Tour All Lines"><i class="bi bi-play-fill" id="mltPlayIcon"></i> <span>Auto</span></button>
+                    </div>
+                  </div>
+                  <div class="mlt-body">
+                    <h4 class="mlt-title" id="mltTitle">Google Review Accelerator</h4>
+                    <p class="mlt-desc" id="mltDesc">Customers choose 1-tap pre-written 5-star review templates and paste directly into Google Maps in seconds.</p>
+                  </div>
+                </div>
+
                 <div class="slide-features-row">
-                  <span class="slide-pill"><i class="bi bi-google"></i> Google</span>
-                  <span class="slide-pill"><i class="bi bi-facebook"></i> Facebook</span>
-                  <span class="slide-pill"><i class="bi bi-instagram"></i> Instagram</span>
-                  <span class="slide-pill"><i class="bi bi-youtube"></i> YouTube</span>
-                  <span class="slide-pill"><i class="bi bi-camera-video"></i> Video Reviews</span>
+                  <a href="javascript:void(0)" onclick="selectMobileLine(0)" class="slide-pill active" id="linePill0"><i class="bi bi-google"></i> Google</a>
+                  <a href="javascript:void(0)" onclick="selectMobileLine(1)" class="slide-pill" id="linePill1"><i class="bi bi-facebook"></i> Facebook</a>
+                  <a href="javascript:void(0)" onclick="selectMobileLine(2)" class="slide-pill" id="linePill2"><i class="bi bi-instagram"></i> Instagram</a>
+                  <a href="javascript:void(0)" onclick="selectMobileLine(3)" class="slide-pill" id="linePill3"><i class="bi bi-youtube"></i> YouTube</a>
+                  <a href="javascript:void(0)" onclick="selectMobileLine(4)" class="slide-pill" id="linePill4"><i class="bi bi-camera-video"></i> Video Reviews</a>
+                  <a href="javascript:void(0)" onclick="selectMobileLine(5)" class="slide-pill" id="linePill5"><i class="bi bi-shield-check"></i> Private Shield</a>
+                  <a href="javascript:void(0)" onclick="selectMobileLine(6)" class="slide-pill" id="linePill6"><i class="bi bi-phone"></i> Install App</a>
+                </div>
+
+                <div class="slide-action-row">
+                  <a href="{{ url('/u/digitalvyapariofficial') }}" target="_blank" class="slide-demo-btn" id="mltDemoLink">
+                    <i class="bi bi-box-arrow-up-right"></i>
+                    <span id="mltDemoBtnText">Try Google Review Demo</span>
+                    <i class="bi bi-arrow-up-right"></i>
+                  </a>
+                  <button type="button" class="slide-demo-btn-secondary" id="mltStartTourBtn">
+                    <i class="bi bi-phone-flip"></i>
+                    <span>Tour Next Line</span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -258,7 +313,7 @@
                   <i class="bi bi-camera-video-fill"></i> Live Video Testimonials
                 </div>
                 
-                <div class="slide-graphic-container">
+                <div class="slide-graphic-container is-phone-graphic">
                   <!-- Tall Realistic Smartphone With Live Recording Activity -->
                   <svg class="slide-graphic-svg" viewBox="0 0 460 415" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
@@ -475,9 +530,21 @@
                 <p class="slide-desc">Customers can record and submit authentic selfie video reviews directly from their smartphone camera without installing any apps.</p>
                 
                 <div class="slide-features-row">
-                  <span class="slide-pill"><i class="bi bi-camera-video"></i> Direct Camera Feed</span>
-                  <span class="slide-pill"><i class="bi bi-cloud-arrow-up-fill"></i> Instant Cloud Save</span>
-                  <span class="slide-pill"><i class="bi bi-patch-check-fill"></i> Verified Proof</span>
+                  <a href="{{ url('/u/digitalvyapariofficial') }}" target="_blank" class="slide-pill" title="Test Camera Recording Demo"><i class="bi bi-camera-video"></i> Direct Camera Feed</a>
+                  <a href="{{ url('/u/digitalvyapariofficial') }}" target="_blank" class="slide-pill" title="Test Instant Cloud Save Demo"><i class="bi bi-cloud-arrow-up-fill"></i> Instant Cloud Save</a>
+                  <a href="{{ url('/u/digitalvyapariofficial') }}" target="_blank" class="slide-pill" title="Test Verified Proof Demo"><i class="bi bi-patch-check-fill"></i> Verified Proof</a>
+                </div>
+
+                <div class="slide-action-row">
+                  <a href="{{ url('/u/digitalvyapariofficial') }}" target="_blank" class="slide-demo-btn">
+                    <i class="bi bi-camera-video-fill"></i>
+                    <span>Try Video Testimonial Demo</span>
+                    <i class="bi bi-arrow-up-right"></i>
+                  </a>
+                  <button type="button" class="slide-demo-btn-secondary" onclick="startTourAt(1)">
+                    <i class="bi bi-compass"></i>
+                    <span>Tour Feature</span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -543,9 +610,21 @@
                 <p class="slide-desc">Place custom-branded acrylic stands at billing counters. Customers tap with NFC or scan to post 5-star Google reviews in seconds.</p>
                 
                 <div class="slide-features-row">
-                  <span class="slide-pill"><i class="bi bi-phone"></i> NFC 1-Tap</span>
-                  <span class="slide-pill"><i class="bi bi-qr-code"></i> Standee QR Matrix</span>
-                  <span class="slide-pill"><i class="bi bi-check-circle-fill"></i> Boost SEO</span>
+                  <a href="{{ url('/u/digitalvyapariofficial') }}" target="_blank" class="slide-pill" title="Test NFC 1-Tap Demo"><i class="bi bi-phone"></i> NFC 1-Tap</a>
+                  <a href="{{ url('/u/digitalvyapariofficial') }}" target="_blank" class="slide-pill" title="Test Standee QR Demo"><i class="bi bi-qr-code"></i> Standee QR Matrix</a>
+                  <a href="{{ url('/u/digitalvyapariofficial') }}" target="_blank" class="slide-pill" title="Test Boost SEO Demo"><i class="bi bi-check-circle-fill"></i> Boost SEO</a>
+                </div>
+
+                <div class="slide-action-row">
+                  <a href="{{ url('/u/digitalvyapariofficial') }}" target="_blank" class="slide-demo-btn">
+                    <i class="bi bi-qr-code-scan"></i>
+                    <span>View Smart Standee Demo</span>
+                    <i class="bi bi-arrow-up-right"></i>
+                  </a>
+                  <button type="button" class="slide-demo-btn-secondary" onclick="startTourAt(2)">
+                    <i class="bi bi-compass"></i>
+                    <span>Tour Feature</span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -589,9 +668,21 @@
                 <p class="slide-desc">Unhappy customers submit private feedback straight to management, protecting your public ratings while resolving complaints immediately.</p>
                 
                 <div class="slide-features-row">
-                  <span class="slide-pill"><i class="bi bi-chat-left-dots-fill"></i> Private Form</span>
-                  <span class="slide-pill"><i class="bi bi-shield-lock-fill"></i> Zero Negative Impact</span>
-                  <span class="slide-pill"><i class="bi bi-bell-fill"></i> Instant Owner Alert</span>
+                  <a href="{{ url('/u/digitalvyapariofficial') }}" target="_blank" class="slide-pill" title="Test Private Form Demo"><i class="bi bi-chat-left-dots-fill"></i> Private Form</a>
+                  <a href="{{ url('/u/digitalvyapariofficial') }}" target="_blank" class="slide-pill" title="Test Negative Impact Shield Demo"><i class="bi bi-shield-lock-fill"></i> Zero Negative Impact</a>
+                  <a href="{{ url('/u/digitalvyapariofficial') }}" target="_blank" class="slide-pill" title="Test Instant Owner Alert Demo"><i class="bi bi-bell-fill"></i> Instant Owner Alert</a>
+                </div>
+
+                <div class="slide-action-row">
+                  <a href="{{ url('/u/digitalvyapariofficial') }}" target="_blank" class="slide-demo-btn">
+                    <i class="bi bi-shield-check"></i>
+                    <span>Test Private Shield Demo</span>
+                    <i class="bi bi-arrow-up-right"></i>
+                  </a>
+                  <button type="button" class="slide-demo-btn-secondary" onclick="startTourAt(3)">
+                    <i class="bi bi-compass"></i>
+                    <span>Tour Feature</span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -664,13 +755,50 @@
                 <p class="slide-desc">Track QR scans, review conversions, customer feedback trends, and video testimonials in real-time from an intuitive business dashboard.</p>
                 
                 <div class="slide-features-row">
-                  <span class="slide-pill"><i class="bi bi-speedometer2"></i> Live Tracking</span>
-                  <span class="slide-pill"><i class="bi bi-bar-chart-line-fill"></i> Channel Breakdown</span>
-                  <span class="slide-pill"><i class="bi bi-check2-circle"></i> 100% Transparent</span>
+                  <a href="{{ url('/login') }}" class="slide-pill" title="Live Analytics Tracking Demo"><i class="bi bi-speedometer2"></i> Live Tracking</a>
+                  <a href="{{ url('/login') }}" class="slide-pill" title="Channel Breakdown Demo"><i class="bi bi-bar-chart-line-fill"></i> Channel Breakdown</a>
+                  <a href="{{ url('/login') }}" class="slide-pill" title="100% Transparent Metrics"><i class="bi bi-check2-circle"></i> 100% Transparent</a>
+                </div>
+
+                <div class="slide-action-row">
+                  <a href="{{ url('/login') }}" class="slide-demo-btn">
+                    <i class="bi bi-graph-up-arrow"></i>
+                    <span>Explore Analytics Demo</span>
+                    <i class="bi bi-arrow-up-right"></i>
+                  </a>
+                  <button type="button" class="slide-demo-btn-secondary" onclick="startTourAt(4)">
+                    <i class="bi bi-compass"></i>
+                    <span>Tour Feature</span>
+                  </button>
                 </div>
               </div>
             </div>
 
+          </div>
+
+          <!-- Interactive Tour Floating Card Overlay -->
+          <div class="interactive-tour-overlay" id="interactiveTourOverlay" style="display: none;">
+            <div class="tour-card-header">
+              <span class="tour-badge-step" id="tourBadgeStep">📍 Step 1 of 5</span>
+              <button type="button" class="tour-close-btn" id="closeTourBtn" title="Close Interactive Tour">&times;</button>
+            </div>
+            <h4 class="tour-card-title" id="tourCardTitle">
+              <i class="bi bi-compass-fill" style="color: #e11d48;"></i>
+              <span id="tourCardTitleText">Multi-Platform Review Hub</span>
+            </h4>
+            <p class="tour-card-desc" id="tourCardDesc">
+              Customers can pick Google, Facebook, Instagram, YouTube, or record 60-second video shoutouts from one high-converting link.
+            </p>
+            <div class="tour-card-actions">
+              <a href="{{ url('/u/digitalvyapariofficial') }}" target="_blank" class="tour-cta-link" id="tourCtaLink">
+                <i class="bi bi-box-arrow-up-right"></i>
+                <span>Open Live Demo</span>
+              </a>
+              <div class="tour-nav-controls">
+                <button type="button" class="tour-nav-pill-btn" id="tourPrevBtn">← Prev</button>
+                <button type="button" class="tour-nav-pill-btn primary" id="tourNextBtn">Next Step →</button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -683,6 +811,13 @@
             <button type="button" class="carousel-indicator-btn" data-slide="3" aria-label="Slide 4"></button>
             <button type="button" class="carousel-indicator-btn" data-slide="4" aria-label="Slide 5"></button>
           </div>
+
+          <!-- Interactive Tour Button -->
+          <button type="button" class="carousel-tour-btn" id="toggleTourBtn" title="Launch guided tour of AskReview features">
+            <span class="tour-beacon-dot"></span>
+            <i class="bi bi-compass"></i>
+            <span>Interactive Tour</span>
+          </button>
           
           <div style="display: flex; gap: 8px;">
             <button type="button" class="carousel-arrow-btn" id="prevSlideBtn" aria-label="Previous Slide">
@@ -695,8 +830,8 @@
         </div>
       </div>
 
-      <!-- Hero Footer Trust Badges -->
-      <div class="hero-footer">
+      <!-- Hero Footer Trust Badges & Live Activity Stream -->
+      <div class="hero-footer" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; position: relative;">
         <div class="hero-trust-item">
           <div class="trust-avatar-stack">
             <div class="trust-avatar" style="background:linear-gradient(135deg,#e11d48,#be123c);">AR</div>
@@ -709,6 +844,14 @@
           </div>
         </div>
 
+        <!-- Floating Live Activity Stream -->
+        <div class="live-activity-stream" id="liveActivityStream">
+          <div class="activity-pulse-circle"></div>
+          <div class="activity-text-line" id="activityText">
+            ⭐ <strong>New 5-star review</strong> on Google Maps
+          </div>
+          <span class="activity-time-pill" id="activityTime">Just now</span>
+        </div>
       </div>
       
     </div>
@@ -923,22 +1066,77 @@
       });
     }
 
-    // 5-Slide QR Code Carousel Functionality
+    // 5-Slide QR Code Carousel & Interactive Tour Engine
     (function initQrCarousel() {
       const slides = document.querySelectorAll('.carousel-slide');
       const indicators = document.querySelectorAll('.carousel-indicator-btn');
       const slidesContainer = document.getElementById('carouselSlides');
       const prevBtn = document.getElementById('prevSlideBtn');
       const nextBtn = document.getElementById('nextSlideBtn');
+      const progressFill = document.getElementById('carouselProgressFill');
+      const toggleTourBtn = document.getElementById('toggleTourBtn');
+      const tourOverlay = document.getElementById('interactiveTourOverlay');
+      const closeTourBtn = document.getElementById('closeTourBtn');
+      const tourPrevBtn = document.getElementById('tourPrevBtn');
+      const tourNextBtn = document.getElementById('tourNextBtn');
+      const tourBadgeStep = document.getElementById('tourBadgeStep');
+      const tourCardTitleText = document.getElementById('tourCardTitleText');
+      const tourCardDesc = document.getElementById('tourCardDesc');
+      const tourCtaLink = document.getElementById('tourCtaLink');
       
       if (!slides.length) return;
       
       let currentIndex = 0;
       let autoPlayTimer = null;
+      let progressTimer = null;
+      let progressVal = 0;
+      let isTourActive = false;
+      let tourStepIndex = 0;
       const totalSlides = slides.length;
-      const intervalDuration = 4800;
+      const intervalDuration = 5200; // 5.2s per slide
+      const tickRate = 50;
+      const stepIncrement = (tickRate / intervalDuration) * 100;
 
-      function goToSlide(index) {
+      // Product Tour Steps Data
+      const tourSteps = [
+        {
+          index: 0,
+          badge: '📍 Step 1 of 5: Review Hub',
+          title: 'Multi-Platform Review Hub',
+          desc: 'One smart link gives customers direct choice between Google, Facebook, Instagram, YouTube, and Video Reviews with smart copy-paste templates.',
+          link: "{{ url('/u/digitalvyapariofficial') }}"
+        },
+        {
+          index: 1,
+          badge: '📍 Step 2 of 5: Video Studio',
+          title: 'Live Selfie Video Reviews',
+          desc: 'Zero app installation required! Customers capture authentic 60-second video testimonials directly through their camera with instant cloud storage.',
+          link: "{{ url('/u/digitalvyapariofficial') }}"
+        },
+        {
+          index: 2,
+          badge: '📍 Step 3 of 5: Smart Stands',
+          title: '1-Tap Acrylic NFC & QR Stands',
+          desc: 'Custom-crafted acrylic stands on billing counters let customers tap their phones with NFC or scan QR to open your review page in 1 second.',
+          link: "{{ url('/u/digitalvyapariofficial') }}"
+        },
+        {
+          index: 3,
+          badge: '📍 Step 4 of 5: Rating Protection',
+          title: 'Private Feedback & Shield',
+          desc: 'Unhappy customers submit private feedback straight to management, protecting your public ratings while resolving complaints immediately.',
+          link: "{{ url('/u/digitalvyapariofficial') }}"
+        },
+        {
+          index: 4,
+          badge: '📍 Step 5 of 5: Live Analytics',
+          title: 'Real-Time Performance Tracking',
+          desc: 'Track QR scans, review conversions, customer feedback trends, and video testimonials in real-time from an intuitive business dashboard.',
+          link: "{{ url('/login') }}"
+        }
+      ];
+
+      function goToSlide(index, resetProgress = true) {
         if (index < 0) index = totalSlides - 1;
         if (index >= totalSlides) index = 0;
         
@@ -952,6 +1150,16 @@
         indicators.forEach((btn, i) => {
           btn.classList.toggle('active', i === currentIndex);
         });
+
+        if (resetProgress) {
+          progressVal = 0;
+          if (progressFill) progressFill.style.width = '0%';
+        }
+
+        // If tour is active, keep card in sync
+        if (isTourActive) {
+          updateTourCard(currentIndex);
+        }
       }
 
       function nextSlide() {
@@ -964,14 +1172,92 @@
 
       function startAutoPlay() {
         stopAutoPlay();
-        autoPlayTimer = setInterval(nextSlide, intervalDuration);
+        if (isTourActive) return; // Don't auto advance during manual tour
+
+        progressTimer = setInterval(() => {
+          progressVal += stepIncrement;
+          if (progressFill) {
+            progressFill.style.width = Math.min(100, progressVal) + '%';
+          }
+          if (progressVal >= 100) {
+            progressVal = 0;
+            nextSlide();
+          }
+        }, tickRate);
       }
 
       function stopAutoPlay() {
+        if (progressTimer) {
+          clearInterval(progressTimer);
+          progressTimer = null;
+        }
         if (autoPlayTimer) {
           clearInterval(autoPlayTimer);
           autoPlayTimer = null;
         }
+      }
+
+      // Interactive Tour Functions
+      function updateTourCard(stepIdx) {
+        tourStepIndex = stepIdx;
+        const data = tourSteps[tourStepIndex] || tourSteps[0];
+        if (tourBadgeStep) tourBadgeStep.textContent = data.badge;
+        if (tourCardTitleText) tourCardTitleText.textContent = data.title;
+        if (tourCardDesc) tourCardDesc.textContent = data.desc;
+        if (tourCtaLink) tourCtaLink.setAttribute('href', data.link);
+      }
+
+      function openTour(stepIdx = 0) {
+        isTourActive = true;
+        stopAutoPlay();
+        if (progressFill) progressFill.style.width = '100%';
+        if (toggleTourBtn) toggleTourBtn.classList.add('active');
+        if (tourOverlay) tourOverlay.style.display = 'block';
+        goToSlide(stepIdx, false);
+        updateTourCard(stepIdx);
+      }
+
+      function closeTour() {
+        isTourActive = false;
+        if (toggleTourBtn) toggleTourBtn.classList.remove('active');
+        if (tourOverlay) tourOverlay.style.display = 'none';
+        progressVal = 0;
+        startAutoPlay();
+      }
+
+      // Expose globally for "Tour Feature" buttons on slides
+      window.startTourAt = function(idx) {
+        openTour(idx);
+      };
+
+      if (toggleTourBtn) {
+        toggleTourBtn.addEventListener('click', () => {
+          if (isTourActive) {
+            closeTour();
+          } else {
+            openTour(currentIndex);
+          }
+        });
+      }
+
+      if (closeTourBtn) {
+        closeTourBtn.addEventListener('click', closeTour);
+      }
+
+      if (tourNextBtn) {
+        tourNextBtn.addEventListener('click', () => {
+          const nextIdx = (tourStepIndex + 1) % totalSlides;
+          goToSlide(nextIdx, false);
+          updateTourCard(nextIdx);
+        });
+      }
+
+      if (tourPrevBtn) {
+        tourPrevBtn.addEventListener('click', () => {
+          const prevIdx = (tourStepIndex - 1 + totalSlides) % totalSlides;
+          goToSlide(prevIdx, false);
+          updateTourCard(prevIdx);
+        });
       }
 
       indicators.forEach((indicator) => {
@@ -998,50 +1284,312 @@
 
       const carouselEl = document.getElementById('authQrCarousel');
       if (carouselEl) {
-        carouselEl.addEventListener('mouseenter', stopAutoPlay);
-        carouselEl.addEventListener('mouseleave', startAutoPlay);
+        carouselEl.addEventListener('mouseenter', () => {
+          if (!isTourActive) stopAutoPlay();
+        });
+        carouselEl.addEventListener('mouseleave', () => {
+          if (!isTourActive) startAutoPlay();
+        });
       }
 
-      // Slide 1: Review Hub Row Click & Hover Interactions
+      // Live Activity Stream Rotation
+      (function initActivityStream() {
+        const activityText = document.getElementById('activityText');
+        const activityTime = document.getElementById('activityTime');
+        const activityBox = document.getElementById('liveActivityStream');
+        if (!activityText || !activityBox) return;
+
+        const activities = [
+          { text: '⭐ <strong>New 5-star review</strong> on Google Maps', time: 'Just now' },
+          { text: '📹 <strong>New 60s video testimonial</strong> recorded', time: '1m ago' },
+          { text: '⚡ <strong>QR Stand scanned</strong> at Billing Counter', time: '2m ago' },
+          { text: '💬 <strong>Private executive message</strong> received', time: '4m ago' },
+          { text: '🚀 <strong>Facebook recommendation</strong> published', time: '6m ago' },
+          { text: '⭐ <strong>New 5-star Google review</strong> for TVS Showroom', time: '8m ago' }
+        ];
+
+        let actIdx = 0;
+        setInterval(() => {
+          actIdx = (actIdx + 1) % activities.length;
+          activityBox.style.opacity = '0';
+          activityBox.style.transform = 'translateY(6px)';
+          setTimeout(() => {
+            activityText.innerHTML = activities[actIdx].text;
+            if (activityTime) activityTime.textContent = activities[actIdx].time;
+            activityBox.style.opacity = '1';
+            activityBox.style.transform = 'translateY(0)';
+          }, 350);
+        }, 4200);
+      })();
+
+      // ==========================================
+      // MOBILE PHONE SCREEN: LINE-BY-LINE TOUR SYSTEM
+      // ==========================================
+      const mobileLines = [
+        {
+          id: 0,
+          platform: 'Google',
+          badge: 'Line 1 of 7 • Google Reviews',
+          title: '1. Google Review 1-Tap Launcher',
+          desc: 'Customers can instantly choose one-click pre-written 5-star review templates and paste them directly to Google Maps in under 15 seconds.',
+          btnText: 'Try Google Review Demo',
+          btnLink: '{{ url("/u/digitalvyapariofficial") }}',
+          x: 141, y: 95, w: 178, h: 32,
+          color: '#4285F4',
+          toast: 'Line 1: Google Reviews Highlighted'
+        },
+        {
+          id: 1,
+          platform: 'Facebook',
+          badge: 'Line 2 of 7 • Facebook Recommendations',
+          title: '2. Facebook Recommendation Direct Link',
+          desc: 'Directs clients straight to your official Facebook Business page with "Do you recommend?" pre-selected to boost social credibility.',
+          btnText: 'Try Facebook Review Demo',
+          btnLink: '{{ url("/u/digitalvyapariofficial") }}',
+          x: 141, y: 127, w: 178, h: 32,
+          color: '#1877F2',
+          toast: 'Line 2: Facebook Recommendations Selected'
+        },
+        {
+          id: 2,
+          platform: 'Instagram',
+          badge: 'Line 3 of 7 • Instagram Community',
+          title: '3. Instagram Profile & Tagging',
+          desc: 'Invites happy customers to follow your page, view behind-the-scenes stories, and tag your business handle in their posts.',
+          btnText: 'Follow On Instagram Demo',
+          btnLink: '{{ url("/u/digitalvyapariofficial") }}',
+          x: 141, y: 159, w: 178, h: 32,
+          color: '#E1306C',
+          toast: 'Line 3: Instagram Hub Selected'
+        },
+        {
+          id: 3,
+          platform: 'YouTube',
+          badge: 'Line 4 of 7 • YouTube Subscriber Growth',
+          title: '4. YouTube Channel Subscribe & Feedback',
+          desc: 'Seamlessly transforms foot traffic into subscribers by routing customers to your YouTube video channel and testimonial playlist.',
+          btnText: 'View YouTube Channel Demo',
+          btnLink: '{{ url("/u/digitalvyapariofficial") }}',
+          x: 141, y: 191, w: 178, h: 32,
+          color: '#FF0000',
+          toast: 'Line 4: YouTube Channel Selected'
+        },
+        {
+          id: 4,
+          platform: 'Video Testimonial',
+          badge: 'Line 5 of 7 • 60s Video Testimonial',
+          title: '5. In-Browser Selfie Video Studio',
+          desc: 'Zero app required! Customers record an authentic 60-second video shoutout right from their mobile browser with instant cloud sync.',
+          btnText: 'Try Video Recording Demo',
+          btnLink: '{{ url("/u/digitalvyapariofficial") }}',
+          x: 141, y: 223, w: 178, h: 32,
+          color: '#E11D48',
+          toast: 'Line 5: Video Studio Spotlight'
+        },
+        {
+          id: 5,
+          platform: 'Private Enquiry',
+          badge: 'Line 6 of 7 • Private Feedback Shield',
+          title: '6. Negative Review Interceptor (Private Shield)',
+          desc: 'Unhappy customers send their complaints privately to the owner or manager, protecting your public ratings while resolving issues fast.',
+          btnText: 'Try Private Shield Demo',
+          btnLink: '{{ url("/u/digitalvyapariofficial") }}',
+          x: 141, y: 255, w: 178, h: 32,
+          color: '#D97706',
+          toast: 'Line 6: Private Shield Selected'
+        },
+        {
+          id: 6,
+          platform: 'App Install',
+          badge: 'Line 7 of 7 • PWA Home Screen Shortcut',
+          title: '7. Progressive Web App (PWA) Install',
+          desc: 'Allows repeat customers and staff to save your custom review hub right to their phone home screen as a native-like web app without app store friction.',
+          btnText: 'Test PWA Install Demo',
+          btnLink: '{{ url("/u/digitalvyapariofficial") }}',
+          x: 161, y: 288, w: 138, h: 22,
+          color: '#2563EB',
+          toast: 'Line 7: App Install Highlighted'
+        }
+      ];
+
+      let currentMobileLine = 0;
+      let mobileTourAutoPlayTimer = null;
+      let isMobileTourPlaying = false;
+
+      const mltSpotlight = document.getElementById('mobileLineSpotlight');
+      const mltPointer = document.getElementById('mobileLinePointer');
+      const mltStepText = document.getElementById('mltStepText');
+      const mltTitle = document.getElementById('mltTitle');
+      const mltDesc = document.getElementById('mltDesc');
+      const mltDemoLink = document.getElementById('mltDemoLink');
+      const mltDemoBtnText = document.getElementById('mltDemoBtnText');
+      const mltPrevBtn = document.getElementById('mltPrevBtn');
+      const mltNextBtn = document.getElementById('mltNextBtn');
+      const mltAutoPlayBtn = document.getElementById('mltAutoPlayBtn');
+      const mltPlayIcon = document.getElementById('mltPlayIcon');
+      const mltStartTourBtn = document.getElementById('mltStartTourBtn');
       const hubRows = document.querySelectorAll('.hub-review-row');
       const hubToast = document.getElementById('hubToastMessage');
       const hubToastText = document.getElementById('hubToastText');
       let toastHideTimeout = null;
 
-      hubRows.forEach((row) => {
-        row.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const platform = row.getAttribute('data-platform') || 'Platform';
-          
-          // Toggle active styling
-          hubRows.forEach(r => r.classList.remove('active'));
-          row.classList.add('active');
+      window.selectMobileLine = function(idx, triggerToast = true) {
+        if (currentIndex !== 0) {
+          goToSlide(0);
+        }
+        stopAutoPlay();
+        if (idx < 0) idx = mobileLines.length - 1;
+        if (idx >= mobileLines.length) idx = 0;
+        currentMobileLine = idx;
+        const line = mobileLines[idx];
 
-          // Trigger toast message inside phone
-          if (hubToast && hubToastText) {
-            clearTimeout(toastHideTimeout);
-            if (platform === 'Video Testimonial') {
-              hubToastText.textContent = 'Opening Video Studio...';
-            } else if (platform === 'App Install') {
-              hubToastText.textContent = 'PWA Saved to Home Screen!';
-            } else {
-              hubToastText.textContent = `✓ ${platform} Form Selected`;
-            }
-            hubToast.classList.add('hub-toast-show');
-            
-            toastHideTimeout = setTimeout(() => {
-              hubToast.classList.remove('hub-toast-show');
-            }, 2400);
-          }
+        // 1. Move SVG Spotlight
+        if (mltSpotlight) {
+          mltSpotlight.setAttribute('x', line.x);
+          mltSpotlight.setAttribute('y', line.y);
+          mltSpotlight.setAttribute('width', line.w);
+          mltSpotlight.setAttribute('height', line.h);
+          mltSpotlight.setAttribute('stroke', line.color);
+          mltSpotlight.setAttribute('fill', `${line.color}18`);
+        }
 
-          // If clicking Video Testimonial, seamlessly transition to Slide 2!
-          if (platform === 'Video Testimonial') {
-            setTimeout(() => {
-              goToSlide(1);
-            }, 550);
+        // 2. Move SVG Pointer
+        if (mltPointer) {
+          const ptrX = line.x - 20;
+          const ptrY = line.y + (line.h / 2) - 6;
+          mltPointer.setAttribute('transform', `translate(${ptrX}, ${ptrY})`);
+          const ptrCircle = mltPointer.querySelector('circle');
+          if (ptrCircle) ptrCircle.setAttribute('fill', line.color);
+        }
+
+        // 3. Highlight row in SVG
+        hubRows.forEach((r, i) => {
+          if (i === idx) {
+            r.classList.add('active');
+          } else {
+            r.classList.remove('active');
           }
         });
+
+        // 4. Update Pills
+        for (let i = 0; i < 7; i++) {
+          const pill = document.getElementById(`linePill${i}`);
+          if (pill) {
+            if (i === idx) {
+              pill.classList.add('active');
+            } else {
+              pill.classList.remove('active');
+            }
+          }
+        }
+
+        // 5. Update Tour Box Card
+        if (mltStepText) mltStepText.textContent = line.badge;
+        if (mltTitle) mltTitle.textContent = line.title;
+        if (mltDesc) mltDesc.textContent = line.desc;
+        if (mltDemoBtnText) mltDemoBtnText.textContent = line.btnText;
+        if (mltDemoLink) mltDemoLink.setAttribute('href', line.btnLink);
+
+        // 6. Toast Notification on phone screen
+        if (triggerToast && hubToast && hubToastText) {
+          clearTimeout(toastHideTimeout);
+          hubToastText.textContent = line.toast;
+          hubToast.classList.add('hub-toast-show');
+          toastHideTimeout = setTimeout(() => {
+            hubToast.classList.remove('hub-toast-show');
+          }, 2200);
+        }
+      };
+
+      function startMobileTourAutoPlay() {
+        stopMobileTourAutoPlay();
+        isMobileTourPlaying = true;
+        if (mltAutoPlayBtn) mltAutoPlayBtn.classList.add('active');
+        if (mltPlayIcon) {
+          mltPlayIcon.classList.remove('bi-play-fill');
+          mltPlayIcon.classList.add('bi-pause-fill');
+        }
+        mobileTourAutoPlayTimer = setInterval(() => {
+          selectMobileLine((currentMobileLine + 1) % mobileLines.length);
+        }, 2600);
+      }
+
+      function stopMobileTourAutoPlay() {
+        isMobileTourPlaying = false;
+        if (mobileTourAutoPlayTimer) {
+          clearInterval(mobileTourAutoPlayTimer);
+          mobileTourAutoPlayTimer = null;
+        }
+        if (mltAutoPlayBtn) mltAutoPlayBtn.classList.remove('active');
+        if (mltPlayIcon) {
+          mltPlayIcon.classList.remove('bi-pause-fill');
+          mltPlayIcon.classList.add('bi-play-fill');
+        }
+      }
+
+      function toggleMobileTourAutoPlay() {
+        if (isMobileTourPlaying) {
+          stopMobileTourAutoPlay();
+        } else {
+          startMobileTourAutoPlay();
+        }
+      }
+
+      // Event Listeners for Mobile Tour Controls
+      if (mltPrevBtn) {
+        mltPrevBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          stopMobileTourAutoPlay();
+          selectMobileLine(currentMobileLine - 1);
+        });
+      }
+
+      if (mltNextBtn) {
+        mltNextBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          stopMobileTourAutoPlay();
+          selectMobileLine(currentMobileLine + 1);
+        });
+      }
+
+      if (mltAutoPlayBtn) {
+        mltAutoPlayBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleMobileTourAutoPlay();
+        });
+      }
+
+      if (mltStartTourBtn) {
+        mltStartTourBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          selectMobileLine((currentMobileLine + 1) % mobileLines.length);
+        });
+      }
+
+      // Direct row click in SVG mobile screen
+      hubRows.forEach((row, index) => {
+        row.style.cursor = 'pointer';
+        row.addEventListener('click', (e) => {
+          e.stopPropagation();
+          stopMobileTourAutoPlay();
+          selectMobileLine(index, true);
+        });
       });
+
+      const slide0VisualCard = document.querySelector('.carousel-slide[data-index="0"] .slide-visual-card');
+      if (slide0VisualCard) {
+        slide0VisualCard.addEventListener('mouseenter', () => {
+          stopAutoPlay();
+        });
+        slide0VisualCard.addEventListener('mouseleave', () => {
+          if (!isTourActive && !isMobileTourPlaying) {
+            startAutoPlay();
+          }
+        });
+      }
+
+      // Initialize Line 0 on load
+      selectMobileLine(0, false);
 
       // Slide 2: Mobile Live Video Recording Interactions
       let isRecording = true;
@@ -1175,6 +1723,29 @@
           }
         });
       }
+
+      // Mobile Viewport Tab Switcher Controller
+      window.switchMobileAuthView = function(mode) {
+        const heroPanel = document.querySelector('.auth-hero-panel');
+        const formPanel = document.querySelector('.auth-form-panel');
+        const tabLogin = document.getElementById('tabShowLogin');
+        const tabTour = document.getElementById('tabShowTour');
+        if (mode === 'tour') {
+          if (heroPanel) heroPanel.classList.add('mobile-active');
+          if (formPanel) formPanel.classList.add('mobile-hidden');
+          if (tabTour) tabTour.classList.add('active');
+          if (tabLogin) tabLogin.classList.remove('active');
+          stopAutoPlay();
+          if (typeof selectMobileLine === 'function') {
+            selectMobileLine(0, false);
+          }
+        } else {
+          if (heroPanel) heroPanel.classList.remove('mobile-active');
+          if (formPanel) formPanel.classList.remove('mobile-hidden');
+          if (tabLogin) tabLogin.classList.add('active');
+          if (tabTour) tabTour.classList.remove('active');
+        }
+      };
 
       startAutoPlay();
     })();

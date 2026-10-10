@@ -46,7 +46,7 @@
                   <i class="bi bi-grid-fill"></i> Multi-Platform Review Hub
                 </div>
                 
-                <div class="slide-graphic-container">
+                <div class="slide-graphic-container is-phone-graphic">
                   <!-- High-Fidelity Realistic Smartphone Review Hub Showcase -->
                   <svg class="slide-graphic-svg" viewBox="0 0 460 415" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
@@ -258,7 +258,7 @@
                   <i class="bi bi-camera-video-fill"></i> Live Video Testimonials
                 </div>
                 
-                <div class="slide-graphic-container">
+                <div class="slide-graphic-container is-phone-graphic">
                   <!-- Tall Realistic Smartphone With Live Recording Activity -->
                   <svg class="slide-graphic-svg" viewBox="0 0 460 415" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
