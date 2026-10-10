@@ -269,7 +269,7 @@
             transition: all 0.3s ease;
         }
 
-        /* Brand Logo Avatar (Default / Initial State) */
+        /* Brand Logo Avatar (Default / Initial State - Large & Prominent) */
         .brand-avatar-box {
             display: inline-flex;
             align-items: center;
@@ -277,26 +277,32 @@
             background: #ffffff;
             border: 1px solid #f1f5f9;
             box-shadow: 
-                0 14px 35px -6px rgba(15, 23, 42, 0.09),
-                0 0 0 1px rgba(226, 232, 240, 0.8);
-            border-radius: 26px;
-            padding: 14px 24px;
+                0 16px 40px -6px rgba(15, 23, 42, 0.12),
+                0 0 0 1px rgba(226, 232, 240, 0.85);
+            border-radius: 28px;
+            padding: 8px 12px;
             margin-bottom: 1.5rem;
+            min-width: 150px;
+            min-height: 150px;
             transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
         }
 
         .brand-avatar-box:hover {
-            transform: translateY(-2px);
+            transform: translateY(-3px) scale(1.02);
             box-shadow: 
-                0 18px 40px -6px rgba(15, 23, 42, 0.14),
-                0 0 0 1px rgba(203, 213, 225, 0.9);
+                0 20px 45px -6px rgba(15, 23, 42, 0.16),
+                0 0 0 1px rgba(203, 213, 225, 0.95);
         }
 
         .brand-avatar-img {
-            max-height: 90px;
-            max-width: 190px;
+            max-height: 160px;
+            max-width: 280px;
+            min-height: 140px;
+            min-width: 140px;
+            width: auto;
+            height: auto;
             object-fit: contain;
-            border-radius: 12px;
+            border-radius: 20px;
         }
 
         /* Luminous Golden Stars */
@@ -397,23 +403,30 @@
             transition: all 0.2s ease;
         }
 
-        /* State 2: Positive Feedback Platforms View (Fits Gracefully Without Window Scroll) */
+        /* State 2: Positive Feedback Platforms View */
         .more_three_star .brand-avatar-box {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             background: #ffffff;
             border: 1px solid #f1f5f9;
-            box-shadow: 0 8px 20px -3px rgba(15, 23, 42, 0.06);
-            border-radius: 18px;
-            padding: 8px 18px;
-            margin-bottom: 0.65rem;
+            box-shadow: 0 10px 25px -4px rgba(15, 23, 42, 0.08);
+            border-radius: 22px;
+            padding: 8px 14px;
+            margin-bottom: 0.85rem;
+            min-width: 110px;
+            min-height: 110px;
         }
 
         .more_three_star .brand-avatar-img {
-            max-height: 52px;
-            max-width: 135px;
+            max-height: 110px;
+            max-width: 220px;
+            min-height: 95px;
+            min-width: 95px;
+            width: auto;
+            height: auto;
             object-fit: contain;
+            border-radius: 14px;
         }
 
         .more_three_star .rating-stars-badge {
@@ -935,12 +948,12 @@
         }
 
         .executive-avatar-core {
-            width: 76px;
-            height: 76px;
-            border-radius: 22px;
+            width: 104px;
+            height: 104px;
+            border-radius: 26px;
             background: #ffffff;
-            padding: 7px;
-            box-shadow: 0 12px 30px -4px rgba(99, 102, 241, 0.22), 0 0 0 1px rgba(99, 102, 241, 0.15);
+            padding: 8px;
+            box-shadow: 0 14px 35px -4px rgba(99, 102, 241, 0.25), 0 0 0 1px rgba(99, 102, 241, 0.15);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1480,6 +1493,19 @@
         }
 
         @media (max-width: 480px) {
+            .brand-avatar-box {
+                min-width: 130px;
+                min-height: 130px;
+                padding: 6px 10px;
+                border-radius: 22px;
+                margin-bottom: 1.25rem;
+            }
+            .brand-avatar-img {
+                min-height: 115px;
+                min-width: 115px;
+                max-height: 135px;
+                max-width: 220px;
+            }
             .left-content-col {
                 padding: 3rem 0.75rem 1.5rem 0.75rem;
             }
@@ -2042,7 +2068,7 @@
                     <div class="text-center position-relative mb-3" style="z-index: 2;">
                         <div class="executive-avatar-wrapper">
                             <div class="executive-avatar-core">
-                                <img src="{{$user->logo}}" alt="{{$user->name}}" class="executive-avatar-img" style="width: 62px; height: 62px; max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 16px;">
+                                <img src="{{$user->logo}}" alt="{{$user->name}}" class="executive-avatar-img" style="width: 88px; height: 88px; max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 20px;">
                             </div>
                             <div class="executive-avatar-verified" title="Verified Direct Channel">
                                 <i class="fa-solid fa-shield-halved"></i>
