@@ -139,10 +139,42 @@ class ReviewController extends Controller
                     'private' => 7,
                     'website' => 8,
                 ];
+                $defaultIcons = [
+                    'google' => URL::to('frontend/images/google.png'),
+                    'facebook' => URL::to('frontend/images/facebook.png'),
+                    'instagram' => URL::to('frontend/images/instagram.png'),
+                    'youtube' => URL::to('frontend/images/youtube.png'),
+                    'whatsapp' => URL::to('frontend/images/whatsapp.png'),
+                    'record' => URL::to('frontend/images/record.png'),
+                    'private' => URL::to('frontend/images/private.png'),
+                    'website' => URL::to('frontend/images/website.png'),
+                ];
+                $defaultNames = [
+                    'google' => 'Google',
+                    'facebook' => 'Facebook',
+                    'instagram' => 'Instagram',
+                    'youtube' => 'Youtube',
+                    'whatsapp' => 'WhatsApp',
+                    'record' => 'Video Testimonial',
+                    'private' => 'Private Enquiry',
+                    'website' => 'Website',
+                ];
                 $orderIndex = 1;
                 foreach (Integration::where('user_id', Auth::user()->id)->get() as $uInt) {
+                    $dirty = false;
                     if ($uInt->button_order === null || $uInt->button_order == 0) {
                         $uInt->button_order = $defaultOrders[$uInt->type] ?? $orderIndex;
+                        $dirty = true;
+                    }
+                    if (empty($uInt->button_icon) && isset($defaultIcons[$uInt->type])) {
+                        $uInt->button_icon = $defaultIcons[$uInt->type];
+                        $dirty = true;
+                    }
+                    if (empty($uInt->button_name) && isset($defaultNames[$uInt->type])) {
+                        $uInt->button_name = $defaultNames[$uInt->type];
+                        $dirty = true;
+                    }
+                    if ($dirty) {
                         $uInt->save();
                     }
                     $orderIndex++;

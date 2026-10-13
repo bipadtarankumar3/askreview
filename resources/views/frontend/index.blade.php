@@ -1679,7 +1679,36 @@
                             @if (isset($integrationList[0]) && $integrationList[0]->button_order != '')
                                 @foreach ($integrationList as $item)
                                     @php
-                                        $platformSlug = strtolower(trim($item->button_name ?? $item->type ?? ''));
+                                        $defaultIcons = [
+                                            'google' => asset('frontend/images/google.png'),
+                                            'facebook' => asset('frontend/images/facebook.png'),
+                                            'instagram' => asset('frontend/images/instagram.png'),
+                                            'youtube' => asset('frontend/images/youtube.png'),
+                                            'whatsapp' => asset('frontend/images/whatsapp.png'),
+                                            'record' => asset('frontend/images/record.png'),
+                                            'private' => asset('frontend/images/private.png'),
+                                            'website' => asset('frontend/images/website.png'),
+                                        ];
+                                        $defaultNames = [
+                                            'google' => 'Google',
+                                            'facebook' => 'Facebook',
+                                            'instagram' => 'Instagram',
+                                            'youtube' => 'Youtube',
+                                            'whatsapp' => 'WhatsApp',
+                                            'record' => 'Video Testimonial',
+                                            'private' => 'Private Message',
+                                            'website' => 'Website',
+                                        ];
+
+                                        $rawIcon = $item->button_icon ?? null;
+                                        if (!empty($rawIcon)) {
+                                            $itemIcon = (str_starts_with($rawIcon, 'http://') || str_starts_with($rawIcon, 'https://')) ? $rawIcon : asset($rawIcon);
+                                        } else {
+                                            $itemIcon = $defaultIcons[$item->type] ?? asset('frontend/images/website.png');
+                                        }
+                                        $itemName = !empty($item->button_name) ? $item->button_name : ($defaultNames[$item->type] ?? ucfirst($item->type));
+
+                                        $platformSlug = strtolower(trim($itemName ?: $item->type ?: ''));
                                         $platformClass = '';
                                         if (str_contains($platformSlug, 'google')) $platformClass = 'platform-google';
                                         elseif (str_contains($platformSlug, 'facebook')) $platformClass = 'platform-facebook';
@@ -1695,7 +1724,7 @@
                                                 </div>
                                                 <div class="platform-info-text">
                                                     <div class="platform-name">
-                                                        <span>{{$item->button_name}}</span>
+                                                        <span>{{$itemName}}</span>
                                                         <span class="pulsing-rec-dot"></span>
                                                     </div>
                                                     <p class="platform-hint">Record a 60-sec video shoutout</p>
@@ -1712,10 +1741,7 @@
                                                     <i class="fa-solid fa-shield-halved fa-lg"></i>
                                                 </div>
                                                 <div class="platform-info-text">
-                                                    <div class="platform-name d-flex align-items-center gap-1.5">
-                                                        Private Message
-                                                        <span style="background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; font-size: 0.62rem; font-weight: 800; padding: 2px 7px; border-radius: 9999px; letter-spacing: 0.03em;"><i class="fa fa-crown"></i> PRO</span>
-                                                    </div>
+                                                    <div class="platform-name">Private Message</div>
                                                     <p class="platform-hint">Direct confidential message to leadership</p>
                                                 </div>
                                                 <div class="platform-chevron-wrap">
@@ -1728,10 +1754,10 @@
                                             @if (isset($googleFeedbackTemplates) && count($googleFeedbackTemplates) > 0)
                                                 <div class="platform-btn-link platform-google" onclick="open_google_reviews_popup('{{$item->review_links}}')">
                                                     <div class="platform-icon-wrap">
-                                                        <img src="{{$item->button_icon}}" alt="Google">
+                                                        <img src="{{$itemIcon}}" alt="{{$itemName}}">
                                                     </div>
                                                     <div class="platform-info-text">
-                                                        <div class="platform-name">{{$item->button_name}}</div>
+                                                        <div class="platform-name">{{$itemName}}</div>
                                                         <p class="platform-hint">Pick pre-written review & paste</p>
                                                     </div>
                                                     <div class="platform-chevron-wrap">
@@ -1741,10 +1767,10 @@
                                             @else
                                                 <a href="{{$item->review_links}}" onclick="review_links_analytics('{{$item->type}}')" target="_blank" class="platform-btn-link platform-google">
                                                     <div class="platform-icon-wrap">
-                                                        <img src="{{$item->button_icon}}" alt="Google">
+                                                        <img src="{{$itemIcon}}" alt="{{$itemName}}">
                                                     </div>
                                                     <div class="platform-info-text">
-                                                        <div class="platform-name">{{$item->button_name}}</div>
+                                                        <div class="platform-name">{{$itemName}}</div>
                                                         <p class="platform-hint">Review directly on Google</p>
                                                     </div>
                                                     <div class="platform-chevron-wrap">
@@ -1757,13 +1783,13 @@
                                         @if ($item->status == 'active')
                                             <a href="{{$item->review_links}}" onclick="review_links_analytics('{{$item->type}}')" target="_blank" class="platform-btn-link {{ $platformClass }}">
                                                 <div class="platform-icon-wrap">
-                                                    <img src="{{$item->button_icon}}" alt="{{$item->button_name}}">
+                                                    <img src="{{$itemIcon}}" alt="{{$itemName}}">
                                                 </div>
                                                 <div class="platform-info-text">
-                                                    <div class="platform-name">{{$item->button_name}}</div>
+                                                    <div class="platform-name">{{$itemName}}</div>
                                                     @php
                                                         $pType = strtolower(trim($item->type ?? ''));
-                                                        $pName = strtolower(trim($item->button_name ?? ''));
+                                                        $pName = strtolower(trim($itemName));
                                                     @endphp
                                                     @if ($pType == 'facebook' || str_contains($pName, 'facebook'))
                                                         <p class="platform-hint">Recommend us on Facebook</p>
@@ -1774,7 +1800,7 @@
                                                     @elseif ($pType == 'whatsapp' || str_contains($pName, 'whatsapp'))
                                                         <p class="platform-hint">Chat directly with our team</p>
                                                     @else
-                                                        <p class="platform-hint">Review us on {{$item->button_name}}</p>
+                                                        <p class="platform-hint">Review us on {{$itemName}}</p>
                                                     @endif
                                                 </div>
                                                 <div class="platform-chevron-wrap">
@@ -1894,10 +1920,7 @@
                                             <i class="fa-solid fa-shield-halved fa-lg"></i>
                                         </div>
                                         <div class="platform-info-text">
-                                            <div class="platform-name d-flex align-items-center gap-1.5">
-                                                Private Message
-                                                <span style="background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; font-size: 0.62rem; font-weight: 800; padding: 2px 7px; border-radius: 9999px; letter-spacing: 0.03em;"><i class="fa fa-crown"></i> PRO</span>
-                                            </div>
+                                            <div class="platform-name">Private Message</div>
                                             <p class="platform-hint">Direct confidential message to leadership</p>
                                         </div>
                                         <div class="platform-chevron-wrap">
