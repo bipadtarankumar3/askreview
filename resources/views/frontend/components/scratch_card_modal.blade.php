@@ -279,12 +279,12 @@
                     @endphp
 
                     <div class="voucher-actions-wrap pt-1 pb-1 {{ !empty($scratchCardExistingLead) ? '' : 'd-none' }}" id="scratchClaimedActionsWrap" style="{{ !empty($scratchCardExistingLead) ? 'display: block;' : 'display: none;' }}">
-                        @if(!empty($userPhone))
+                        <!-- @if(!empty($userPhone))
                             <a href="https://wa.me/{{ $userPhone }}?text={{ urlencode($waMsg) }}" target="_blank" class="btn btn-whatsapp-voucher w-100 d-flex align-items-center justify-content-center gap-2 mb-3">
                                 <i class="fa-brands fa-whatsapp fs-5"></i>
                                 <span>Send Voucher via WhatsApp</span>
                             </a>
-                        @endif
+                        @endif -->
 
                         <button type="button" class="btn btn-light w-100 btn-done-close text-muted py-2.5" onclick="close_scratch_card_modal()">
                             Done &amp; Return to Review
