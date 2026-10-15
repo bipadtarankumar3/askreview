@@ -178,9 +178,15 @@
                 </div>
             </div>
             <div class="col-lg-4 col-12 text-lg-end mt-3 mt-lg-0">
-                <button type="button" class="btn btn-warning fw-bold px-4 py-2.5 me-2" data-bs-toggle="modal" data-bs-target="#createScratchModal" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);">
-                    <i class="ti ti-plus me-1"></i> Create Scratch Card
-                </button>
+                @if($hasAccess)
+                    <button type="button" class="btn btn-warning fw-bold px-4 py-2.5 me-2" data-bs-toggle="modal" data-bs-target="#createScratchModal" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);">
+                        <i class="ti ti-plus me-1"></i> Create Scratch Card
+                    </button>
+                @else
+                    <a href="{{ url('admin/user_payments_list') }}" class="btn btn-warning fw-bold px-4 py-2.5 me-2" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);">
+                        <i class="ti ti-lock me-1"></i> Upgrade to Unlock
+                    </a>
+                @endif
                 <a href="{{ url('u/' . ($user->name_url ?? '')) }}" target="_blank" class="btn btn-outline-light px-3 py-2.5" style="border-radius: 12px;" title="View Live Landing Page">
                     <i class="ti ti-external-link"></i> View Live Page
                 </a>

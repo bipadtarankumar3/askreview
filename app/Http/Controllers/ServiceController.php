@@ -262,10 +262,18 @@ class ServiceController extends Controller
 
         if(Auth::check()){
 
-            $array['title'] = "Support";
-            return view('user.support',$array);
+            $user = Auth::user();
+            $array['title'] = "Help & Support";
+            $array['user'] = $user;
+
+            if ($request->ajax()) {
+                return view('user.support_modal', $array);
+            }
+
+            return view('user.support', $array);
 
         }
+        return redirect('login');
     }
 
     public function service_payment_success($payment_id){

@@ -1169,7 +1169,7 @@
                   </a>
                 </li>
                 <li class="sidebar-item">
-                  <a class="sidebar-link" href="javascript:void(0)" onclick="get_support()" aria-expanded="false">
+                  <a class="sidebar-link {{ Request::is('admin/service_support*') ? 'active' : '' }}" href="{{URL::to('admin/service_support')}}" aria-expanded="false">
                     <span><i class="ti ti-headset"></i></span>
                     <span class="hide-menu">Need Support?</span>
                   </a>
