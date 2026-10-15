@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Payment;
 use App\Models\ScratchCard;
@@ -259,6 +260,15 @@ class ScratchCardController extends Controller
         $user = Auth::user();
         $card = ScratchCard::where('user_id', $user->id)->where('id', $id)->first();
         if ($card) {
+            // Block deletion if leads exist
+            $leadsCount = ScratchCardLead::where('scratch_card_id', $card->id)->count();
+            if ($leadsCount > 0) {
+                return redirect()->route('scratch_cards.index', ['card_id' => $card->id])->with([
+                    'messege' => "Cannot delete scratch card '{$card->title}'! It currently has {$leadsCount} customer lead(s). Please delete all associated leads first.",
+                    'alert-type' => 'error'
+                ]);
+            }
+
             if (!empty($card->image) && file_exists(public_path($card->image))) {
                 @unlink(public_path($card->image));
             }
@@ -270,6 +280,76 @@ class ScratchCardController extends Controller
         }
 
         return back()->with(['messege' => 'Card not found', 'alert-type' => 'error']);
+    }
+
+    /**
+     * Delete a single customer lead
+     */
+    public function destroyLead($id)
+    {
+        if (!Auth::check()) {
+            return redirect('login');
+        }
+
+        $user = Auth::user();
+        $lead = ScratchCardLead::where('user_id', $user->id)->where('id', $id)->first();
+        if ($lead) {
+            $lead->delete();
+            return back()->with([
+                'messege' => 'Customer lead deleted successfully.',
+                'alert-type' => 'success'
+            ]);
+        }
+
+        return back()->with(['messege' => 'Customer lead not found.', 'alert-type' => 'error']);
+    }
+
+    /**
+     * AJAX Delete a customer lead
+     */
+    public function destroyLeadAjax(Request $request)
+    {
+        if (!Auth::check()) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
+        }
+
+        $user = Auth::user();
+        $lead = ScratchCardLead::where('user_id', $user->id)->where('id', $request->lead_id)->first();
+        if ($lead) {
+            $cardId = $lead->scratch_card_id;
+            $lead->delete();
+            $remaining = ScratchCardLead::where('scratch_card_id', $cardId)->count();
+            return response()->json([
+                'success' => true,
+                'message' => 'Customer lead deleted.',
+                'remaining_leads' => $remaining
+            ]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Lead not found.'], 404);
+    }
+
+    /**
+     * Delete all leads for a specific scratch card
+     */
+    public function destroyAllLeadsForCard($id)
+    {
+        if (!Auth::check()) {
+            return redirect('login');
+        }
+
+        $user = Auth::user();
+        $card = ScratchCard::where('user_id', $user->id)->where('id', $id)->first();
+        if ($card) {
+            $count = ScratchCardLead::where('user_id', $user->id)->where('scratch_card_id', $card->id)->count();
+            ScratchCardLead::where('user_id', $user->id)->where('scratch_card_id', $card->id)->delete();
+            return back()->with([
+                'messege' => "Deleted {$count} lead(s) for '{$card->title}'. You can now delete this scratch card.",
+                'alert-type' => 'success'
+            ]);
+        }
+
+        return back()->with(['messege' => 'Card not found.', 'alert-type' => 'error']);
     }
 
     /**
@@ -401,12 +481,38 @@ class ScratchCardController extends Controller
      */
     public function submitCustomerLead(Request $request)
     {
-        $request->validate([
-            'customer_name' => 'required|string|max:255',
-            'customer_phone' => 'required|string|max:50',
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+            'customer_name' => 'required|string|min:2|max:255',
+            'customer_phone' => [
+                'required',
+                'string',
+                'regex:/^(?:(?:\+|0{0,2})91[\s-]?)?[0]?[6-9]\d{9}$/'
+            ],
             'customer_email' => 'nullable|email|max:255',
             'scratch_card_id' => 'required|integer',
+        ], [
+            'customer_name.required' => 'Please enter your full name.',
+            'customer_name.min' => 'Please enter at least 2 characters for your name.',
+            'customer_phone.required' => 'Please enter your 10-digit mobile number.',
+            'customer_phone.regex' => 'Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9.'
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'status' => false,
+                'message' => $validator->errors()->first(),
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        // Normalize phone number to clean 10-digit string
+        $cleanPhone = preg_replace('/[^0-9]/', '', $request->customer_phone);
+        if (strlen($cleanPhone) === 12 && str_starts_with($cleanPhone, '91')) {
+            $cleanPhone = substr($cleanPhone, 2);
+        } elseif (strlen($cleanPhone) === 11 && str_starts_with($cleanPhone, '0')) {
+            $cleanPhone = substr($cleanPhone, 1);
+        }
 
         $user = null;
         if ($request->filled('user_id')) {
@@ -438,11 +544,17 @@ class ScratchCardController extends Controller
             ], 400);
         }
 
-        // Check if customer already submitted this phone for this card today
+        $ip = $request->ip();
+
+        // Check if customer already submitted from this phone or this IP address
         $existing = ScratchCardLead::where('user_id', $user->id)
             ->where('scratch_card_id', $card->id)
-            ->where('customer_phone', $request->customer_phone)
-            ->whereDate('created_at', date('Y-m-d'))
+            ->where(function($q) use ($cleanPhone, $ip) {
+                $q->where('customer_phone', $cleanPhone);
+                if (!empty($ip)) {
+                    $q->orWhere('ip_address', $ip);
+                }
+            })
             ->first();
 
         if ($existing) {
@@ -450,23 +562,41 @@ class ScratchCardController extends Controller
                 'success' => true,
                 'status' => true,
                 'already_claimed' => true,
-                'message' => 'You have already claimed this offer today!',
+                'message' => 'You have already claimed this offer from this device/IP!',
                 'coupon_code' => $existing->coupon_code,
                 'offer_won' => $existing->offer_won
             ]);
         }
 
-        // Save new lead
+        // Save new lead with normalized phone and IP address
         $lead = ScratchCardLead::create([
             'user_id' => $user->id,
             'scratch_card_id' => $card->id,
             'customer_name' => trim($request->customer_name),
-            'customer_phone' => trim($request->customer_phone),
+            'customer_phone' => $cleanPhone,
             'customer_email' => $request->customer_email ? trim($request->customer_email) : null,
             'offer_won' => $card->offer_text,
             'coupon_code' => $card->coupon_code,
+            'ip_address' => $ip,
             'status' => 'claimed'
         ]);
+
+        // Record scratch IP log if not already recorded
+        if (!empty($ip)) {
+            $alreadyLogged = DB::table('scratch_card_ip_logs')
+                ->where('scratch_card_id', $card->id)
+                ->where('ip_address', $ip)
+                ->exists();
+            if (!$alreadyLogged) {
+                DB::table('scratch_card_ip_logs')->insert([
+                    'user_id' => $user->id,
+                    'scratch_card_id' => $card->id,
+                    'ip_address' => $ip,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+        }
 
         return response()->json([
             'success' => true,
@@ -481,16 +611,44 @@ class ScratchCardController extends Controller
 
     /**
      * Public AJAX endpoint: Increment scratch count when customer starts scratching
+     * Enforces: 1 IP can scratch 1 time only.
      */
     public function trackScratch(Request $request)
     {
         if ($request->filled('scratch_card_id')) {
             $card = ScratchCard::find($request->scratch_card_id);
             if ($card) {
+                $ip = $request->ip();
+
+                if (!empty($ip)) {
+                    $alreadyScratched = DB::table('scratch_card_ip_logs')
+                        ->where('scratch_card_id', $card->id)
+                        ->where('ip_address', $ip)
+                        ->exists();
+
+                    if ($alreadyScratched) {
+                        return response()->json([
+                            'success' => false,
+                            'allowed' => false,
+                            'already_scratched' => true,
+                            'message' => '1 IP can scratch 1 time only. You have already scratched this card.'
+                        ]);
+                    }
+
+                    // Record IP log
+                    DB::table('scratch_card_ip_logs')->insert([
+                        'user_id' => $card->user_id,
+                        'scratch_card_id' => $card->id,
+                        'ip_address' => $ip,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+
                 $card->increment('scratch_count');
-                return response()->json(['success' => true, 'scratches' => $card->scratch_count]);
+                return response()->json(['success' => true, 'allowed' => true, 'scratches' => $card->scratch_count]);
             }
         }
-        return response()->json(['success' => false], 400);
+        return response()->json(['success' => false, 'allowed' => false], 400);
     }
 }

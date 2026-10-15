@@ -267,15 +267,18 @@
         </div>
     @else
 
+        @php
+            $isLeadsTab = request('tab') === 'leads' || request('card_id') || request('search');
+        @endphp
         <!-- ── NAVIGATION TABS (CARDS vs LEADS) ── -->
         <ul class="nav nav-pills mb-4 gap-2" id="scratchTabs" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active fw-bold px-4 py-2" id="cards-tab" data-bs-toggle="pill" data-bs-target="#cards-content" type="button" role="tab" style="border-radius: 12px;">
+                <button class="nav-link {{ !$isLeadsTab ? 'active' : '' }} fw-bold px-4 py-2" id="cards-tab" data-bs-toggle="pill" data-bs-target="#cards-content" type="button" role="tab" style="border-radius: 12px;">
                     <i class="ti ti-cards me-1.5"></i> My Scratch Cards ({{ $cards->count() }})
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link fw-bold px-4 py-2" id="leads-tab" data-bs-toggle="pill" data-bs-target="#leads-content" type="button" role="tab" style="border-radius: 12px;">
+                <button class="nav-link {{ $isLeadsTab ? 'active' : '' }} fw-bold px-4 py-2" id="leads-tab" data-bs-toggle="pill" data-bs-target="#leads-content" type="button" role="tab" style="border-radius: 12px;">
                     <i class="ti ti-users me-1.5"></i> Customer Submissions &amp; Leads ({{ $leads->total() }})
                 </button>
             </li>
@@ -284,7 +287,7 @@
         <div class="tab-content" id="scratchTabsContent">
             
             <!-- ── TAB 1: SCRATCH CARDS MANAGEMENT ── -->
-            <div class="tab-pane fade show active" id="cards-content" role="tabpanel">
+            <div class="tab-pane fade {{ !$isLeadsTab ? 'show active' : '' }}" id="cards-content" role="tabpanel">
                 <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
                     <div>
                         <h4 class="fw-bold text-slate-800 mb-0">Configured Scratch Cards</h4>
@@ -399,9 +402,15 @@
                                                 <i class="ti ti-edit fs-5"></i>
                                             </button>
 
-                                            <a href="{{ route('scratch_cards.delete', $c->id) }}" onclick="return confirm('Are you sure you want to delete this scratch card?')" class="btn btn-outline-danger btn-sm px-2.5 py-1.5" style="border-radius: 8px;" title="Delete Card">
-                                                <i class="ti ti-trash fs-5"></i>
-                                            </a>
+                                            @if($c->leads_count > 0)
+                                                <button type="button" class="btn btn-outline-danger btn-sm px-2.5 py-1.5" style="border-radius: 8px;" onclick="cannotDeleteCardWithLeads({{ $c->id }}, '{{ addslashes($c->title) }}', {{ $c->leads_count }})" title="Cannot delete: has {{ $c->leads_count }} leads. Delete leads first.">
+                                                    <i class="ti ti-trash fs-5"></i>
+                                                </button>
+                                            @else
+                                                <a href="{{ route('scratch_cards.delete', $c->id) }}" onclick="return confirm('Are you sure you want to delete this scratch card?')" class="btn btn-outline-danger btn-sm px-2.5 py-1.5" style="border-radius: 8px;" title="Delete Card">
+                                                    <i class="ti ti-trash fs-5"></i>
+                                                </a>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -412,7 +421,7 @@
             </div>
 
             <!-- ── TAB 2: CUSTOMER LEADS SUBMISSIONS TABLE ── -->
-            <div class="tab-pane fade" id="leads-content" role="tabpanel">
+            <div class="tab-pane fade {{ $isLeadsTab ? 'show active' : '' }}" id="leads-content" role="tabpanel">
                 <div class="card border-0 shadow-sm" style="border-radius: 18px; overflow: hidden; background: #ffffff;">
                     <div class="p-4 border-bottom bg-white">
                         <div class="row align-items-center g-3">
@@ -532,13 +541,18 @@
                                             </span>
                                         </td>
                                         <td>
-                                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="toggleLeadStatus({{ $lead->id }}, '{{ $lead->status === 'redeemed' ? 'claimed' : 'redeemed' }}')" id="leadBtn{{ $lead->id }}">
-                                                @if($lead->status === 'redeemed')
-                                                    <i class="ti ti-arrow-back-up me-1"></i> Mark Claimed
-                                                @else
-                                                    <i class="ti ti-check me-1"></i> Mark Redeemed
-                                                @endif
-                                            </button>
+                                            <div class="d-flex align-items-center gap-1.5">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="toggleLeadStatus({{ $lead->id }}, '{{ $lead->status === 'redeemed' ? 'claimed' : 'redeemed' }}')" id="leadBtn{{ $lead->id }}">
+                                                    @if($lead->status === 'redeemed')
+                                                        <i class="ti ti-arrow-back-up me-1"></i> Claimed
+                                                    @else
+                                                        <i class="ti ti-check me-1"></i> Redeemed
+                                                    @endif
+                                                </button>
+                                                <a href="{{ route('scratch_cards.leads.delete', $lead->id) }}" onclick="return confirm('Are you sure you want to delete lead for {{ addslashes($lead->customer_name) }}?')" class="btn btn-sm btn-outline-danger px-2" title="Delete Customer Lead">
+                                                    <i class="ti ti-trash"></i>
+                                                </a>
+                                            </div>
                                         </td>
                                     </tr>
                                 @empty
@@ -700,7 +714,15 @@
                 </div>
 
                 <!-- Customer Submissions Table with exact Date & Time -->
-                <h5 class="fw-bold text-dark mb-2">Customers Who Scratched This Card</h5>
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <h5 class="fw-bold text-dark mb-0">Customers Who Scratched This Card</h5>
+                    <form id="modalPurgeLeadsForm" action="" method="POST" onsubmit="return confirm('Are you sure you want to delete ALL customer leads for this scratch card? This cannot be undone!')" class="d-inline-block">
+                        @csrf
+                        <button type="submit" class="btn btn-sm btn-outline-danger" id="btnModalPurgeLeads">
+                            <i class="ti ti-trash me-1"></i> Delete All Leads for Card
+                        </button>
+                    </form>
+                </div>
                 <div class="table-responsive" style="max-height: 280px; overflow-y: auto;">
                     <table class="table table-sm table-modern align-middle mb-0">
                         <thead>
@@ -710,6 +732,7 @@
                                 <th>Coupon</th>
                                 <th>Date &amp; Time</th>
                                 <th>Status</th>
+                                <th style="width: 50px;">Action</th>
                             </tr>
                         </thead>
                         <tbody id="modalCardLeadsTbody">
@@ -720,6 +743,44 @@
             </div>
             <div class="modal-footer border-0 pt-0 bg-light">
                 <button type="button" class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Cannot Delete Scratch Card with Leads -->
+<div class="modal fade" id="cannotDeleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 480px;">
+        <div class="modal-content border-0 shadow" style="border-radius: 20px;">
+            <div class="modal-body p-4 text-center">
+                <div style="width: 60px; height: 60px; border-radius: 50%; background: #fee2e2; color: #dc2626; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 1.8rem;">
+                    <i class="ti ti-alert-triangle"></i>
+                </div>
+                <h5 class="fw-bold text-slate-800 mb-2">Cannot Delete Scratch Card</h5>
+                <p class="text-muted mb-3" id="cannotDeleteDesc" style="font-size: 0.92rem; line-height: 1.45;">
+                    This scratch card has customer leads. You must first delete all associated customer leads before you can delete this card.
+                </p>
+                <div class="alert alert-warning py-2.5 px-3 small text-start d-flex align-items-center gap-2 mb-3.5" style="border-radius: 12px;">
+                    <i class="ti ti-info-circle text-warning fs-4 flex-shrink-0"></i>
+                    <div style="font-size: 0.82rem;"><strong>First delete the leads</strong> from this card, then delete the scratch card.</div>
+                </div>
+
+                <div class="d-flex flex-column gap-2 mt-2">
+                    <button type="button" class="btn btn-primary fw-bold py-2.5" onclick="viewCardLeadsFromCannotDelete()" style="border-radius: 12px;">
+                        <i class="ti ti-users me-1"></i> View &amp; Delete Leads for this Card
+                    </button>
+
+                    <form id="cannotDeletePurgeForm" action="" method="POST" onsubmit="return confirm('Are you sure you want to delete ALL customer leads for this scratch card? This cannot be undone!')">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-danger w-100 fw-bold py-2.5" style="border-radius: 12px;">
+                            <i class="ti ti-trash me-1"></i> Purge All Leads &amp; Unlock Deletion
+                        </button>
+                    </form>
+
+                    <button type="button" class="btn btn-light text-muted py-2" data-bs-dismiss="modal" style="border-radius: 12px;">
+                        Cancel
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -813,10 +874,20 @@ function openCardAnalyticsModal(cardId) {
                     ? '<span class="badge bg-success px-3 py-1.5"><span class="pulse-active-dot me-1"></span> LIVE ON PAGE</span>'
                     : '<span class="badge bg-secondary px-3 py-1.5">Inactive</span>';
 
-                // Leads list table
+                // Configure Purge Leads form for this card
+                var purgeForm = document.getElementById('modalPurgeLeadsForm');
+                var purgeBtn = document.getElementById('btnModalPurgeLeads');
+                if (purgeForm) {
+                    purgeForm.action = '{{ url("admin/scratch_cards/leads/delete_all_for_card") }}/' + card.id;
+                }
+                if (purgeBtn) {
+                    purgeBtn.style.display = leads.length > 0 ? 'inline-block' : 'none';
+                }
+
+                // Leads list table with single lead delete action
                 var tbody = document.getElementById('modalCardLeadsTbody');
                 if (leads.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">No customers have scratched this card yet.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted"><i class="ti ti-inbox fs-2 text-slate-300 d-block mb-1"></i>No customer leads for this scratch card yet.</td></tr>';
                 } else {
                     var html = '';
                     leads.forEach(function(l) {
@@ -830,6 +901,11 @@ function openCardAnalyticsModal(cardId) {
                             '<td><span class="font-monospace fw-bold text-primary">' + (l.coupon_code || '-') + '</span></td>' +
                             '<td><div class="fw-bold small">' + l.date_time + '</div><div class="text-muted" style="font-size: 0.72rem;">' + l.date_relative + '</div></td>' +
                             '<td><span class="badge ' + (l.status === 'redeemed' ? 'bg-success' : 'bg-warning text-dark') + ' text-capitalize">' + l.status + '</span></td>' +
+                            '<td>' +
+                                '<button type="button" class="btn btn-sm btn-outline-danger px-2" onclick="deleteModalLeadAjax(' + l.id + ', ' + card.id + ')" title="Delete Lead">' +
+                                    '<i class="ti ti-trash"></i>' +
+                                '</button>' +
+                            '</td>' +
                         '</tr>';
                     });
                     tbody.innerHTML = html;
@@ -845,6 +921,67 @@ function openCardAnalyticsModal(cardId) {
             console.error(err);
             alert('Error loading card analytics.');
         });
+}
+
+// Delete individual lead inside analytics modal via AJAX
+function deleteModalLeadAjax(leadId, cardId) {
+    if (!confirm('Are you sure you want to delete this customer lead?')) {
+        return;
+    }
+    fetch('{{ route("scratch_cards.leads.delete_ajax") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({ lead_id: leadId })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            // Refresh analytics modal
+            openCardAnalyticsModal(cardId);
+            if (data.remaining_leads === 0) {
+                // If this was the last lead, refresh the main view so card delete button unlocks
+                window.location.reload();
+            }
+        } else {
+            alert(data.message || 'Failed to delete lead.');
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert('Error deleting lead.');
+    });
+}
+
+// Cannot delete scratch card popup logic
+var currentCannotDeleteCardId = null;
+
+function cannotDeleteCardWithLeads(cardId, cardTitle, leadsCount) {
+    currentCannotDeleteCardId = cardId;
+    var descEl = document.getElementById('cannotDeleteDesc');
+    if (descEl) {
+        descEl.innerHTML = 'Scratch card <strong>"' + cardTitle + '"</strong> currently has <strong>' + leadsCount + ' customer lead(s)</strong>.<br>Cards with active leads cannot be deleted. First delete the leads, then you can delete the scratch card.';
+    }
+    var purgeForm = document.getElementById('cannotDeletePurgeForm');
+    if (purgeForm) {
+        purgeForm.action = '{{ url("admin/scratch_cards/leads/delete_all_for_card") }}/' + cardId;
+    }
+
+    var modal = new bootstrap.Modal(document.getElementById('cannotDeleteModal'));
+    modal.show();
+}
+
+function viewCardLeadsFromCannotDelete() {
+    var cannotModalEl = document.getElementById('cannotDeleteModal');
+    var cannotModal = bootstrap.Modal.getInstance(cannotModalEl);
+    if (cannotModal) {
+        cannotModal.hide();
+    }
+    if (currentCannotDeleteCardId) {
+        openCardAnalyticsModal(currentCannotDeleteCardId);
+    }
 }
 
 // Toggle lead status via AJAX

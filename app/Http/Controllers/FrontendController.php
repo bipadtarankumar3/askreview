@@ -270,10 +270,34 @@ class FrontendController extends Controller
                 $scratchAccess = \App\Http\Controllers\ScratchCardController::hasAccess($userDate);
                 $array['scratch_card_access_show'] = $scratchAccess;
                 $array['activeScratchCard'] = null;
+                $array['scratchCardAlreadyScratched'] = false;
+                $array['scratchCardExistingLead'] = null;
+
                 if ($scratchAccess) {
-                    $array['activeScratchCard'] = \App\Models\ScratchCard::where('user_id', $userDate->id)
+                    $activeCard = \App\Models\ScratchCard::where('user_id', $userDate->id)
                         ->where('status', 'active')
                         ->first();
+                    $array['activeScratchCard'] = $activeCard;
+
+                    if ($activeCard) {
+                        $visitorIp = request()->ip();
+
+                        // Check if lead already claimed from this IP
+                        $existingLead = \App\Models\ScratchCardLead::where('scratch_card_id', $activeCard->id)
+                            ->where('ip_address', $visitorIp)
+                            ->first();
+
+                        // Check if already logged as scratched from this IP
+                        $alreadyScratchedIp = DB::table('scratch_card_ip_logs')
+                            ->where('scratch_card_id', $activeCard->id)
+                            ->where('ip_address', $visitorIp)
+                            ->exists();
+
+                        if ($existingLead || $alreadyScratchedIp) {
+                            $array['scratchCardAlreadyScratched'] = true;
+                            $array['scratchCardExistingLead'] = $existingLead;
+                        }
+                    }
                 }
 
 

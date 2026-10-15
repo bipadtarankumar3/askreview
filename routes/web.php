@@ -305,6 +305,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
     Route::post('scratch_cards/activate/{id}', [ScratchCardController::class, 'activate'])->name('scratch_cards.activate');
     Route::post('scratch_cards/deactivate/{id}', [ScratchCardController::class, 'deactivate'])->name('scratch_cards.deactivate');
     Route::get('scratch_cards/delete/{id}', [ScratchCardController::class, 'destroy'])->name('scratch_cards.delete');
+    Route::get('scratch_cards/leads/delete/{id}', [ScratchCardController::class, 'destroyLead'])->name('scratch_cards.leads.delete');
+    Route::post('scratch_cards/leads/delete_ajax', [ScratchCardController::class, 'destroyLeadAjax'])->name('scratch_cards.leads.delete_ajax');
+    Route::post('scratch_cards/leads/delete_all_for_card/{id}', [ScratchCardController::class, 'destroyAllLeadsForCard'])->name('scratch_cards.leads.delete_all_for_card');
     Route::post('scratch_cards/update_lead_status', [ScratchCardController::class, 'updateLeadStatus'])->name('scratch_cards.update_lead_status');
     Route::get('scratch_cards/export_leads', [ScratchCardController::class, 'exportLeads'])->name('scratch_cards.export_leads');
     Route::get('scratch_cards/analytics/{id}', [ScratchCardController::class, 'cardAnalytics'])->name('scratch_cards.analytics');
