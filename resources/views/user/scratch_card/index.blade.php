@@ -288,14 +288,9 @@
             
             <!-- ── TAB 1: SCRATCH CARDS MANAGEMENT ── -->
             <div class="tab-pane fade {{ !$isLeadsTab ? 'show active' : '' }}" id="cards-content" role="tabpanel">
-                <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
-                    <div>
-                        <h4 class="fw-bold text-slate-800 mb-0">Configured Scratch Cards</h4>
-                        <small class="text-muted">You can create multiple scratch cards with custom images and offers, but only <strong>1 card can be active</strong> at a time.</small>
-                    </div>
-                    <button type="button" class="btn btn-primary fw-bold" data-bs-toggle="modal" data-bs-target="#createScratchModal" style="border-radius: 10px;">
-                        <i class="ti ti-plus me-1"></i> Add Scratch Card
-                    </button>
+                <div class="mb-3">
+                    <h4 class="fw-bold text-slate-800 mb-0">Configured Scratch Cards</h4>
+                    <small class="text-muted">You can create multiple scratch cards with custom images and offers, but only <strong>1 card can be active</strong> at a time.</small>
                 </div>
 
                 @if($cards->isEmpty())

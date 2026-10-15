@@ -1612,7 +1612,7 @@
 
                     <!-- Live Preview Footer with Custom CTA Button -->
                     <div style="padding: 11px 14px; background: #f8fafc; border-top: 1px solid #e2e8f0;">
-                      <a href="{{ URL::to('u/'.Auth::user()->user_name) }}" target="_blank" class="qr-flow-preview-btn">
+                      <a href="{{ URL::to('u/'.Auth::user()->name_url) }}" target="_blank" class="qr-flow-preview-btn">
                         <i class="ti ti-external-link" style="font-size: 0.95rem;"></i>
                         <span>Test & Preview Live QR Page</span>
                       </a>
