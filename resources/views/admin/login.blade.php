@@ -57,18 +57,29 @@
             <!-- SLIDE 1: Multi-Platform Review Hub (Matching /u/rajuranjanagency) -->
             <div class="carousel-slide active" data-index="0">
               <div class="slide-visual-card">
-                <div class="slide-badge-top">
-                  <i class="bi bi-grid-fill"></i> Multi-Platform Review Hub
+                <!-- Top Slide Header With Badge & Auto Button -->
+                <div class="slide-header-top">
+                  <div class="slide-badge-top">
+                    <i class="bi bi-grid-fill"></i> Multi-Platform Review Hub
+                  </div>
+                  <button type="button" class="slide-auto-play-btn" id="mltAutoPlayBtn" title="Auto-Tour Review Platforms">
+                    <i class="bi bi-play-fill" id="mltPlayIcon"></i>
+                    <span>Auto</span>
+                  </button>
                 </div>
                 
                 <div class="slide-graphic-container is-phone-graphic">
-                  <!-- High-Fidelity Realistic Smartphone Review Hub Showcase -->
+                  <!-- High-Fidelity Realistic Smartphone Review Hub Showcase (Enlarged) -->
                   <svg class="slide-graphic-svg" viewBox="0 0 460 415" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                       <linearGradient id="instaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" stop-color="#833ab4"/>
                         <stop offset="50%" stop-color="#fd1d1d"/>
                         <stop offset="100%" stop-color="#fcb045"/>
+                      </linearGradient>
+                      <linearGradient id="luckyBadgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#ef4444"/>
+                        <stop offset="100%" stop-color="#f59e0b"/>
                       </linearGradient>
                       <filter id="floatShadow" x="-10%" y="-10%" width="125%" height="125%">
                         <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="rgba(15,23,42,0.08)"/>
@@ -79,30 +90,30 @@
                     </defs>
 
                     <!-- Desk Base Shadow -->
-                    <ellipse cx="230" cy="408" rx="130" ry="6" fill="rgba(15,23,42,0.08)"/>
+                    <ellipse cx="230" cy="408" rx="140" ry="6" fill="rgba(15,23,42,0.08)"/>
                     
                     <!-- Side Physical Buttons -->
                     <!-- Volume Up -->
-                    <rect x="128" y="80" width="3" height="22" rx="1.5" fill="#475569"/>
+                    <rect x="115" y="80" width="3" height="22" rx="1.5" fill="#475569"/>
                     <!-- Volume Down -->
-                    <rect x="128" y="110" width="3" height="22" rx="1.5" fill="#475569"/>
+                    <rect x="115" y="110" width="3" height="22" rx="1.5" fill="#475569"/>
                     <!-- Power Button -->
-                    <rect x="329" y="90" width="3" height="30" rx="1.5" fill="#475569"/>
+                    <rect x="342" y="90" width="3" height="30" rx="1.5" fill="#475569"/>
 
-                    <!-- Main Smartphone Outer Frame (Chassis / Bezel) -->
-                    <rect x="131" y="6" width="198" height="396" rx="38" fill="#0f172a" stroke="#334155" stroke-width="2" filter="url(#phoneShadow)"/>
+                    <!-- Main Smartphone Outer Frame (Chassis / Bezel) - Bigger & Prominent -->
+                    <rect x="118" y="5" width="224" height="398" rx="38" fill="#0f172a" stroke="#334155" stroke-width="2" filter="url(#phoneShadow)"/>
                     
                     <!-- Smartphone Inner Screen Display -->
-                    <rect x="135" y="10" width="190" height="388" rx="34" fill="#ffffff"/>
+                    <rect x="123" y="9" width="214" height="390" rx="34" fill="#ffffff"/>
 
                     <!-- Top Dynamic Island Pill -->
-                    <rect x="195" y="15" width="70" height="13" rx="6.5" fill="#000000"/>
-                    <circle cx="248" cy="21.5" r="2.8" fill="#1e293b"/>
-                    <circle cx="248.5" cy="21" r="1" fill="#2563eb" opacity="0.6"/>
+                    <rect x="195" y="14" width="70" height="13" rx="6.5" fill="#000000"/>
+                    <circle cx="248" cy="20.5" r="2.8" fill="#1e293b"/>
+                    <circle cx="248.5" cy="20" r="1" fill="#2563eb" opacity="0.6"/>
 
                     <!-- Status Bar: Time & Connectivity Icons -->
-                    <text x="152" y="25" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.2" font-weight="700" fill="#0f172a">9:41</text>
-                    <g transform="translate(288, 18)">
+                    <text x="142" y="24" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.2" font-weight="700" fill="#0f172a">9:41</text>
+                    <g transform="translate(290, 17)">
                       <!-- Signal Bars -->
                       <rect x="0" y="5" width="1.8" height="3" rx="0.5" fill="#0f172a"/>
                       <rect x="2.8" y="3.5" width="1.8" height="4.5" rx="0.5" fill="#0f172a"/>
@@ -116,13 +127,13 @@
                     
                     <!-- Screen Content -->
                     <!-- Top Navigation: Back Button & Agency Header -->
-                    <g transform="translate(143, 36)">
+                    <g transform="translate(133, 34)">
                       <circle cx="7" cy="8" r="7" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
                       <path d="M8.5 6 L6 8 L8.5 10" stroke="#475569" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
                     </g>
                     
                     <!-- Business Logo Header Card (Center Top) -->
-                    <g transform="translate(202, 32)">
+                    <g transform="translate(202, 30)">
                       <rect x="0" y="0" width="56" height="23" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
                       <circle cx="12" cy="11.5" r="6" fill="#eff6ff"/>
                       <text x="12" y="14" font-family="'Plus Jakarta Sans', sans-serif" font-size="7" font-weight="900" fill="#2563eb" text-anchor="middle">R</text>
@@ -131,7 +142,7 @@
                     </g>
 
                     <!-- 5 Glowing Rating Stars -->
-                    <g transform="translate(193, 62)">
+                    <g transform="translate(193, 56)">
                       <polygon points="4.5,0 5.8,3 9,3.5 6.7,5.6 7.3,8.7 4.5,7.2 1.7,8.7 2.3,5.6 0,3.5 3.2,3" fill="#f59e0b"/>
                       <polygon points="4.5,0 5.8,3 9,3.5 6.7,5.6 7.3,8.7 4.5,7.2 1.7,8.7 2.3,5.6 0,3.5 3.2,3" fill="#f59e0b" transform="translate(16, 0)"/>
                       <polygon points="4.5,0 5.8,3 9,3.5 6.7,5.6 7.3,8.7 4.5,7.2 1.7,8.7 2.3,5.6 0,3.5 3.2,3" fill="#f59e0b" transform="translate(32, 0)"/>
@@ -140,97 +151,115 @@
                     </g>
 
                     <!-- Friendly Header -->
-                    <text x="230" y="80" font-family="'Plus Jakarta Sans', sans-serif" font-size="10.5" font-weight="800" fill="#0f172a" text-anchor="middle">Thank You!</text>
-                    <text x="230" y="89" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b" text-anchor="middle">Select your preferred platform below to leave us a quick review.</text>
+                    <text x="230" y="72" font-family="'Plus Jakarta Sans', sans-serif" font-size="9.5" font-weight="800" fill="#0f172a" text-anchor="middle">Thank You!</text>
+                    <text x="230" y="80" font-family="'Inter', sans-serif" font-size="4.8" font-weight="500" fill="#64748b" text-anchor="middle">Select your preferred platform below to leave us a quick review.</text>
 
                     <!-- 1. GOOGLE REVIEW CARD -->
-                    <g class="hub-review-row" data-platform="Google" transform="translate(144, 98)">
-                      <rect class="hub-card-bg" x="0" y="0" width="172" height="26" rx="7" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
-                      <circle cx="13" cy="13" r="8" fill="#f8fafc" stroke="#f1f5f9"/>
-                      <path d="M15.5 13 H13 V14.5 H14.6 C14.3 15.3 13.6 15.8 12.7 15.8 C11.4 15.8 10.4 14.7 10.4 13.3 C10.4 12 11.4 10.9 12.7 10.9 C13.3 10.9 13.9 11.1 14.3 11.5 L15.4 10.4 C14.7 9.7 13.7 9.3 12.7 9.3 C10.5 9.3 8.7 11.1 8.7 13.3 C8.7 15.5 10.5 17.3 12.7 17.3 C15 17.3 16.5 15.7 16.5 13.4 C16.5 13.1 16.4 12.8 16.4 12.6 L15.5 13 Z" fill="#4285F4"/>
-                      <text x="27" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Google</text>
-                      <text x="27" y="19" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b">Pick pre-written review &amp; paste</text>
-                      <circle cx="160" cy="13" r="5" fill="#f8fafc"/>
-                      <path class="row-arrow" d="M159 11 L161.5 13 L159 15" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
+                    <g class="hub-review-row" data-platform="Google" transform="translate(133, 86)">
+                      <rect class="hub-card-bg" x="0" y="0" width="194" height="24" rx="6.5" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+                      <circle cx="12" cy="12" r="7.5" fill="#f8fafc" stroke="#f1f5f9"/>
+                      <path d="M14.5 12 H12 V13.5 H13.6 C13.3 14.3 12.6 14.8 11.7 14.8 C10.4 14.8 9.4 13.7 9.4 12.3 C9.4 11 10.4 9.9 11.7 9.9 C12.3 9.9 12.9 10.1 13.3 10.5 L14.4 9.4 C13.7 8.7 12.7 8.3 11.7 8.3 C9.5 8.3 7.7 10.1 7.7 12.3 C7.7 14.5 9.5 16.3 11.7 16.3 C14 16.3 15.5 14.7 15.5 12.4 C15.5 12.1 15.4 11.8 15.4 11.6 L14.5 12 Z" fill="#4285F4"/>
+                      <text x="25" y="10.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Google</text>
+                      <text x="25" y="18" font-family="'Inter', sans-serif" font-size="4.8" font-weight="500" fill="#64748b">Pick pre-written review &amp; paste</text>
+                      <circle cx="182" cy="12" r="4.5" fill="#f8fafc"/>
+                      <path class="row-arrow" d="M181 10 L183.5 12 L181 14" stroke="#94a3b8" stroke-width="1.1" stroke-linecap="round"/>
                     </g>
 
                     <!-- 2. FACEBOOK REVIEW CARD -->
-                    <g class="hub-review-row" data-platform="Facebook" transform="translate(144, 130)">
-                      <rect class="hub-card-bg" x="0" y="0" width="172" height="26" rx="7" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
-                      <circle cx="13" cy="13" r="8" fill="#1877f2"/>
-                      <text x="13" y="16.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="9.5" font-weight="800" fill="#ffffff" text-anchor="middle">f</text>
-                      <text x="27" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Facebook</text>
-                      <text x="27" y="19" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b">Recommend us on Facebook</text>
-                      <circle cx="160" cy="13" r="5" fill="#f8fafc"/>
-                      <path class="row-arrow" d="M159 11 L161.5 13 L159 15" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
+                    <g class="hub-review-row" data-platform="Facebook" transform="translate(133, 114)">
+                      <rect class="hub-card-bg" x="0" y="0" width="194" height="24" rx="6.5" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+                      <circle cx="12" cy="12" r="7.5" fill="#1877f2"/>
+                      <text x="12" y="15.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="800" fill="#ffffff" text-anchor="middle">f</text>
+                      <text x="25" y="10.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Facebook</text>
+                      <text x="25" y="18" font-family="'Inter', sans-serif" font-size="4.8" font-weight="500" fill="#64748b">Recommend us on Facebook</text>
+                      <circle cx="182" cy="12" r="4.5" fill="#f8fafc"/>
+                      <path class="row-arrow" d="M181 10 L183.5 12 L181 14" stroke="#94a3b8" stroke-width="1.1" stroke-linecap="round"/>
                     </g>
 
                     <!-- 3. INSTAGRAM REVIEW CARD -->
-                    <g class="hub-review-row" data-platform="Instagram" transform="translate(144, 162)">
-                      <rect class="hub-card-bg" x="0" y="0" width="172" height="26" rx="7" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
-                      <circle cx="13" cy="13" r="8" fill="url(#instaGradient)"/>
-                      <rect x="8.5" y="9" width="9" height="8" rx="2.2" fill="none" stroke="#ffffff" stroke-width="0.9"/>
-                      <circle cx="13" cy="13" r="2.2" fill="none" stroke="#ffffff" stroke-width="0.8"/>
-                      <circle cx="15.5" cy="10.7" r="0.5" fill="#ffffff"/>
-                      <text x="27" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Instagram</text>
-                      <text x="27" y="19" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b">Follow us on Instagram</text>
-                      <circle cx="160" cy="13" r="5" fill="#f8fafc"/>
-                      <path class="row-arrow" d="M159 11 L161.5 13 L159 15" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
+                    <g class="hub-review-row" data-platform="Instagram" transform="translate(133, 142)">
+                      <rect class="hub-card-bg" x="0" y="0" width="194" height="24" rx="6.5" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+                      <circle cx="12" cy="12" r="7.5" fill="url(#instaGradient)"/>
+                      <rect x="8" y="8.5" width="8" height="7" rx="2" fill="none" stroke="#ffffff" stroke-width="0.8"/>
+                      <circle cx="12" cy="12" r="2" fill="none" stroke="#ffffff" stroke-width="0.7"/>
+                      <circle cx="14.3" cy="10" r="0.4" fill="#ffffff"/>
+                      <text x="25" y="10.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Instagram</text>
+                      <text x="25" y="18" font-family="'Inter', sans-serif" font-size="4.8" font-weight="500" fill="#64748b">Follow us on Instagram</text>
+                      <circle cx="182" cy="12" r="4.5" fill="#f8fafc"/>
+                      <path class="row-arrow" d="M181 10 L183.5 12 L181 14" stroke="#94a3b8" stroke-width="1.1" stroke-linecap="round"/>
                     </g>
 
                     <!-- 4. YOUTUBE REVIEW CARD -->
-                    <g class="hub-review-row" data-platform="YouTube" transform="translate(144, 194)">
-                      <rect class="hub-card-bg" x="0" y="0" width="172" height="26" rx="7" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
-                      <circle cx="13" cy="13" r="8" fill="#ff0000"/>
-                      <polygon points="11.5,10 16,13 11.5,16" fill="#ffffff"/>
-                      <text x="27" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Youtube</text>
-                      <text x="27" y="19" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#64748b">Subscribe &amp; support us</text>
-                      <circle cx="160" cy="13" r="5" fill="#f8fafc"/>
-                      <path class="row-arrow" d="M159 11 L161.5 13 L159 15" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
+                    <g class="hub-review-row" data-platform="YouTube" transform="translate(133, 170)">
+                      <rect class="hub-card-bg" x="0" y="0" width="194" height="24" rx="6.5" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+                      <circle cx="12" cy="12" r="7.5" fill="#ff0000"/>
+                      <polygon points="10.5,9.5 15,12 10.5,14.5" fill="#ffffff"/>
+                      <text x="25" y="10.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Youtube</text>
+                      <text x="25" y="18" font-family="'Inter', sans-serif" font-size="4.8" font-weight="500" fill="#64748b">Subscribe &amp; support us</text>
+                      <circle cx="182" cy="12" r="4.5" fill="#f8fafc"/>
+                      <path class="row-arrow" d="M181 10 L183.5 12 L181 14" stroke="#94a3b8" stroke-width="1.1" stroke-linecap="round"/>
                     </g>
 
                     <!-- 5. VIDEO TESTIMONIAL CARD (HIGHLIGHTED IN SOFT PINK/ROSE) -->
-                    <g class="hub-review-row" data-platform="Video Testimonial" transform="translate(144, 226)">
-                      <rect class="hub-card-bg" x="0" y="0" width="172" height="26" rx="7" fill="#fff1f2" stroke="#fecdd3" stroke-width="1.2"/>
-                      <circle cx="13" cy="13" r="8" fill="#ffe4e6"/>
-                      <rect x="9.5" y="9.5" width="5.5" height="7" rx="1.2" fill="#e11d48"/>
-                      <polygon points="15,11.5 18,10 18,16 15,14.5" fill="#e11d48"/>
-                      <text x="27" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Video Testimonial</text>
-                      <circle cx="97" cy="8.5" r="2.2" fill="#e11d48" class="rec-dot-animated"/>
-                      <text x="27" y="19" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#e11d48">Record a 60–sec video shoutout</text>
-                      <circle cx="160" cy="13" r="5" fill="#fff1f2"/>
-                      <path class="row-arrow" d="M159 11 L161.5 13 L159 15" stroke="#e11d48" stroke-width="1.2" stroke-linecap="round"/>
+                    <g class="hub-review-row" data-platform="Video Testimonial" transform="translate(133, 198)">
+                      <rect class="hub-card-bg" x="0" y="0" width="194" height="24" rx="6.5" fill="#fff1f2" stroke="#fecdd3" stroke-width="1.1"/>
+                      <circle cx="12" cy="12" r="7.5" fill="#ffe4e6"/>
+                      <rect x="9" y="9" width="5" height="6" rx="1" fill="#e11d48"/>
+                      <polygon points="14,10.5 16.5,9.5 16.5,14.5 14,13.5" fill="#e11d48"/>
+                      <text x="25" y="10.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Video Testimonial</text>
+                      <circle cx="95" cy="8" r="2" fill="#e11d48" class="rec-dot-animated"/>
+                      <text x="25" y="18" font-family="'Inter', sans-serif" font-size="4.8" font-weight="500" fill="#e11d48">Record a 60–sec video shoutout</text>
+                      <circle cx="182" cy="12" r="4.5" fill="#fff1f2"/>
+                      <path class="row-arrow" d="M181 10 L183.5 12 L181 14" stroke="#e11d48" stroke-width="1.1" stroke-linecap="round"/>
                     </g>
 
                     <!-- 6. PRIVATE ENQUIRY CARD (HIGHLIGHTED IN SOFT AMBER) -->
-                    <g class="hub-review-row" data-platform="Private Enquiry" transform="translate(144, 258)">
-                      <rect class="hub-card-bg" x="0" y="0" width="172" height="26" rx="7" fill="#fffdf0" stroke="#fde68a" stroke-width="1.2"/>
-                      <circle cx="13" cy="13" r="8" fill="#fef3c7"/>
-                      <rect x="9.5" y="9.5" width="7" height="5.5" rx="1.5" fill="#d97706"/>
-                      <polygon points="11,15 13,15 10,17" fill="#d97706"/>
-                      <text x="27" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Private Enquiry</text>
-                      <text x="27" y="19" font-family="'Inter', sans-serif" font-size="5" font-weight="500" fill="#b45309">Send a direct private message to us</text>
-                      <circle cx="160" cy="13" r="5" fill="#fffdf0"/>
-                      <path class="row-arrow" d="M159 11 L161.5 13 L159 15" stroke="#d97706" stroke-width="1.2" stroke-linecap="round"/>
+                    <g class="hub-review-row" data-platform="Private Enquiry" transform="translate(133, 226)">
+                      <rect class="hub-card-bg" x="0" y="0" width="194" height="24" rx="6.5" fill="#fffdf0" stroke="#fde68a" stroke-width="1.1"/>
+                      <circle cx="12" cy="12" r="7.5" fill="#fef3c7"/>
+                      <rect x="9" y="9" width="6.5" height="5" rx="1.2" fill="#d97706"/>
+                      <polygon points="10.5,14 12,14 9.5,16" fill="#d97706"/>
+                      <text x="25" y="10.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#0f172a">Private Enquiry</text>
+                      <text x="25" y="18" font-family="'Inter', sans-serif" font-size="4.8" font-weight="500" fill="#b45309">Send a direct private message to us</text>
+                      <circle cx="182" cy="12" r="4.5" fill="#fffdf0"/>
+                      <path class="row-arrow" d="M181 10 L183.5 12 L181 14" stroke="#d97706" stroke-width="1.1" stroke-linecap="round"/>
                     </g>
 
-                    <!-- 7. INSTALL APP PILL BUTTON -->
-                    <g class="hub-review-row" data-platform="App Install" transform="translate(164, 290)">
-                      <rect class="hub-card-bg" x="0" y="0" width="132" height="17" rx="8.5" fill="#ffffff" stroke="#bfdbfe" stroke-width="0.9"/>
-                      <path d="M8 4.5 H10.5 C10.8 4.5 11 4.7 11 5 V11 C11 11.3 10.8 11.5 10.5 11.5 H8 C7.7 11.5 7.5 11.3 7.5 11 V5 C7.5 4.7 7.7 4.5 8 4.5 Z" fill="none" stroke="#2563eb" stroke-width="0.8"/>
-                      <circle cx="9.25" cy="10.3" r="0.4" fill="#2563eb"/>
-                      <text x="70" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="5.5" font-weight="700" fill="#2563eb" text-anchor="middle">Install App on Home Screen</text>
+                    <!-- 7. SCRATCH & WIN CARD (HIGHLIGHTED IN GOLDEN/AMBER) -->
+                    <g class="hub-review-row" data-platform="Scratch Card" transform="translate(133, 254)">
+                      <rect class="hub-card-bg" x="0" y="0" width="194" height="24" rx="6.5" fill="#fffdf5" stroke="#fcd34d" stroke-width="1.1"/>
+                      <circle cx="12" cy="12" r="7.5" fill="#fef3c7"/>
+                      <g transform="translate(7.5, 7.5)">
+                        <rect x="1.5" y="3.5" width="6" height="4.5" rx="0.8" fill="#d97706"/>
+                        <rect x="0.8" y="2" width="7.4" height="1.8" rx="0.5" fill="#f59e0b"/>
+                        <line x1="4.5" y1="2" x2="4.5" y2="8" stroke="#ffffff" stroke-width="0.8"/>
+                        <line x1="1" y1="3" x2="8" y2="3" stroke="#ffffff" stroke-width="0.6"/>
+                      </g>
+                      <text x="25" y="10.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#92400e">Scratch &amp; Win Reward</text>
+                      <rect x="120" y="3.5" width="48" height="7.5" rx="3.75" fill="url(#luckyBadgeGrad)"/>
+                      <text x="144" y="9" font-family="'Plus Jakarta Sans', sans-serif" font-size="4.2" font-weight="800" fill="#ffffff" text-anchor="middle">🎁 LUCKY OFFER</text>
+                      <text x="25" y="18" font-family="'Inter', sans-serif" font-size="4.8" font-weight="500" fill="#b45309">Scratch card &amp; unlock surprise gift</text>
+                      <circle cx="182" cy="12" r="4.5" fill="#fef3c7"/>
+                      <path class="row-arrow" d="M181 10 L183.5 12 L181 14" stroke="#d97706" stroke-width="1.1" stroke-linecap="round"/>
+                    </g>
+
+                    <!-- 8. INSTALL APP PILL BUTTON -->
+                    <g class="hub-review-row" data-platform="App Install" transform="translate(155, 283)">
+                      <rect class="hub-card-bg" x="0" y="0" width="150" height="18" rx="9" fill="#ffffff" stroke="#bfdbfe" stroke-width="0.9"/>
+                      <path d="M10 5 H12.5 C12.8 5 13 5.2 13 5.5 V11.5 C13 11.8 12.8 12 12.5 12 H10 C9.7 12 9.5 11.8 9.5 11.5 V5.5 C9.5 5.2 9.7 5 10 5 Z" fill="none" stroke="#2563eb" stroke-width="0.8"/>
+                      <circle cx="11.25" cy="10.8" r="0.4" fill="#2563eb"/>
+                      <text x="80" y="11.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="5.8" font-weight="700" fill="#2563eb" text-anchor="middle">Install App on Home Screen</text>
                     </g>
 
                     <!-- Dynamic Spotlight Rectangle & Pointer for Mobile Line Tour -->
-                    <rect id="mobileLineSpotlight" x="141" y="95" width="178" height="32" rx="9" fill="rgba(225, 29, 72, 0.05)" stroke="#e11d48" stroke-width="2" style="transition: all 0.35s cubic-bezier(0.34, 1.4, 0.64, 1); pointer-events: none;"/>
-                    <g id="mobileLinePointer" transform="translate(120, 105)" style="transition: all 0.35s cubic-bezier(0.34, 1.4, 0.64, 1); pointer-events: none;">
+                    <rect id="mobileLineSpotlight" x="130" y="84" width="200" height="28" rx="8" fill="rgba(225, 29, 72, 0.05)" stroke="#e11d48" stroke-width="2" style="transition: all 0.35s cubic-bezier(0.34, 1.4, 0.64, 1); pointer-events: none;"/>
+                    <g id="mobileLinePointer" transform="translate(112, 92)" style="transition: all 0.35s cubic-bezier(0.34, 1.4, 0.64, 1); pointer-events: none;">
                       <circle cx="6" cy="6" r="6" fill="#e11d48" filter="url(#floatShadow)"/>
                       <path d="M4 3.5 L8 6 L4 8.5" fill="#ffffff"/>
                     </g>
 
                     <!-- Interactive Notification Toast Inside Smartphone Screen -->
-                    <g id="hubToastMessage" opacity="0" transform="translate(148, 335)" style="transition: all 0.3s cubic-bezier(0.34, 1.4, 0.64, 1); pointer-events: none;">
+                    <g id="hubToastMessage" opacity="0" transform="translate(148, 330)" style="transition: all 0.3s cubic-bezier(0.34, 1.4, 0.64, 1); pointer-events: none;">
                       <rect width="164" height="26" rx="13" fill="#0f172a" filter="url(#floatShadow)"/>
                       <circle cx="15" cy="13" r="6" fill="#16a34a"/>
                       <path d="M12.5 13 L14.5 15 L17.5 11" stroke="#ffffff" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
@@ -241,46 +270,27 @@
                     <rect x="195" y="386" width="70" height="3.5" rx="1.75" fill="#0f172a"/>
 
                     <!-- Left Floating Feature Pill -->
-                    <g transform="translate(6, 170)" filter="url(#floatShadow)">
-                      <rect x="0" y="0" width="102" height="48" rx="10" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.2"/>
-                      <circle cx="18" cy="24" r="8.5" fill="#fff1f2"/>
-                      <text x="18" y="27.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" font-weight="800" fill="#e11d48" text-anchor="middle">QR</text>
-                      <text x="33" y="19" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" font-weight="800" fill="#e11d48">1 QR Stand</text>
-                      <text x="33" y="32" font-family="'Inter', sans-serif" font-size="7" font-weight="600" fill="#64748b">All Review Links</text>
+                    <g transform="translate(10, 175)" filter="url(#floatShadow)">
+                      <rect x="0" y="0" width="98" height="46" rx="10" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.2"/>
+                      <circle cx="17" cy="23" r="8" fill="#fff1f2"/>
+                      <text x="17" y="26.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="8" font-weight="800" fill="#e11d48" text-anchor="middle">QR</text>
+                      <text x="31" y="18" font-family="'Plus Jakarta Sans', sans-serif" font-size="8" font-weight="800" fill="#e11d48">1 QR Stand</text>
+                      <text x="31" y="31" font-family="'Inter', sans-serif" font-size="6.8" font-weight="600" fill="#64748b">All Review Links</text>
                     </g>
                     
                     <!-- Right Floating Feature Pill -->
                     <g transform="translate(352, 195)" filter="url(#floatShadow)">
-                      <rect x="0" y="0" width="102" height="48" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
-                      <circle cx="18" cy="24" r="8.5" fill="#f0fdf4"/>
-                      <text x="18" y="27.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" fill="#16a34a" text-anchor="middle">⚡</text>
-                      <text x="33" y="19" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" font-weight="800" fill="#16a34a">Instant Tap</text>
-                      <text x="33" y="32" font-family="'Inter', sans-serif" font-size="7" font-weight="600" fill="#64748b">Google &amp; Socials</text>
+                      <rect x="0" y="0" width="98" height="46" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
+                      <circle cx="17" cy="23" r="8" fill="#f0fdf4"/>
+                      <text x="17" y="26.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" fill="#16a34a" text-anchor="middle">⚡</text>
+                      <text x="31" y="18" font-family="'Plus Jakarta Sans', sans-serif" font-size="8" font-weight="800" fill="#16a34a">Instant Tap</text>
+                      <text x="31" y="31" font-family="'Inter', sans-serif" font-size="6.8" font-weight="600" fill="#64748b">Google &amp; Socials</text>
                     </g>
                   </svg>
                 </div>
                 
                 <h3 class="slide-title">Multi-Platform Review Hub</h3>
                 <p class="slide-desc">Give customers complete freedom: Google, Facebook, Instagram, YouTube, Video Testimonials, or Private Enquiry in one single tap.</p>
-                
-                <!-- Interactive Mobile Line Tour Box -->
-                <div class="mobile-line-tour-box" id="mobileLineTourBox">
-                  <div class="mlt-header">
-                    <div class="mlt-step-pill">
-                      <span class="mlt-dot"></span>
-                      <span id="mltStepText">Line 1 of 7 &bull; Google Reviews</span>
-                    </div>
-                    <div class="mlt-nav-arrows">
-                      <button type="button" class="mlt-arrow-btn" id="mltPrevBtn" title="Previous Line"><i class="bi bi-chevron-left"></i></button>
-                      <button type="button" class="mlt-arrow-btn" id="mltNextBtn" title="Next Line"><i class="bi bi-chevron-right"></i></button>
-                      <button type="button" class="mlt-play-btn" id="mltAutoPlayBtn" title="Auto-Tour All Lines"><i class="bi bi-play-fill" id="mltPlayIcon"></i> <span>Auto</span></button>
-                    </div>
-                  </div>
-                  <div class="mlt-body">
-                    <h4 class="mlt-title" id="mltTitle">Google Review Accelerator</h4>
-                    <p class="mlt-desc" id="mltDesc">Customers choose 1-tap pre-written 5-star review templates and paste directly into Google Maps in seconds.</p>
-                  </div>
-                </div>
 
                 <div class="slide-features-row">
                   <a href="javascript:void(0)" onclick="selectMobileLine(0)" class="slide-pill active" id="linePill0"><i class="bi bi-google"></i> Google</a>
@@ -289,19 +299,16 @@
                   <a href="javascript:void(0)" onclick="selectMobileLine(3)" class="slide-pill" id="linePill3"><i class="bi bi-youtube"></i> YouTube</a>
                   <a href="javascript:void(0)" onclick="selectMobileLine(4)" class="slide-pill" id="linePill4"><i class="bi bi-camera-video"></i> Video Reviews</a>
                   <a href="javascript:void(0)" onclick="selectMobileLine(5)" class="slide-pill" id="linePill5"><i class="bi bi-shield-check"></i> Private Shield</a>
-                  <a href="javascript:void(0)" onclick="selectMobileLine(6)" class="slide-pill" id="linePill6"><i class="bi bi-phone"></i> Install App</a>
+                  <a href="javascript:void(0)" onclick="selectMobileLine(6)" class="slide-pill" id="linePill6"><i class="bi bi-gift-fill" style="color: #f59e0b;"></i> Scratch Card</a>
+                  <a href="javascript:void(0)" onclick="selectMobileLine(7)" class="slide-pill" id="linePill7"><i class="bi bi-phone"></i> Install App</a>
                 </div>
 
-                <div class="slide-action-row">
+                <div class="slide-action-row" style="justify-content: center; margin-top: 0.35rem;">
                   <a href="{{ url('/u/digitalvyapariofficial') }}" target="_blank" class="slide-demo-btn" id="mltDemoLink">
                     <i class="bi bi-box-arrow-up-right"></i>
                     <span id="mltDemoBtnText">Try Google Review Demo</span>
                     <i class="bi bi-arrow-up-right"></i>
                   </a>
-                  <button type="button" class="slide-demo-btn-secondary" id="mltStartTourBtn">
-                    <i class="bi bi-phone-flip"></i>
-                    <span>Tour Next Line</span>
-                  </button>
                 </div>
               </div>
             </div>
@@ -830,8 +837,8 @@
         </div>
       </div>
 
-      <!-- Hero Footer Trust Badges & Live Activity Stream -->
-      <div class="hero-footer" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; position: relative;">
+      <!-- Hero Footer Trust Badges -->
+      <div class="hero-footer" style="display: flex; align-items: center; justify-content: flex-start; gap: 12px; position: relative;">
         <div class="hero-trust-item">
           <div class="trust-avatar-stack">
             <div class="trust-avatar" style="background:linear-gradient(135deg,#e11d48,#be123c);">AR</div>
@@ -842,15 +849,6 @@
           <div class="trust-text">
             Trusted by <strong>5,000+ businesses</strong>
           </div>
-        </div>
-
-        <!-- Floating Live Activity Stream -->
-        <div class="live-activity-stream" id="liveActivityStream">
-          <div class="activity-pulse-circle"></div>
-          <div class="activity-text-line" id="activityText">
-            ⭐ <strong>New 5-star review</strong> on Google Maps
-          </div>
-          <span class="activity-time-pill" id="activityTime">Just now</span>
         </div>
       </div>
       
@@ -1292,123 +1290,89 @@
         });
       }
 
-      // Live Activity Stream Rotation
-      (function initActivityStream() {
-        const activityText = document.getElementById('activityText');
-        const activityTime = document.getElementById('activityTime');
-        const activityBox = document.getElementById('liveActivityStream');
-        if (!activityText || !activityBox) return;
-
-        const activities = [
-          { text: '⭐ <strong>New 5-star review</strong> on Google Maps', time: 'Just now' },
-          { text: '📹 <strong>New 60s video testimonial</strong> recorded', time: '1m ago' },
-          { text: '⚡ <strong>QR Stand scanned</strong> at Billing Counter', time: '2m ago' },
-          { text: '💬 <strong>Private executive message</strong> received', time: '4m ago' },
-          { text: '🚀 <strong>Facebook recommendation</strong> published', time: '6m ago' },
-          { text: '⭐ <strong>New 5-star Google review</strong> for TVS Showroom', time: '8m ago' }
-        ];
-
-        let actIdx = 0;
-        setInterval(() => {
-          actIdx = (actIdx + 1) % activities.length;
-          activityBox.style.opacity = '0';
-          activityBox.style.transform = 'translateY(6px)';
-          setTimeout(() => {
-            activityText.innerHTML = activities[actIdx].text;
-            if (activityTime) activityTime.textContent = activities[actIdx].time;
-            activityBox.style.opacity = '1';
-            activityBox.style.transform = 'translateY(0)';
-          }, 350);
-        }, 4200);
-      })();
-
       // ==========================================
-      // MOBILE PHONE SCREEN: LINE-BY-LINE TOUR SYSTEM
+      // MOBILE PHONE SCREEN: REVIEW PLATFORMS SYSTEM (8 PLATFORMS)
       // ==========================================
       const mobileLines = [
         {
           id: 0,
           platform: 'Google',
-          badge: 'Line 1 of 7 • Google Reviews',
-          title: '1. Google Review 1-Tap Launcher',
-          desc: 'Customers can instantly choose one-click pre-written 5-star review templates and paste them directly to Google Maps in under 15 seconds.',
+          badge: '1. Google Reviews',
           btnText: 'Try Google Review Demo',
           btnLink: '{{ url("/u/digitalvyapariofficial") }}',
-          x: 141, y: 95, w: 178, h: 32,
+          x: 130, y: 84, w: 200, h: 28,
           color: '#4285F4',
-          toast: 'Line 1: Google Reviews Highlighted'
+          toast: 'Google Reviews Highlighted'
         },
         {
           id: 1,
           platform: 'Facebook',
-          badge: 'Line 2 of 7 • Facebook Recommendations',
-          title: '2. Facebook Recommendation Direct Link',
-          desc: 'Directs clients straight to your official Facebook Business page with "Do you recommend?" pre-selected to boost social credibility.',
+          badge: '2. Facebook Recommendations',
           btnText: 'Try Facebook Review Demo',
           btnLink: '{{ url("/u/digitalvyapariofficial") }}',
-          x: 141, y: 127, w: 178, h: 32,
+          x: 130, y: 112, w: 200, h: 28,
           color: '#1877F2',
-          toast: 'Line 2: Facebook Recommendations Selected'
+          toast: 'Facebook Selected'
         },
         {
           id: 2,
           platform: 'Instagram',
-          badge: 'Line 3 of 7 • Instagram Community',
-          title: '3. Instagram Profile & Tagging',
-          desc: 'Invites happy customers to follow your page, view behind-the-scenes stories, and tag your business handle in their posts.',
+          badge: '3. Instagram Community',
           btnText: 'Follow On Instagram Demo',
           btnLink: '{{ url("/u/digitalvyapariofficial") }}',
-          x: 141, y: 159, w: 178, h: 32,
+          x: 130, y: 140, w: 200, h: 28,
           color: '#E1306C',
-          toast: 'Line 3: Instagram Hub Selected'
+          toast: 'Instagram Selected'
         },
         {
           id: 3,
           platform: 'YouTube',
-          badge: 'Line 4 of 7 • YouTube Subscriber Growth',
-          title: '4. YouTube Channel Subscribe & Feedback',
-          desc: 'Seamlessly transforms foot traffic into subscribers by routing customers to your YouTube video channel and testimonial playlist.',
+          badge: '4. YouTube Subscriber Growth',
           btnText: 'View YouTube Channel Demo',
           btnLink: '{{ url("/u/digitalvyapariofficial") }}',
-          x: 141, y: 191, w: 178, h: 32,
+          x: 130, y: 168, w: 200, h: 28,
           color: '#FF0000',
-          toast: 'Line 4: YouTube Channel Selected'
+          toast: 'YouTube Selected'
         },
         {
           id: 4,
           platform: 'Video Testimonial',
-          badge: 'Line 5 of 7 • 60s Video Testimonial',
-          title: '5. In-Browser Selfie Video Studio',
-          desc: 'Zero app required! Customers record an authentic 60-second video shoutout right from their mobile browser with instant cloud sync.',
+          badge: '5. 60s Video Testimonial',
           btnText: 'Try Video Recording Demo',
           btnLink: '{{ url("/u/digitalvyapariofficial") }}',
-          x: 141, y: 223, w: 178, h: 32,
+          x: 130, y: 196, w: 200, h: 28,
           color: '#E11D48',
-          toast: 'Line 5: Video Studio Spotlight'
+          toast: 'Video Studio Spotlight'
         },
         {
           id: 5,
           platform: 'Private Enquiry',
-          badge: 'Line 6 of 7 • Private Feedback Shield',
-          title: '6. Negative Review Interceptor (Private Shield)',
-          desc: 'Unhappy customers send their complaints privately to the owner or manager, protecting your public ratings while resolving issues fast.',
+          badge: '6. Private Feedback Shield',
           btnText: 'Try Private Shield Demo',
           btnLink: '{{ url("/u/digitalvyapariofficial") }}',
-          x: 141, y: 255, w: 178, h: 32,
+          x: 130, y: 224, w: 200, h: 28,
           color: '#D97706',
-          toast: 'Line 6: Private Shield Selected'
+          toast: 'Private Shield Selected'
         },
         {
           id: 6,
+          platform: 'Scratch Card',
+          badge: '7. Scratch & Win Surprise Rewards',
+          btnText: 'Try Scratch Card Demo',
+          btnLink: '{{ url("/u/digitalvyapariofficial") }}',
+          x: 130, y: 252, w: 200, h: 28,
+          color: '#F59E0B',
+          toast: 'Scratch & Win Card Selected'
+        },
+        {
+          id: 7,
           platform: 'App Install',
-          badge: 'Line 7 of 7 • PWA Home Screen Shortcut',
-          title: '7. Progressive Web App (PWA) Install',
-          desc: 'Allows repeat customers and staff to save your custom review hub right to their phone home screen as a native-like web app without app store friction.',
+          badge: '8. PWA Home Screen Shortcut',
           btnText: 'Test PWA Install Demo',
           btnLink: '{{ url("/u/digitalvyapariofficial") }}',
-          x: 161, y: 288, w: 138, h: 22,
+          x: 152, y: 280, w: 156, h: 24,
           color: '#2563EB',
-          toast: 'Line 7: App Install Highlighted'
+          toast: 'App Install Highlighted'
         }
       ];
 
@@ -1418,16 +1382,10 @@
 
       const mltSpotlight = document.getElementById('mobileLineSpotlight');
       const mltPointer = document.getElementById('mobileLinePointer');
-      const mltStepText = document.getElementById('mltStepText');
-      const mltTitle = document.getElementById('mltTitle');
-      const mltDesc = document.getElementById('mltDesc');
       const mltDemoLink = document.getElementById('mltDemoLink');
       const mltDemoBtnText = document.getElementById('mltDemoBtnText');
-      const mltPrevBtn = document.getElementById('mltPrevBtn');
-      const mltNextBtn = document.getElementById('mltNextBtn');
       const mltAutoPlayBtn = document.getElementById('mltAutoPlayBtn');
       const mltPlayIcon = document.getElementById('mltPlayIcon');
-      const mltStartTourBtn = document.getElementById('mltStartTourBtn');
       const hubRows = document.querySelectorAll('.hub-review-row');
       const hubToast = document.getElementById('hubToastMessage');
       const hubToastText = document.getElementById('hubToastText');
@@ -1455,7 +1413,7 @@
 
         // 2. Move SVG Pointer
         if (mltPointer) {
-          const ptrX = line.x - 20;
+          const ptrX = line.x - 18;
           const ptrY = line.y + (line.h / 2) - 6;
           mltPointer.setAttribute('transform', `translate(${ptrX}, ${ptrY})`);
           const ptrCircle = mltPointer.querySelector('circle');
@@ -1472,7 +1430,7 @@
         });
 
         // 4. Update Pills
-        for (let i = 0; i < 7; i++) {
+        for (let i = 0; i < 8; i++) {
           const pill = document.getElementById(`linePill${i}`);
           if (pill) {
             if (i === idx) {
@@ -1483,10 +1441,7 @@
           }
         }
 
-        // 5. Update Tour Box Card
-        if (mltStepText) mltStepText.textContent = line.badge;
-        if (mltTitle) mltTitle.textContent = line.title;
-        if (mltDesc) mltDesc.textContent = line.desc;
+        // 5. Update Demo Action Button
         if (mltDemoBtnText) mltDemoBtnText.textContent = line.btnText;
         if (mltDemoLink) mltDemoLink.setAttribute('href', line.btnLink);
 
@@ -1506,8 +1461,7 @@
         isMobileTourPlaying = true;
         if (mltAutoPlayBtn) mltAutoPlayBtn.classList.add('active');
         if (mltPlayIcon) {
-          mltPlayIcon.classList.remove('bi-play-fill');
-          mltPlayIcon.classList.add('bi-pause-fill');
+          mltPlayIcon.className = 'bi bi-pause-fill';
         }
         mobileTourAutoPlayTimer = setInterval(() => {
           selectMobileLine((currentMobileLine + 1) % mobileLines.length);
@@ -1522,8 +1476,7 @@
         }
         if (mltAutoPlayBtn) mltAutoPlayBtn.classList.remove('active');
         if (mltPlayIcon) {
-          mltPlayIcon.classList.remove('bi-pause-fill');
-          mltPlayIcon.classList.add('bi-play-fill');
+          mltPlayIcon.className = 'bi bi-play-fill';
         }
       }
 
@@ -1535,34 +1488,10 @@
         }
       }
 
-      // Event Listeners for Mobile Tour Controls
-      if (mltPrevBtn) {
-        mltPrevBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          stopMobileTourAutoPlay();
-          selectMobileLine(currentMobileLine - 1);
-        });
-      }
-
-      if (mltNextBtn) {
-        mltNextBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          stopMobileTourAutoPlay();
-          selectMobileLine(currentMobileLine + 1);
-        });
-      }
-
       if (mltAutoPlayBtn) {
         mltAutoPlayBtn.addEventListener('click', (e) => {
           e.stopPropagation();
           toggleMobileTourAutoPlay();
-        });
-      }
-
-      if (mltStartTourBtn) {
-        mltStartTourBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          selectMobileLine((currentMobileLine + 1) % mobileLines.length);
         });
       }
 
