@@ -187,7 +187,7 @@ body {
     #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar,
     #main-wrapper.mini-sidebar .left-sidebar,
     .mini-sidebar .left-sidebar {
-        width: 87px !important;
+        width: 270px !important;
         position: fixed !important;
         top: 0;
         bottom: 0;
@@ -200,7 +200,7 @@ body {
     #main-wrapper[data-sidebartype="mini-sidebar"] .body-wrapper,
     #main-wrapper.mini-sidebar .body-wrapper,
     .mini-sidebar .body-wrapper {
-        margin-left: 87px !important;
+        margin-left: 270px !important;
         min-height: 100vh;
         position: relative;
         z-index: 1;

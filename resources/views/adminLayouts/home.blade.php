@@ -91,304 +91,87 @@
     }
 
     /* ========================================================= */
-    /* MINI-SIDEBAR (COLLAPSED): PERFECT CENTERING & NO ARROW    */
-    /* (DESKTOP SCREENS >= 992px ONLY)                           */
+    /* ALWAYS-OPEN SIDEBAR DESIGN SYSTEM (NO COLLAPSIBLE MENU)  */
     /* ========================================================= */
-    @media (min-width: 992px) {
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .brand-logo,
-    #main-wrapper.mini-sidebar .left-sidebar .brand-logo,
-    .mini-sidebar .left-sidebar .brand-logo {
-        padding: 0 !important;
-        justify-content: center !important;
-        align-items: center !important;
-        text-align: center !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .brand-logo .logo-img,
-    #main-wrapper.mini-sidebar .left-sidebar .brand-logo .logo-img,
-    .mini-sidebar .left-sidebar .brand-logo .logo-img {
-        margin: 0 auto !important;
-        justify-content: center !important;
-        display: flex !important;
-        align-items: center !important;
-        width: auto !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .brand-logo img,
-    #main-wrapper.mini-sidebar .left-sidebar .brand-logo img,
-    .mini-sidebar .left-sidebar .brand-logo img {
-        margin: 0 auto !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .brand-logo #sidebarCollapse,
-    #main-wrapper.mini-sidebar .left-sidebar .brand-logo #sidebarCollapse {
-        display: none !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav,
-    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav,
-    .mini-sidebar .left-sidebar .sidebar-nav {
-        padding: 14px 0 30px 0 !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav ul#sidebarnav,
-    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav ul#sidebarnav,
-    .mini-sidebar .left-sidebar .sidebar-nav ul#sidebarnav {
-        padding: 0 !important;
-        margin: 0 !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar,
-    #main-wrapper.mini-sidebar .left-sidebar,
-    .mini-sidebar .left-sidebar {
-        width: 87px !important;
-        position: fixed !important;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        z-index: 1000 !important;
-        display: block !important;
-        background: #ffffff !important;
-        border-right: 1px solid #f1f5f9 !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .body-wrapper,
-    #main-wrapper.mini-sidebar .body-wrapper,
-    .mini-sidebar .body-wrapper {
-        margin-left: 87px !important;
-        min-height: 100vh;
-        position: relative;
-        z-index: 1;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav ul .sidebar-item,
-    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item,
-    .mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item {
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: center !important;
-        align-items: center !important;
-        width: 100% !important;
-        margin: 0 0 6px 0 !important;
-        padding: 0 !important;
-    }
 
-    /* Submenu inside collapsed mini-sidebar (stack vertically within 87px) */
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav .first-level,
-    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav .first-level,
-    .mini-sidebar .left-sidebar .sidebar-nav .first-level {
-        padding: 4px 0 0 0 !important;
-        margin: 0 !important;
-        border-left: none !important;
-        width: 100% !important;
-        display: none;
-        flex-direction: column !important;
-        align-items: center !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav .first-level.show,
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav .first-level.in,
-    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav .first-level.show,
-    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav .first-level.in,
-    .mini-sidebar .left-sidebar .sidebar-nav .first-level.show,
-    .mini-sidebar .left-sidebar .sidebar-nav .first-level.in {
-        display: flex !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav .first-level .sidebar-item,
-    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav .first-level .sidebar-item,
-    .mini-sidebar .left-sidebar .sidebar-nav .first-level .sidebar-item {
-        width: 100% !important;
-        margin-bottom: 4px !important;
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav .first-level .sidebar-item .sidebar-link,
-    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav .first-level .sidebar-item .sidebar-link,
-    .mini-sidebar .left-sidebar .sidebar-nav .first-level .sidebar-item .sidebar-link {
-        width: 42px !important;
-        height: 42px !important;
-        padding: 0 !important;
-        margin: 0 auto !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        border-radius: 10px !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav .first-level .sidebar-item .sidebar-link i,
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav .first-level .sidebar-item .sidebar-link .ti,
-    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav .first-level .sidebar-item .sidebar-link i,
-    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav .first-level .sidebar-item .sidebar-link .ti,
-    .mini-sidebar .left-sidebar .sidebar-nav .first-level .sidebar-item .sidebar-link i,
-    .mini-sidebar .left-sidebar .sidebar-nav .first-level .sidebar-item .sidebar-link .ti {
-        font-size: 1.35rem !important;
-        width: 26px !important;
-        height: 26px !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link,
-    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link,
-    .mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link {
-        width: 48px !important;
-        height: 48px !important;
-        padding: 0 !important;
-        margin: 0 auto !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        border-radius: 12px !important;
-        transform: none !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link span:first-child,
-    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link span:first-child,
-    .mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link span:first-child {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        width: 100% !important;
-        height: 100% !important;
-        margin: 0 auto !important;
-        padding: 0 !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link i,
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link .ti,
-    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link i,
-    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link .ti,
-    .mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link i,
-    .mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link .ti {
-        font-size: 1.65rem !important;
-        width: 32px !important;
-        height: 32px !important;
-        margin: 0 auto !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav ul .sidebar-item.selected > .sidebar-link,
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link.active,
-    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item.selected > .sidebar-link,
-    #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link.active,
-    .mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item.selected > .sidebar-link,
-    .mini-sidebar .left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link.active {
-        box-shadow: none !important;
-        border: 1.5px solid #fecdd3 !important;
+    /* Common Active & Hover States */
+    .sidebar-nav ul .sidebar-item.selected > .sidebar-link,
+    .sidebar-nav ul .sidebar-item .sidebar-link.active {
         background: #fff1f2 !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .nav-small-cap,
-    #main-wrapper.mini-sidebar .left-sidebar .nav-small-cap,
-    .mini-sidebar .left-sidebar .nav-small-cap {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        padding: 12px 0 6px 0 !important;
-        margin: 0 auto !important;
-        text-align: center !important;
-        width: 100% !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .nav-small-cap .nav-small-cap-icon,
-    #main-wrapper.mini-sidebar .left-sidebar .nav-small-cap .nav-small-cap-icon,
-    .mini-sidebar .left-sidebar .nav-small-cap .nav-small-cap-icon {
-        display: block !important;
-        margin: 0 auto !important;
-        color: #cbd5e1 !important;
-        text-align: center !important;
-    }
-    /* STRICTLY HIDE TEXT AND CHEVRON ARROW IN COLLAPSED MODE */
-    #main-wrapper[data-sidebartype="mini-sidebar"] .hide-menu,
-    #main-wrapper[data-sidebartype="mini-sidebar"] .ti-chevron-down,
-    #main-wrapper[data-sidebartype="mini-sidebar"] [class*="ti-chevron"],
-    #main-wrapper.mini-sidebar .hide-menu,
-    #main-wrapper.mini-sidebar .ti-chevron-down,
-    #main-wrapper.mini-sidebar [class*="ti-chevron"],
-    .mini-sidebar .hide-menu,
-    .mini-sidebar .ti-chevron-down,
-    .mini-sidebar [class*="ti-chevron"] {
-        display: none !important;
-    }
-
-    /* MINI-SIDEBAR: EXPANDED ON HOVER */
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover {
-        width: 270px !important;
-        box-shadow: 0 10px 40px -10px rgba(15, 23, 42, 0.15) !important;
-        z-index: 1000 !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .brand-logo {
-        padding: 16px 20px 14px 20px !important;
-        justify-content: space-between !important;
-        height: 70px !important;
-        text-align: left !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .brand-logo .logo-img {
-        width: auto !important;
-        margin: 0 !important;
-        display: flex !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .brand-logo img {
-        margin: 0 !important;
-        max-height: 40px !important;
-        max-width: 170px !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav {
-        padding: 12px 14px 30px 14px !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul#sidebarnav {
-        display: block !important;
-        width: 100% !important;
-        padding: 0 !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item {
-        display: block !important;
-        width: 100% !important;
-        margin-bottom: 4px !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item .sidebar-link {
-        width: 100% !important;
-        height: 44px !important;
-        padding: 10px 14px !important;
-        margin: 0 !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: flex-start !important;
-        gap: 12px !important;
-        border-radius: 12px !important;
+        color: #e11d48 !important;
+        font-weight: 700 !important;
+        box-shadow: inset 3px 0 0 #e11d48 !important;
         border: none !important;
-        background: transparent;
-        color: #475569 !important;
     }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item .sidebar-link:hover {
+    .sidebar-nav ul .sidebar-item.selected > .sidebar-link i,
+    .sidebar-nav ul .sidebar-item .sidebar-link.active i,
+    .sidebar-nav ul .sidebar-item.selected > .sidebar-link .ti,
+    .sidebar-nav ul .sidebar-item .sidebar-link.active .ti {
+        color: #e11d48 !important;
+    }
+    .sidebar-nav ul .sidebar-item .sidebar-link:hover {
         background-color: #f1f5f9 !important;
         color: #0f172a !important;
         transform: translateX(3px) !important;
     }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item .sidebar-link span:first-child {
-        width: 28px !important;
-        height: 28px !important;
-        flex-shrink: 0 !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item .sidebar-link i,
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item .sidebar-link .ti {
-        font-size: 1.35rem !important;
-        width: 28px !important;
-        height: 28px !important;
-        color: #64748b !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item .sidebar-link:hover i,
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item .sidebar-link:hover .ti {
+    .sidebar-nav ul .sidebar-item .sidebar-link:hover i,
+    .sidebar-nav ul .sidebar-item .sidebar-link:hover .ti {
         color: #e11d48 !important;
     }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item .sidebar-link .hide-menu {
-        display: inline !important;
-        font-size: 0.88rem !important;
-        font-weight: 600 !important;
-        color: inherit !important;
-        white-space: nowrap !important;
+
+    /* Section Category Headings */
+    .sidebar-nav .nav-small-cap {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        padding: 16px 14px 6px 14px !important;
+        text-align: left !important;
+        width: 100% !important;
     }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav .ti-chevron-down {
+    .sidebar-nav .nav-small-cap .nav-small-cap-icon {
+        display: none !important;
+    }
+    .sidebar-nav .nav-small-cap .hide-menu {
+        display: block !important;
+        color: #94a3b8 !important;
+        font-size: 0.68rem !important;
+        font-weight: 800 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.08em !important;
+    }
+
+    /* Submenus (Analytics etc) */
+    .sidebar-nav .first-level {
+        padding: 4px 0 6px 14px !important;
+        list-style: none !important;
+    }
+    .sidebar-nav .first-level .sidebar-item {
+        margin-bottom: 2px !important;
+    }
+    .sidebar-nav .first-level .sidebar-item .sidebar-link {
+        padding: 8px 12px !important;
+        font-size: 0.84rem !important;
+        border-radius: 10px !important;
+    }
+    .sidebar-nav .first-level .sidebar-item .sidebar-link i,
+    .sidebar-nav .first-level .sidebar-item .sidebar-link .ti {
+        font-size: 1.15rem !important;
+    }
+    .sidebar-link[aria-expanded="true"] .ti-chevron-down {
+        transform: rotate(180deg) !important;
+    }
+    .sidebar-link[aria-expanded="false"] .ti-chevron-down {
+        transform: rotate(0deg) !important;
+    }
+    .sidebar-link .ti-chevron-down {
+        transition: transform 0.15s ease !important;
         display: inline-block !important;
         font-size: 0.85rem !important;
         margin-left: auto !important;
-        width: auto !important;
-        height: auto !important;
         color: #94a3b8 !important;
     }
+
+    /* Submenu collapse animation stability */
     #analytics-submenu.collapsing,
     .sidebar-nav .first-level.collapsing {
         transition: none !important;
@@ -400,53 +183,124 @@
     .sidebar-nav .first-level.in {
         display: block !important;
     }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav .first-level.show,
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav .first-level.in {
-        display: block !important;
-    }
-    .sidebar-link[aria-expanded="true"] .ti-chevron-down {
-        transform: rotate(180deg) !important;
-    }
-    .sidebar-link[aria-expanded="false"] .ti-chevron-down {
-        transform: rotate(0deg) !important;
-    }
-    .sidebar-link .ti-chevron-down {
-        transition: transform 0.12s ease !important;
-        display: inline-block !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .nav-small-cap {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: flex-start !important;
-        padding: 16px 14px 6px 14px !important;
-        text-align: left !important;
-        width: 100% !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .nav-small-cap .nav-small-cap-icon {
-        display: none !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .nav-small-cap .hide-menu {
-        display: block !important;
-        color: #94a3b8 !important;
-        font-size: 0.68rem !important;
-        font-weight: 800 !important;
-        text-transform: uppercase !important;
-        letter-spacing: 0.08em !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item.selected > .sidebar-link,
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item .sidebar-link.active {
-        background: #fff1f2 !important;
-        color: #e11d48 !important;
-        font-weight: 700 !important;
-        box-shadow: inset 3px 0 0 #e11d48 !important;
-        border: none !important;
-    }
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item.selected > .sidebar-link i,
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item .sidebar-link.active i,
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item.selected > .sidebar-link .ti,
-    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav ul .sidebar-item .sidebar-link.active .ti {
-        color: #e11d48 !important;
-    }
+
+    /* DESKTOP (>= 992px): ALWAYS EXPANDED, NO COLLAPSE */
+    @media (min-width: 992px) {
+        .left-sidebar,
+        #main-wrapper .left-sidebar,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar,
+        #main-wrapper[data-sidebartype="full"] .left-sidebar,
+        #main-wrapper.mini-sidebar .left-sidebar,
+        .mini-sidebar .left-sidebar {
+            width: 270px !important;
+            position: fixed !important;
+            top: 0 !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            z-index: 1000 !important;
+            display: block !important;
+            background: #ffffff !important;
+            border-right: 1px solid #f1f5f9 !important;
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05) !important;
+        }
+
+        .body-wrapper,
+        #main-wrapper .body-wrapper,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .body-wrapper,
+        #main-wrapper[data-sidebartype="full"] .body-wrapper,
+        #main-wrapper.mini-sidebar .body-wrapper,
+        .mini-sidebar .body-wrapper {
+            margin-left: 270px !important;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Ensure labels are always visible */
+        .hide-menu,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .hide-menu,
+        #main-wrapper.mini-sidebar .hide-menu,
+        .mini-sidebar .hide-menu {
+            display: inline !important;
+            font-size: 0.88rem !important;
+            font-weight: 600 !important;
+            white-space: nowrap !important;
+        }
+
+        /* Brand logo in full mode */
+        .left-sidebar .brand-logo,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .brand-logo,
+        #main-wrapper.mini-sidebar .left-sidebar .brand-logo,
+        .mini-sidebar .left-sidebar .brand-logo {
+            padding: 16px 20px 14px 20px !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            text-align: left !important;
+            height: 70px !important;
+            border-bottom: 1px solid #f1f5f9 !important;
+        }
+        .left-sidebar .brand-logo .logo-img,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .brand-logo .logo-img,
+        #main-wrapper.mini-sidebar .left-sidebar .brand-logo .logo-img,
+        .mini-sidebar .left-sidebar .brand-logo .logo-img {
+            margin: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            width: auto !important;
+        }
+        .left-sidebar .brand-logo img,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .brand-logo img,
+        #main-wrapper.mini-sidebar .left-sidebar .brand-logo img,
+        .mini-sidebar .left-sidebar .brand-logo img {
+            margin: 0 !important;
+            max-height: 42px !important;
+            max-width: 170px !important;
+        }
+
+        /* Sidebar navigation full items */
+        .sidebar-nav,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .sidebar-nav,
+        #main-wrapper.mini-sidebar .sidebar-nav,
+        .mini-sidebar .sidebar-nav {
+            padding: 14px 14px 30px 14px !important;
+        }
+        .sidebar-nav ul#sidebarnav,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .sidebar-nav ul#sidebarnav,
+        #main-wrapper.mini-sidebar .sidebar-nav ul#sidebarnav,
+        .mini-sidebar .sidebar-nav ul#sidebarnav {
+            display: block !important;
+            width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        .sidebar-nav ul .sidebar-item,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .sidebar-nav ul .sidebar-item,
+        #main-wrapper.mini-sidebar .sidebar-nav ul .sidebar-item,
+        .mini-sidebar .sidebar-nav ul .sidebar-item {
+            display: block !important;
+            width: 100% !important;
+            margin: 0 0 4px 0 !important;
+        }
+        .sidebar-nav ul .sidebar-item .sidebar-link,
+        #main-wrapper[data-sidebartype="mini-sidebar"] .sidebar-nav ul .sidebar-item .sidebar-link,
+        #main-wrapper.mini-sidebar .sidebar-nav ul .sidebar-item .sidebar-link,
+        .mini-sidebar .sidebar-nav ul .sidebar-item .sidebar-link {
+            width: 100% !important;
+            height: 44px !important;
+            padding: 10px 14px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: flex-start !important;
+            gap: 12px !important;
+            border-radius: 12px !important;
+            text-decoration: none !important;
+        }
+
+        /* Hide desktop collapse toggle button - menu is always open */
+        #headerCollapse {
+            display: none !important;
+        }
     } /* ================= END DESKTOP ONLY (min-width: 992px) ================= */
 
     /* ========================================================= */
@@ -1106,13 +960,7 @@
                 </li>
 
                 <li class="sidebar-item">
-                  <a class="sidebar-link" href="{{URL::to('admin/user_payments_list')}}" aria-expanded="false">
-                    <span><i class="ti ti-crown"></i></span>
-                    <span class="hide-menu">Subscriptions</span>
-                  </a>
-                </li>
-                <li class="sidebar-item">
-                  <a class="sidebar-link" href="{{URL::to('admin/review_links')}}" aria-expanded="false">
+                  <a class="sidebar-link {{ Request::is('admin/review_links*') ? 'active' : '' }}" href="{{URL::to('admin/review_links')}}" aria-expanded="false">
                     <span><i class="ti ti-plug"></i></span>
                     <span class="hide-menu">Integrations</span>
                   </a>
@@ -1121,14 +969,7 @@
                   <a class="sidebar-link {{ Request::is('admin/scratch_cards*') ? 'active' : '' }}" href="{{URL::to('admin/scratch_cards')}}" aria-expanded="false">
                     <span><i class="ti ti-ticket"></i></span>
                     <span class="hide-menu">Scratch Cards</span>
-                    <!-- @php
-                      $userScratchAccess = \App\Http\Controllers\ScratchCardController::hasAccess(Auth::user());
-                    @endphp
-                    @if($userScratchAccess)
-                      <span class="badge bg-success ms-auto" style="font-size: 0.65rem; padding: 2px 7px;">ACTIVE</span>
-                    @else
-                      <span class="badge bg-secondary ms-auto" style="font-size: 0.65rem; padding: 2px 7px;"><i class="ti ti-lock"></i> PRO</span>
-                    @endif -->
+                    <span class="badge ms-auto" style="background: linear-gradient(135deg, #e11d48 0%, #f43f5e 100%); color: #ffffff; font-size: 0.62rem; font-weight: 800; padding: 2.5px 7px; border-radius: 999px; letter-spacing: 0.04em; box-shadow: 0 2px 6px rgba(225, 29, 72, 0.25);">NEW</span>
                   </a>
                 </li>
 
@@ -1155,6 +996,13 @@
                       </a>
                     </li>
                   </ul>
+                </li>
+
+                <li class="sidebar-item">
+                  <a class="sidebar-link {{ Request::is('admin/user_payments_list*') ? 'active' : '' }}" href="{{URL::to('admin/user_payments_list')}}" aria-expanded="false">
+                    <span><i class="ti ti-crown"></i></span>
+                    <span class="hide-menu">Subscriptions</span>
+                  </a>
                 </li>
 
                 <li class="nav-small-cap">
@@ -1197,14 +1045,14 @@
 
             <!-- LEFT: Hamburger + Role Indicator -->
             <div class="d-flex align-items-center gap-3 flex-shrink-0">
-              <!-- Sidebar Toggle -->
-              <a class="sidebartoggler d-flex align-items-center justify-content-center" id="headerCollapse" href="javascript:void(0)" style="width: 38px; height: 38px; border-radius: 10px; background: #f8fafc; border: 1px solid #e2e8f0; color: #475569; transition: all 0.2s ease; text-decoration: none;">
+              <!-- Sidebar Toggle (Mobile only: menu is always open on desktop) -->
+              <a class="sidebartoggler d-flex d-lg-none align-items-center justify-content-center" id="headerCollapse" href="javascript:void(0)" style="width: 38px; height: 38px; border-radius: 10px; background: #f8fafc; border: 1px solid #e2e8f0; color: #475569; transition: all 0.2s ease; text-decoration: none;">
                 <i class="ti ti-menu-2" style="font-size: 1.1rem;"></i>
               </a>
 
               <!-- Role Indicator Pill -->
               @if(Auth::user()->type == 'user')
-                <div id="navbarLiveReviewPill" class="d-none d-xl-flex align-items-center gap-2 px-3" style="height: 36px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 9999px; font-size: 0.82rem; white-space: nowrap;">
+                <div id="navbarLiveReviewPill" class="d-none d-md-flex align-items-center gap-2 px-3" style="height: 36px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 9999px; font-size: 0.82rem; white-space: nowrap;">
                   <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 0 3px rgba(16,185,129,0.15); flex-shrink: 0;"></span>
                   <span class="text-muted fw-500">Live:</span>
                   <a href="{{ url('u/'.Auth::user()->name_url) }}" target="_blank" class="fw-bold text-dark text-decoration-none d-flex align-items-center gap-1">
@@ -1516,53 +1364,7 @@
                     <!-- Options Body -->
                     <div class="p-2.5 p-sm-3" style="display: flex; flex-direction: column; gap: 9px; background: #ffffff;">
                       
-                      <!-- Option 1: 5-Star Smart Funnel -->
-                      <form action="{{ URL::to('admin/star_page_status') }}" method="POST" class="m-0 p-0">
-                        @csrf
-                        <input type="hidden" name="star_page" value="YES">
-                        <div onclick="this.closest('form').submit()" role="button" 
-                          class="qr-flow-card @if(Auth::user()->star_page == 'YES') active-funnel @else inactive @endif text-start"
-                        >
-                          <div class="d-flex align-items-center justify-content-between gap-2 mb-1.5">
-                            <div class="d-flex align-items-center gap-2" style="min-width: 0;">
-                              <div style="width: 32px; height: 32px; border-radius: 50%; background: {{ Auth::user()->star_page == 'YES' ? '#fde68a' : '#e2e8f0' }}; color: {{ Auth::user()->star_page == 'YES' ? '#d97706' : '#64748b' }}; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                                <i class="fa-solid fa-star" style="font-size: 0.82rem;"></i>
-                              </div>
-                              <div style="min-width: 0;">
-                                <div class="d-flex align-items-center gap-1.5 flex-wrap">
-                                  <span class="qr-flow-card-title">5★ Review Funnel</span>
-                                  <span class="qr-flow-tag-recommended">Recommended</span>
-                                </div>
-                              </div>
-                            </div>
-                            
-                            <div style="flex-shrink: 0;">
-                              @if(Auth::user()->star_page == 'YES')
-                                <span class="qr-flow-badge-active">
-                                  <i class="fa-solid fa-check"></i> ACTIVE
-                                </span>
-                              @else
-                                <span class="qr-flow-badge-action">
-                                  Activate
-                                </span>
-                              @endif
-                            </div>
-                          </div>
-
-                          <div class="qr-flow-points">
-                            <div class="qr-flow-point point-green">
-                              <i class="fa-solid fa-circle-check text-success"></i>
-                              <span><strong>Filters bad reviews:</strong> 4–5★ go to Google Reviews</span>
-                            </div>
-                            <div class="qr-flow-point point-amber">
-                              <i class="fa-solid fa-shield-halved text-warning"></i>
-                              <span><strong>Reputation shield:</strong> 1–3★ go to private feedback</span>
-                            </div>
-                          </div>
-                        </div>
-                      </form>
-
-                      <!-- Option 2: Direct Platform Links -->
+                      <!-- Option 1: Direct Platform Links -->
                       <form action="{{ URL::to('admin/star_page_status') }}" method="POST" class="m-0 p-0">
                         @csrf
                         <input type="hidden" name="star_page" value="NO">
@@ -1603,6 +1405,52 @@
                             <div class="qr-flow-point point-indigo">
                               <i class="fa-solid fa-arrow-up-right-from-square text-indigo"></i>
                               <span>Directly shows your Google & social review links</span>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+
+                      <!-- Option 2: 5-Star Smart Funnel -->
+                      <form action="{{ URL::to('admin/star_page_status') }}" method="POST" class="m-0 p-0">
+                        @csrf
+                        <input type="hidden" name="star_page" value="YES">
+                        <div onclick="this.closest('form').submit()" role="button" 
+                          class="qr-flow-card @if(Auth::user()->star_page == 'YES') active-funnel @else inactive @endif text-start"
+                        >
+                          <div class="d-flex align-items-center justify-content-between gap-2 mb-1.5">
+                            <div class="d-flex align-items-center gap-2" style="min-width: 0;">
+                              <div style="width: 32px; height: 32px; border-radius: 50%; background: {{ Auth::user()->star_page == 'YES' ? '#fde68a' : '#e2e8f0' }}; color: {{ Auth::user()->star_page == 'YES' ? '#d97706' : '#64748b' }}; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i class="fa-solid fa-star" style="font-size: 0.82rem;"></i>
+                              </div>
+                              <div style="min-width: 0;">
+                                <div class="d-flex align-items-center gap-1.5 flex-wrap">
+                                  <span class="qr-flow-card-title">5★ Review Funnel</span>
+                                  <span class="qr-flow-tag-recommended">Recommended</span>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div style="flex-shrink: 0;">
+                              @if(Auth::user()->star_page == 'YES')
+                                <span class="qr-flow-badge-active">
+                                  <i class="fa-solid fa-check"></i> ACTIVE
+                                </span>
+                              @else
+                                <span class="qr-flow-badge-action">
+                                  Activate
+                                </span>
+                              @endif
+                            </div>
+                          </div>
+
+                          <div class="qr-flow-points">
+                            <div class="qr-flow-point point-green">
+                              <i class="fa-solid fa-circle-check text-success"></i>
+                              <span><strong>Filters bad reviews:</strong> 4–5★ go to Google Reviews</span>
+                            </div>
+                            <div class="qr-flow-point point-amber">
+                              <i class="fa-solid fa-shield-halved text-warning"></i>
+                              <span><strong>Reputation shield:</strong> 1–3★ go to private feedback</span>
                             </div>
                           </div>
                         </div>
@@ -2449,6 +2297,29 @@
   <script src="{{asset('adminAssets/js/custom.js')}}"></script>
   <script>
     $(document).ready(function() {
+      // Ensure sidebar is always in full mode (never collapsed / mini-sidebar)
+      function forceAlwaysOpenSidebar() {
+        $('#main-wrapper').removeClass('mini-sidebar').attr('data-sidebartype', 'full');
+      }
+      forceAlwaysOpenSidebar();
+      $(window).on('resize', forceAlwaysOpenSidebar);
+
+      // Prevent any sidebartoggler from toggling mini-sidebar
+      $(document).on('click', '.sidebartoggler', function() {
+        setTimeout(forceAlwaysOpenSidebar, 1);
+      });
+
+      if (window.MutationObserver) {
+        var wrapper = document.getElementById('main-wrapper');
+        if (wrapper) {
+          new MutationObserver(function() {
+            if ($('#main-wrapper').hasClass('mini-sidebar')) {
+              forceAlwaysOpenSidebar();
+            }
+          }).observe(wrapper, { attributes: true, attributeFilter: ['class', 'data-sidebartype'] });
+        }
+      }
+
       // Close mobile drawer when clicking the backdrop overlay
       $(document).on('click', '.sidebar-backdrop', function() {
         $('#main-wrapper').removeClass('show-sidebar');
