@@ -44,7 +44,7 @@
                                 </div>
                             </td>
                             <td style="padding: 12px 14px; border-bottom: 1px solid #f1f5f9; color: #0f172a; font-size: 13px; font-weight: 600; text-align: right;">
-                                {{ date('d M Y, h:i A') }}
+                                {{ $getData['submitted_at'] ?? \Carbon\Carbon::now('Asia/Kolkata')->format('d M Y, h:i A') }} (IST)
                             </td>
                         </tr>
 

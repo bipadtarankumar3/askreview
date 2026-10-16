@@ -2248,17 +2248,6 @@
                                 Have feedback or a concern? Connect directly with senior leadership for discreet, prompt attention.
                             @endif
                         </p>
-
-                        <!-- Linear-style Frosted Guarantee Banner -->
-                        <div class="executive-trust-banner">
-                            <div class="executive-trust-icon-box">
-                                <i class="fa-solid fa-shield-halved"></i>
-                            </div>
-                            <div class="text-start">
-                                <div class="executive-trust-title">Direct to Business Leadership</div>
-                                <p class="executive-trust-desc">Guaranteed 100% confidential &bull; Never published online</p>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- Form Inputs with Inset Icons & Micro-Interactions -->

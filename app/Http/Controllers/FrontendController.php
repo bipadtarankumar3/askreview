@@ -687,10 +687,11 @@ class FrontendController extends Controller
                         'rating' => $request->rating_number,
                         'message' => $request->f_comments,
                         'business_name' => $businessName,
+                        'submitted_at' => \Carbon\Carbon::now('Asia/Kolkata')->format('d M Y, h:i A'),
                         'admin_url' => url('admin/list_question_answers')
                     );
 
-                    // 1. Send to User
+                    // 1. Send to Store User (Business owner)
                     if (!empty($userDate->email)) {
                         try {
                             Mail::to($userDate->email)->send(new SpinnerFormMail('ADMIN', $mail_arr, $subject));
@@ -699,29 +700,7 @@ class FrontendController extends Controller
                         }
                     }
 
-                    // 2. Send to Admin
-                    if ($adminUser && !empty($adminUser->email) && strtolower(trim($adminUser->email)) !== strtolower(trim($userDate->email ?? ''))) {
-                        try {
-                            Mail::to($adminUser->email)->send(new SpinnerFormMail('ADMIN', $mail_arr, $subject . ' [Admin Copy]'));
-                        } catch (\Throwable $e) {
-                            \Log::error('Review form parent admin email error: ' . $e->getMessage());
-                        }
-                    }
-
-                    // 3. Send to Super Admin
-                    $sentEmails = array_filter([
-                        strtolower(trim($userDate->email ?? '')),
-                        $adminUser ? strtolower(trim($adminUser->email ?? '')) : null
-                    ]);
-                    if ($superAdmin && !empty($superAdmin->email) && !in_array(strtolower(trim($superAdmin->email)), $sentEmails)) {
-                        try {
-                            Mail::to($superAdmin->email)->send(new SpinnerFormMail('ADMIN', $mail_arr, $subject . ' [Admin Copy]'));
-                        } catch (\Throwable $e) {
-                            \Log::error('Review form super admin email error: ' . $e->getMessage());
-                        }
-                    }
-
-                    // 4. Send Confirmation to Customer
+                    // 2. Send Confirmation to Customer
                     if (!empty($request->email)) {
                         try {
                             Mail::to($request->email)->send(new SpinnerFormMail('CUSTOMER', $mail_arr, 'Thank you for your feedback - ' . $businessName));
@@ -857,7 +836,7 @@ class FrontendController extends Controller
 
                     // Setup Mail configuration
                     $this->setMailConfig();
-                    $subject = "New Private Enquiry from " . ($request->customer_name ?: 'Customer') . " - " . $businessName;
+                    $subject = "New Private Enquiry from AskReview" . " - " . $businessName;
                     
                     $mail_arr = array(
                         'title' => 'New Private Message Received',
@@ -866,10 +845,11 @@ class FrontendController extends Controller
                         'phone' => $request->customer_number,
                         'message' => $request->customer_message,
                         'business_name' => $businessName,
+                        'submitted_at' => \Carbon\Carbon::now('Asia/Kolkata')->format('d M Y, h:i A'),
                         'admin_url' => url('admin/private_review_list')
                     );
 
-                    // 1. Send Email to that User (Business owner)
+                    // 1. Send Email ONLY to Store User (Business owner)
                     if (!empty($userDate->email)) {
                         try {
                             Mail::to($userDate->email)->send(new SpinnerFormMail('ADMIN', $mail_arr, $subject));
@@ -878,29 +858,7 @@ class FrontendController extends Controller
                         }
                     }
 
-                    // 2. Send Email to that Admin (Parent Admin / Reseller)
-                    if ($adminUser && !empty($adminUser->email) && strtolower(trim($adminUser->email)) !== strtolower(trim($userDate->email ?? ''))) {
-                        try {
-                            Mail::to($adminUser->email)->send(new SpinnerFormMail('ADMIN', $mail_arr, $subject . ' [Admin Copy]'));
-                        } catch (\Throwable $e) {
-                            \Log::error('Private feedback parent admin email error: ' . $e->getMessage());
-                        }
-                    }
-
-                    // 3. Send Email to Super Admin (if distinct from user and admin)
-                    $sentEmails = array_filter([
-                        strtolower(trim($userDate->email ?? '')),
-                        $adminUser ? strtolower(trim($adminUser->email ?? '')) : null
-                    ]);
-                    if ($superAdmin && !empty($superAdmin->email) && !in_array(strtolower(trim($superAdmin->email)), $sentEmails)) {
-                        try {
-                            Mail::to($superAdmin->email)->send(new SpinnerFormMail('ADMIN', $mail_arr, $subject . ' [Admin Copy]'));
-                        } catch (\Throwable $e) {
-                            \Log::error('Private feedback super admin email error: ' . $e->getMessage());
-                        }
-                    }
-
-                    // 4. Send Confirmation Email to the customer if provided
+                    // 2. Send Confirmation Email to the customer if provided
                     if (!empty($request->customer_email)) {
                         try {
                             Mail::to($request->customer_email)->send(new SpinnerFormMail('CUSTOMER', $mail_arr, 'Thank you for contacting ' . $businessName));
