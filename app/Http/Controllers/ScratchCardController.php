@@ -121,12 +121,13 @@ class ScratchCardController extends Controller
         }
 
         $request->validate([
-            'title' => 'required|string|max:255',
-            'offer_text' => 'required|string|max:255',
+            'title' => 'nullable|string|max:255',
+            'offer_text' => 'nullable|string|max:255',
             'coupon_code' => 'nullable|string|max:100',
             'card_theme' => 'nullable|string|in:gold,emerald,sapphire,crimson,violet',
             'status' => 'nullable|in:active,inactive',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:5120'
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:5120',
+            'description' => 'nullable|string'
         ]);
 
         $shouldActivate = $request->status === 'active';
@@ -137,10 +138,10 @@ class ScratchCardController extends Controller
         }
 
         $data = [
-            'title' => $request->title,
-            'offer_text' => $request->offer_text,
-            'coupon_code' => $request->coupon_code ? strtoupper(trim($request->coupon_code)) : null,
-            'description' => $request->description,
+            'title' => $request->filled('title') ? trim($request->title) : null,
+            'offer_text' => $request->filled('offer_text') ? trim($request->offer_text) : null,
+            'coupon_code' => $request->filled('coupon_code') ? strtoupper(trim($request->coupon_code)) : null,
+            'description' => $request->filled('description') ? trim($request->description) : null,
             'card_theme' => $request->card_theme ?? 'gold',
             'status' => $shouldActivate ? 'active' : 'inactive',
         ];
@@ -575,7 +576,7 @@ class ScratchCardController extends Controller
             'customer_name' => trim($request->customer_name),
             'customer_phone' => $cleanPhone,
             'customer_email' => $request->customer_email ? trim($request->customer_email) : null,
-            'offer_won' => $card->offer_text,
+            'offer_won' => $card->offer_text ?: ($card->title ?: 'Exclusive Reward'),
             'coupon_code' => $card->coupon_code,
             'ip_address' => $ip,
             'status' => 'claimed'

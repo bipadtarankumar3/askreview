@@ -37,8 +37,8 @@
     ];
     $activeTheme = $themeStyles[$theme] ?? $themeStyles['gold'];
     $couponCode = !empty($scratchCardExistingLead->coupon_code) ? $scratchCardExistingLead->coupon_code : ($activeScratchCard->coupon_code ?? '');
-    $userPhone = preg_replace('/[^0-9]/', '', $user->mobile ?? $user->phone ?? '');
-    $waShareText = "Hello " . $user->name . ",\n\nI just unlocked my reward on your review page!\n\n🎁 Offer: " . $activeScratchCard->offer_text . ($couponCode ? ("\n🎟️ Code: " . $couponCode) : "") . "\n\nPlease find my voucher details for redemption at your store.";
+    $rewardName = !empty($activeScratchCard->offer_text) ? $activeScratchCard->offer_text : (!empty($activeScratchCard->title) ? $activeScratchCard->title : 'Exclusive Reward');
+    $waShareText = "Hello " . $user->name . ",\n\nI just unlocked my reward on your review page!\n\n🎁 Offer: " . $rewardName . ($couponCode ? ("\n🎟️ Code: " . $couponCode) : "") . "\n\nPlease find my voucher details for redemption at your store.";
 @endphp
 
 <!-- ═══════════════════════════════════════════════════════════════ -->
@@ -84,11 +84,13 @@
                         <div class="scratch-revealed-inner text-center">
                             @if(!empty($activeScratchCard->image))
                                 <div class="revealed-reward-img-box mb-1.5">
-                                    <img src="{{ asset($activeScratchCard->image) }}" alt="{{ $activeScratchCard->title }}" class="revealed-reward-img">
+                                    <img src="{{ asset($activeScratchCard->image) }}" alt="{{ $activeScratchCard->title ?? 'Reward' }}" class="revealed-reward-img">
                                 </div>
                             @endif
                             <span class="revealed-tag"><i class="fa-solid fa-gift"></i> YOU WON!</span>
-                            <h3 class="revealed-offer-text">{{ $activeScratchCard->offer_text }}</h3>
+                            @if(!empty($activeScratchCard->offer_text))
+                                <h3 class="revealed-offer-text">{{ $activeScratchCard->offer_text }}</h3>
+                            @endif
                             @if(!empty($couponCode))
                                 <div class="revealed-coupon-badge" id="revealedCouponBadge">
                                     <span class="coupon-label">CODE:</span>
@@ -110,7 +112,7 @@
                     <!-- Hint / Hand swipe animation over canvas (hidden after first scratch) -->
                     <div class="scratch-hand-hint {{ !empty($scratchCardAlreadyScratched) ? 'd-none' : '' }}" id="scratchHandHint" style="{{ !empty($scratchCardAlreadyScratched) ? 'display:none;' : '' }}">
                         <i class="fa-solid fa-hand-pointer hand-icon"></i>
-                        <span>Scratch with finger or cursor</span>
+                        <span>Rub with finger or cursor</span>
                     </div>
 
                     <!-- Scratch Progress Indicator -->
@@ -152,10 +154,17 @@
                             <span class="detail-value fw-bold text-dark">{{ $user->name }}</span>
                         </div>
 
+                        @if(!empty($activeScratchCard->offer_text))
                         <div class="voucher-detail-row">
                             <span class="detail-label"><i class="fa-solid fa-gift text-primary me-1"></i> Reward Won</span>
                             <span class="detail-value fw-bold text-success">{{ $activeScratchCard->offer_text }}</span>
                         </div>
+                        @elseif(!empty($activeScratchCard->title))
+                        <div class="voucher-detail-row">
+                            <span class="detail-label"><i class="fa-solid fa-gift text-primary me-1"></i> Offer</span>
+                            <span class="detail-value fw-bold text-success">{{ $activeScratchCard->title }}</span>
+                        </div>
+                        @endif
 
                         @if(!empty($couponCode))
                         <div class="voucher-detail-row">
@@ -226,7 +235,7 @@
                                 <input type="hidden" name="user_id" value="{{ $user->id }}">
                                 <input type="hidden" name="user_name" value="{{ $user->name_url ?? ($user_name ?? '') }}">
                                 <input type="hidden" name="scratch_card_id" value="{{ $activeScratchCard->id }}">
-                                <input type="hidden" name="offer_won" value="{{ $activeScratchCard->offer_text }}">
+                                <input type="hidden" name="offer_won" value="{{ $activeScratchCard->offer_text ?: ($activeScratchCard->title ?: 'Exclusive Reward') }}">
                                 <input type="hidden" name="coupon_code" value="{{ $couponCode }}">
 
                                 <!-- Name Input Group -->
@@ -275,16 +284,17 @@
                     @php
                         $userPhone = preg_replace('/[^0-9]/', '', $user->mobile ?? $user->phone ?? '');
                         $couponText = !empty($couponCode) ? ' (Code: ' . $couponCode . ')' : '';
-                        $waMsg = 'Hello ' . $user->name . ', I just scratched and won ' . $activeScratchCard->offer_text . $couponText . ' on your review page!';
+                        $rewardName = $activeScratchCard->offer_text ?: ($activeScratchCard->title ?: 'Exclusive Reward');
+                        $waMsg = 'Hello ' . $user->name . ', I just scratched and won ' . $rewardName . $couponText . ' on your review page!';
                     @endphp
 
                     <div class="voucher-actions-wrap pt-1 pb-1 {{ !empty($scratchCardExistingLead) ? '' : 'd-none' }}" id="scratchClaimedActionsWrap" style="{{ !empty($scratchCardExistingLead) ? 'display: block;' : 'display: none;' }}">
-                        <!-- @if(!empty($userPhone))
+                        @if(!empty($userPhone))
                             <a href="https://wa.me/{{ $userPhone }}?text={{ urlencode($waMsg) }}" target="_blank" class="btn btn-whatsapp-voucher w-100 d-flex align-items-center justify-content-center gap-2 mb-3">
                                 <i class="fa-brands fa-whatsapp fs-5"></i>
                                 <span>Send Voucher via WhatsApp</span>
                             </a>
-                        @endif -->
+                        @endif
 
                         <button type="button" class="btn btn-light w-100 btn-done-close text-muted py-2.5" onclick="close_scratch_card_modal()">
                             Done &amp; Return to Review
@@ -513,9 +523,11 @@
         margin-bottom: 4px;
     }
     .revealed-reward-img {
-        width: 48px;
-        height: 48px;
-        object-fit: cover;
+        width: 60px;
+        height: 60px;
+        object-fit: contain;
+        background: #ffffff;
+        padding: 4px;
         border-radius: 12px;
         border: 2px solid rgba(255, 255, 255, 0.9);
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
@@ -1412,11 +1424,11 @@
         ctx.textBaseline = 'middle';
         ctx.fillStyle = '#ffffff';
         ctx.font = 'bold 15px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-        ctx.fillText('✨ SCRATCH HERE TO WIN', width / 2, badgeY + 19);
+        ctx.fillText('✨ SCRATCH TO REVEAL', width / 2, badgeY + 19);
 
         ctx.font = '600 11.5px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
         ctx.fillStyle = '#fde047';
-        ctx.fillText('Rub with finger or cursor', width / 2, badgeY + 38);
+        ctx.fillText('Secret Prize Inside', width / 2, badgeY + 38);
 
         ctx.restore();
         ctx.restore();

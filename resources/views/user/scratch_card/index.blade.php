@@ -318,7 +318,7 @@
                                     <div class="scratch-preview-chassis theme-{{ $c->card_theme ?? 'gold' }}">
                                         <div class="d-flex align-items-center justify-content-between">
                                             <span style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 800; opacity: 0.9;">
-                                                <i class="ti ti-sparkles me-1"></i> {{ $c->title }}
+                                                <i class="ti ti-sparkles me-1"></i> {{ $c->title ?: 'Scratch Card Offer' }}
                                             </span>
                                             @if($c->status === 'active')
                                                 <span class="badge bg-white text-success fw-bold px-2.5 py-1" style="border-radius: 20px; font-size: 0.72rem;">
@@ -338,18 +338,22 @@
                                                     <img src="{{ asset($c->image) }}" alt="Reward" class="card-thumb-badge">
                                                 </div>
                                             @endif
-                                            <div style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.85;">Secret Reward:</div>
-                                            <h4 class="fw-bold mb-1 mt-0.5 text-white" style="letter-spacing: -0.01em;">{{ $c->offer_text }}</h4>
-                                            @if($c->coupon_code)
+                                            @if(!empty($c->offer_text))
+                                                <div style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.85;">Secret Reward:</div>
+                                                <h4 class="fw-bold mb-1 mt-0.5 text-white" style="letter-spacing: -0.01em;">{{ $c->offer_text }}</h4>
+                                            @endif
+                                            @if(!empty($c->coupon_code))
                                                 <span class="badge bg-white text-dark fw-bold px-2.5 py-0.5 font-monospace" style="font-size: 0.78rem;">
                                                     CODE: {{ $c->coupon_code }}
                                                 </span>
                                             @endif
                                         </div>
 
-                                        <div style="font-size: 0.72rem; opacity: 0.85; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
-                                            {{ $c->description ?: 'Show this coupon code at counter to redeem.' }}
-                                        </div>
+                                        @if(!empty($c->description))
+                                            <div style="font-size: 0.72rem; opacity: 0.85; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+                                                {{ $c->description }}
+                                            </div>
+                                        @endif
                                     </div>
 
                                     <!-- Card Actions & Deep Details Deck -->
@@ -592,13 +596,13 @@
                 <div class="modal-body pt-3">
                     
                     <div class="mb-3">
-                        <label class="form-label fw-bold small text-muted">Offer Title / Campaign Name <span class="text-danger">*</span></label>
-                        <input type="text" name="title" id="cardTitle" class="form-control" placeholder="e.g. Weekend Surprise Treat" required>
+                        <label class="form-label fw-bold small text-muted">Offer Title / Campaign Name (Optional)</label>
+                        <input type="text" name="title" id="cardTitle" class="form-control" placeholder="e.g. Weekend Surprise Treat">
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-bold small text-muted">Prize / Reward Won Text <span class="text-danger">*</span></label>
-                        <input type="text" name="offer_text" id="cardOfferText" class="form-control" placeholder="e.g. Flat 20% OFF or Free Coffee" required>
+                        <label class="form-label fw-bold small text-muted">Prize / Reward Won Text (Optional)</label>
+                        <input type="text" name="offer_text" id="cardOfferText" class="form-control" placeholder="e.g. Flat 20% OFF or Free Coffee">
                         <small class="text-muted">This text is hidden under the scratch foil and revealed when scratched!</small>
                     </div>
 
@@ -803,8 +807,8 @@ function editScratchCard(card) {
     document.getElementById('modalHeading').innerHTML = '<i class="ti ti-edit text-primary me-1.5"></i> Edit Scratch Card';
     document.getElementById('btnSaveCard').innerText = 'Update Scratch Card';
     document.getElementById('cardId').value = card.id;
-    document.getElementById('cardTitle').value = card.title;
-    document.getElementById('cardOfferText').value = card.offer_text;
+    document.getElementById('cardTitle').value = card.title || '';
+    document.getElementById('cardOfferText').value = card.offer_text || '';
     document.getElementById('cardCouponCode').value = card.coupon_code || '';
     document.getElementById('cardTheme').value = card.card_theme || 'gold';
     document.getElementById('cardDesc').value = card.description || '';
