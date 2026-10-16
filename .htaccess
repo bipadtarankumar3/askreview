@@ -17,7 +17,7 @@
     # Route public assets if accessed without public/ prefix
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^(adminAssets|frontend|mp3|upload|css|js|images|fonts)/(.*)$ public/$1/$2 [L,NC]
+    RewriteRule ^(adminAssets|frontend|mp3|upload|uploads|css|js|images|fonts)/(.*)$ public/$1/$2 [L,NC]
 
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f

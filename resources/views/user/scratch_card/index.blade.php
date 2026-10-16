@@ -158,12 +158,12 @@
     <div class="scratch-hero-card">
         <div class="row align-items-center">
             <div class="col-lg-8 col-12">
-                <span class="badge mb-2 px-3 py-1.5 text-uppercase fw-bold" style="background: rgba(245, 158, 11, 0.2); color: #fef08a; border: 1px solid rgba(245, 158, 11, 0.35); font-size: 0.72rem; letter-spacing: 0.06em;">
-                    <i class="ti ti-gift me-1"></i> Interactive Gamified Lead Magnet
+                <span class="badge mb-2 px-2.5 py-1 text-uppercase fw-bold" style="background: rgba(245, 158, 11, 0.2); color: #fef08a; border: 1px solid rgba(245, 158, 11, 0.35); font-size: 0.68rem; letter-spacing: 0.05em;">
+                    <i class="ti ti-gift me-1"></i> Lead Magnet
                 </span>
-                <h2 class="fw-bold mb-2 text-white" style="letter-spacing: -0.02em;">Scratch &amp; Win Reward Cards</h2>
-                <p class="text-white-50 mb-3" style="font-size: 0.95rem; max-width: 650px;">
-                    Boost customer engagement and collect high-intent leads on your public review page. Customers scratch an authentic foil card with sound effects, reveal your reward image &amp; coupon, and claim it with their contact details.
+                <h2 class="fw-bold mb-1.5 text-white" style="letter-spacing: -0.02em;">Scratch &amp; Win Reward Cards</h2>
+                <p class="text-white-50 mb-3" style="font-size: 0.85rem; max-width: 580px;">
+                    Engage customers and collect leads with interactive scratch reward cards.
                 </p>
                 <div class="d-flex flex-wrap gap-2">
                     <span class="badge bg-dark bg-opacity-50 text-white border border-secondary px-3 py-2 fw-normal" style="border-radius: 8px;">
@@ -860,7 +860,8 @@ function openCardAnalyticsModal(cardId) {
 
                 var imgWrap = document.getElementById('modalCardImageWrap');
                 if (card.image) {
-                    imgWrap.innerHTML = '<img src="' + card.image + '" style="width: 52px; height: 52px; object-fit: cover; border-radius: 10px; border: 1.5px solid #cbd5e1;">';
+                    var imgUrl = (card.image.indexOf('http') === 0 || card.image.indexOf('/') === 0) ? card.image : ('{{ url('/') }}/' + card.image);
+                    imgWrap.innerHTML = '<img src="' + imgUrl + '" style="width: 52px; height: 52px; object-fit: cover; border-radius: 10px; border: 1.5px solid #cbd5e1;">';
                 } else {
                     imgWrap.innerHTML = '<div style="width: 52px; height: 52px; border-radius: 10px; background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;"><i class="ti ti-gift"></i></div>';
                 }
