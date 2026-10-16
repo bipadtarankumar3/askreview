@@ -150,6 +150,90 @@
     text-align: center;
     box-shadow: 0 10px 25px -5px rgba(239, 68, 68, 0.08);
 }
+
+/* Card Analytics Modal & Selection Toolbar Button Hover Fixes */
+.btn-export-excel {
+    background-color: #ffffff !important;
+    color: #107c41 !important;
+    border: 1.5px solid #107c41 !important;
+    transition: all 0.2s ease !important;
+}
+.btn-export-excel:hover,
+.btn-export-excel:focus,
+.btn-export-excel:active {
+    background-color: #107c41 !important;
+    color: #ffffff !important;
+    border-color: #107c41 !important;
+    box-shadow: 0 4px 10px rgba(16, 124, 65, 0.25) !important;
+}
+.btn-export-excel:hover i,
+.btn-export-excel:hover span {
+    color: #ffffff !important;
+}
+
+.btn-export-pdf {
+    background-color: #ffffff !important;
+    color: #dc2626 !important;
+    border: 1.5px solid #dc2626 !important;
+    transition: all 0.2s ease !important;
+}
+.btn-export-pdf:hover,
+.btn-export-pdf:focus,
+.btn-export-pdf:active {
+    background-color: #dc2626 !important;
+    color: #ffffff !important;
+    border-color: #dc2626 !important;
+    box-shadow: 0 4px 10px rgba(220, 38, 38, 0.25) !important;
+}
+.btn-export-pdf:hover i,
+.btn-export-pdf:hover span {
+    color: #ffffff !important;
+}
+
+.btn-print-report {
+    background-color: #ffffff !important;
+    color: #475569 !important;
+    border: 1.5px solid #cbd5e1 !important;
+    transition: all 0.2s ease !important;
+}
+.btn-print-report:hover,
+.btn-print-report:focus,
+.btn-print-report:active {
+    background-color: #475569 !important;
+    color: #ffffff !important;
+    border-color: #475569 !important;
+    box-shadow: 0 4px 10px rgba(71, 85, 105, 0.25) !important;
+}
+.btn-print-report:hover i,
+.btn-print-report:hover span {
+    color: #ffffff !important;
+}
+
+/* Ensure all outline buttons in modal have crisp visible text on hover */
+#cardAnalyticsModal .btn-outline-success:hover,
+#cardAnalyticsModal .btn-outline-success:focus,
+#modalSelectionToolbar .btn-outline-success:hover,
+#modalSelectionToolbar .btn-outline-success:focus {
+    background-color: #107c41 !important;
+    color: #ffffff !important;
+    border-color: #107c41 !important;
+}
+
+#cardAnalyticsModal .btn-outline-danger:hover,
+#cardAnalyticsModal .btn-outline-danger:focus,
+#modalSelectionToolbar .btn-outline-danger:hover,
+#modalSelectionToolbar .btn-outline-danger:focus {
+    background-color: #dc2626 !important;
+    color: #ffffff !important;
+    border-color: #dc2626 !important;
+}
+
+#cardAnalyticsModal .btn-outline-secondary:hover,
+#cardAnalyticsModal .btn-outline-secondary:focus {
+    background-color: #64748b !important;
+    color: #ffffff !important;
+    border-color: #64748b !important;
+}
 </style>
 
 <div class="container-fluid px-4 py-3">
@@ -659,49 +743,75 @@
     </div>
 </div>
 
-<!-- ── CARD-WISE DEEP ANALYTICS & LEADS MODAL ── -->
+<!-- ── CARD-WISE DEEP ANALYTICS & LEADS MODAL (EXPANDED MODAL-XL) ── -->
 <div class="modal fade" id="cardAnalyticsModal" tabindex="-1" aria-labelledby="cardAnalyticsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable" style="max-width: 95vw; width: 1320px;">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
-            <div class="modal-header border-0 pb-0" style="background: #f8fafc; padding: 20px 24px;">
-                <div>
-                    <span class="badge bg-primary px-2.5 py-1 text-uppercase" id="modalCardThemeBadge" style="font-size: 0.68rem;">Theme</span>
-                    <h4 class="fw-bold text-dark mt-1 mb-0" id="modalCardTitle">Scratch Card Details</h4>
-                    <small class="text-muted" id="modalCardCreated">Created on ...</small>
+            <!-- Modal Header -->
+            <div class="modal-header border-0 pb-3" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); padding: 20px 28px; border-bottom: 1px solid #e2e8f0 !important;">
+                <div class="d-flex align-items-center gap-3">
+                    <div id="modalCardHeaderIcon" style="width: 48px; height: 48px; border-radius: 12px; background: #e0e7ff; color: #4338ca; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                        <i class="ti ti-ticket"></i>
+                    </div>
+                    <div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge bg-primary px-2.5 py-1 text-uppercase fw-bold" id="modalCardThemeBadge" style="font-size: 0.68rem; letter-spacing: 0.5px;">Theme</span>
+                            <span id="modalCardStatusWrap"></span>
+                        </div>
+                        <h4 class="fw-bold text-dark mt-1 mb-0" id="modalCardTitle" style="font-size: 1.35rem;">Scratch Card Details</h4>
+                        <small class="text-muted" id="modalCardCreated">Created on ...</small>
+                    </div>
                 </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                <!-- Export & Print Actions -->
+                <div class="d-flex align-items-center gap-2">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-export-excel fw-bold d-flex align-items-center gap-1.5 shadow-sm" onclick="exportCardLeadsExcel()" title="Export Filtered or Selected Leads to Excel / CSV">
+                            <i class="ti ti-file-spreadsheet fs-5"></i> <span>Export Excel</span>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-export-pdf fw-bold d-flex align-items-center gap-1.5 shadow-sm" onclick="exportCardLeadsPdf()" title="Export Leads to PDF Document">
+                            <i class="ti ti-file-text fs-5"></i> <span>Export PDF</span>
+                        </button>
+                        <!-- <button type="button" class="btn btn-sm btn-print-report d-flex align-items-center gap-1.5 shadow-sm" onclick="printModalLeads()" title="Print Leads Report">
+                            <i class="ti ti-printer fs-5"></i> <span>Print</span>
+                        </button> -->
+                    </div>
+                    <button type="button" class="btn-close ms-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
             </div>
-            <div class="modal-body p-4">
-                <!-- Card Metrics Cards -->
+
+            <!-- Modal Body -->
+            <div class="modal-body p-4" style="background: #ffffff;">
+                <!-- Card Metrics Row -->
                 <div class="row g-3 mb-4">
-                    <div class="col-3">
-                        <div class="p-3 text-center rounded border" style="background: #fffbeb;">
-                            <div class="text-muted small fw-bold text-uppercase" style="font-size: 0.7rem;">Scratches</div>
+                    <div class="col-6 col-md-3">
+                        <div class="p-3 text-center rounded-3 border shadow-sm" style="background: #fffbeb; border-color: #fef3c7 !important;">
+                            <div class="text-muted small fw-bold text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.5px;">Total Scratches</div>
                             <h3 class="fw-bold mb-0 text-warning" id="modalStatScratches">0</h3>
                         </div>
                     </div>
-                    <div class="col-3">
-                        <div class="p-3 text-center rounded border" style="background: #eff6ff;">
-                            <div class="text-muted small fw-bold text-uppercase" style="font-size: 0.7rem;">Total Leads</div>
+                    <div class="col-6 col-md-3">
+                        <div class="p-3 text-center rounded-3 border shadow-sm" style="background: #eff6ff; border-color: #dbeafe !important;">
+                            <div class="text-muted small fw-bold text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.5px;">Total Leads</div>
                             <h3 class="fw-bold mb-0 text-primary" id="modalStatLeads">0</h3>
                         </div>
                     </div>
-                    <div class="col-3">
-                        <div class="p-3 text-center rounded border" style="background: #ecfdf5;">
-                            <div class="text-muted small fw-bold text-uppercase" style="font-size: 0.7rem;">Claimed</div>
+                    <div class="col-6 col-md-3">
+                        <div class="p-3 text-center rounded-3 border shadow-sm" style="background: #ecfdf5; border-color: #d1fae5 !important;">
+                            <div class="text-muted small fw-bold text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.5px;">Claimed Leads</div>
                             <h3 class="fw-bold mb-0 text-success" id="modalStatClaimed">0</h3>
                         </div>
                     </div>
-                    <div class="col-3">
-                        <div class="p-3 text-center rounded border" style="background: #faf5ff;">
-                            <div class="text-muted small fw-bold text-uppercase" style="font-size: 0.7rem;">Redeemed</div>
-                            <h3 class="fw-bold mb-0 text-purple" style="color: #9333ea;" id="modalStatRedeemed">0</h3>
+                    <div class="col-6 col-md-3">
+                        <div class="p-3 text-center rounded-3 border shadow-sm" style="background: #faf5ff; border-color: #f3e8ff !important;">
+                            <div class="text-muted small fw-bold text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.5px;">Redeemed Leads</div>
+                            <h3 class="fw-bold mb-0" style="color: #9333ea;" id="modalStatRedeemed">0</h3>
                         </div>
                     </div>
                 </div>
 
                 <!-- Card Details Snippet -->
-                <div class="p-3 rounded border mb-4 d-flex align-items-center justify-content-between" style="background: #f8fafc;">
+                <div class="p-3 rounded-3 border mb-4 d-flex align-items-center justify-content-between" style="background: #f8fafc; border-color: #e2e8f0 !important;">
                     <div class="d-flex align-items-center gap-3">
                         <div id="modalCardImageWrap"></div>
                         <div>
@@ -709,29 +819,132 @@
                             <div class="text-muted small" id="modalCardCouponWrap"></div>
                         </div>
                     </div>
-                    <div id="modalCardStatusWrap"></div>
+                    <div class="d-flex align-items-center gap-2">
+                        <form id="modalPurgeLeadsForm" action="" method="POST" onsubmit="return confirm('Are you sure you want to delete ALL customer leads for this scratch card? This cannot be undone!')" class="d-inline-block">
+                            @csrf
+                            <button type="submit" class="btn btn-sm btn-outline-danger" id="btnModalPurgeLeads">
+                                <i class="ti ti-trash me-1"></i> Delete All Leads for Card
+                            </button>
+                        </form>
+                    </div>
                 </div>
 
-                <!-- Customer Submissions Table with exact Date & Time -->
-                <div class="d-flex align-items-center justify-content-between mb-2">
-                    <h5 class="fw-bold text-dark mb-0">Customers Who Scratched This Card</h5>
-                    <form id="modalPurgeLeadsForm" action="" method="POST" onsubmit="return confirm('Are you sure you want to delete ALL customer leads for this scratch card? This cannot be undone!')" class="d-inline-block">
-                        @csrf
-                        <button type="submit" class="btn btn-sm btn-outline-danger" id="btnModalPurgeLeads">
-                            <i class="ti ti-trash me-1"></i> Delete All Leads for Card
-                        </button>
-                    </form>
+                <!-- ── FILTER & SEARCH TOOLBAR (Date-wise, Status, Keyword) ── -->
+                <div class="card border mb-3 shadow-none" style="background: #f8fafc; border-radius: 14px; border-color: #e2e8f0 !important;">
+                    <div class="card-body p-3">
+                        <div class="row g-2 align-items-end">
+                            <!-- From Date -->
+                            <div class="col-12 col-sm-6 col-md-3 col-lg-2">
+                                <label class="form-label text-muted small fw-bold mb-1" style="font-size: 0.75rem;">
+                                    <i class="ti ti-calendar me-1"></i>From Date
+                                </label>
+                                <input type="date" id="modalFilterFromDate" class="form-control form-control-sm" onchange="onModalFilterChanged()">
+                            </div>
+                            <!-- To Date -->
+                            <div class="col-12 col-sm-6 col-md-3 col-lg-2">
+                                <label class="form-label text-muted small fw-bold mb-1" style="font-size: 0.75rem;">
+                                    <i class="ti ti-calendar me-1"></i>To Date
+                                </label>
+                                <input type="date" id="modalFilterToDate" class="form-control form-control-sm" onchange="onModalFilterChanged()">
+                            </div>
+                            <!-- Status Filter -->
+                            <div class="col-12 col-sm-6 col-md-3 col-lg-2">
+                                <label class="form-label text-muted small fw-bold mb-1" style="font-size: 0.75rem;">
+                                    <i class="ti ti-adjustments-horizontal me-1"></i>Status
+                                </label>
+                                <select id="modalFilterStatus" class="form-select form-select-sm" onchange="onModalFilterChanged()">
+                                    <option value="">All Statuses</option>
+                                    <option value="claimed">Claimed</option>
+                                    <option value="redeemed">Redeemed</option>
+                                </select>
+                            </div>
+                            <!-- Keyword Search -->
+                            <div class="col-12 col-sm-6 col-md-3 col-lg-3">
+                                <label class="form-label text-muted small fw-bold mb-1" style="font-size: 0.75rem;">
+                                    <i class="ti ti-search me-1"></i>Search Leads
+                                </label>
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text bg-white border-end-0"><i class="ti ti-search text-muted"></i></span>
+                                    <input type="text" id="modalFilterSearch" class="form-control border-start-0" placeholder="Name, phone, code..." onkeyup="onModalFilterChanged()">
+                                </div>
+                            </div>
+                            <!-- Filter Buttons & Reset -->
+                            <div class="col-12 col-lg-3 d-flex gap-2 justify-content-lg-end">
+                                <button type="button" class="btn btn-sm btn-primary px-3 fw-bold flex-grow-1 flex-lg-grow-0" onclick="applyModalServerFilter()">
+                                    <i class="ti ti-filter me-1"></i> Filter
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary px-2.5" onclick="resetModalFilters()" title="Reset all filters">
+                                    <i class="ti ti-refresh me-1"></i> Reset
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Quick Date Presets -->
+                        <div class="d-flex align-items-center flex-wrap gap-1.5 mt-2.5 pt-2 border-top" style="border-color: #e2e8f0 !important;">
+                            <span class="text-muted small fw-bold me-1" style="font-size: 0.72rem;">Quick Range:</span>
+                            <button type="button" class="btn btn-xs btn-outline-secondary py-0.5 px-2 rounded-pill" onclick="setModalDateRange('all')">All Time</button>
+                            <button type="button" class="btn btn-xs btn-outline-secondary py-0.5 px-2 rounded-pill" onclick="setModalDateRange('today')">Today</button>
+                            <button type="button" class="btn btn-xs btn-outline-secondary py-0.5 px-2 rounded-pill" onclick="setModalDateRange('yesterday')">Yesterday</button>
+                            <button type="button" class="btn btn-xs btn-outline-secondary py-0.5 px-2 rounded-pill" onclick="setModalDateRange('7days')">Last 7 Days</button>
+                            <button type="button" class="btn btn-xs btn-outline-secondary py-0.5 px-2 rounded-pill" onclick="setModalDateRange('30days')">Last 30 Days</button>
+                            <button type="button" class="btn btn-xs btn-outline-secondary py-0.5 px-2 rounded-pill" onclick="setModalDateRange('this_month')">This Month</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="table-responsive" style="max-height: 280px; overflow-y: auto;">
-                    <table class="table table-sm table-modern align-middle mb-0">
-                        <thead>
+
+                <!-- ── BATCH / BULK SELECTION ACTION TOOLBAR ── -->
+                <div id="modalSelectionToolbar" class="alert alert-primary py-2.5 px-3.5 d-flex align-items-center justify-content-between mb-3 shadow-sm" style="display: none !important; border-radius: 12px; border-left: 4px solid #2563eb;">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="badge bg-primary rounded-pill px-2.5 py-1" id="modalSelectedCountBadge">0 Selected</span>
+                        <span class="small text-dark fw-bold" id="modalSelectedCountText">Select actions for checked customer leads</span>
+                    </div>
+                    <div class="d-flex align-items-center flex-wrap gap-2">
+                        <button type="button" class="btn btn-xs btn-success fw-bold px-2.5 py-1" onclick="bulkUpdateSelectedStatus('redeemed')">
+                            <i class="ti ti-check me-1"></i> Mark Redeemed
+                        </button>
+                        <button type="button" class="btn btn-xs btn-warning text-dark fw-bold px-2.5 py-1" onclick="bulkUpdateSelectedStatus('claimed')">
+                            <i class="ti ti-clock me-1"></i> Mark Claimed
+                        </button>
+                        <button type="button" class="btn btn-xs btn-export-excel fw-bold px-2.5 py-1" onclick="exportSelectedOnlyExcel()">
+                            <i class="ti ti-file-spreadsheet me-1"></i> Excel Selected
+                        </button>
+                        <button type="button" class="btn btn-xs btn-export-pdf fw-bold px-2.5 py-1" onclick="exportSelectedOnlyPdf()">
+                            <i class="ti ti-file-text me-1"></i> PDF Selected
+                        </button>
+                        <button type="button" class="btn btn-xs btn-danger fw-bold px-2.5 py-1" onclick="bulkDeleteSelectedLeads()">
+                            <i class="ti ti-trash me-1"></i> Delete Selected
+                        </button>
+                        <button type="button" class="btn btn-xs btn-link text-muted p-0 text-decoration-none ms-1" onclick="clearModalSelection()">
+                            Clear
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ── LEADS TABLE HEADER BAR ── -->
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <div class="d-flex align-items-center gap-2">
+                        <h5 class="fw-bold text-dark mb-0">Customers Who Scratched This Card</h5>
+                        <span class="badge bg-secondary rounded-pill" id="modalLeadsCounterBadge">0</span>
+                    </div>
+                    <div class="small text-muted" id="modalFilterSummaryText">
+                        Showing all leads
+                    </div>
+                </div>
+
+                <!-- ── TABLE WITH CHECKBOXES ── -->
+                <div class="table-responsive border rounded-3" style="max-height: 480px; min-height: 220px; overflow-y: auto;">
+                    <table class="table table-hover table-sm table-modern align-middle mb-0" id="modalLeadsTable">
+                        <thead class="table-light sticky-top" style="z-index: 2;">
                             <tr>
-                                <th>Customer Name</th>
-                                <th>Phone &amp; WhatsApp</th>
-                                <th>Coupon</th>
-                                <th>Date &amp; Time</th>
-                                <th>Status</th>
-                                <th style="width: 50px;">Action</th>
+                                <th style="width: 44px; text-align: center;">
+                                    <input type="checkbox" id="modalSelectAllLeads" onchange="toggleSelectAllModalLeads(this)" class="form-check-input" title="Select / Deselect All Visible" style="cursor: pointer; width: 17px; height: 17px;">
+                                </th>
+                                <th style="min-width: 170px;">Customer Name</th>
+                                <th style="min-width: 190px;">Phone &amp; WhatsApp</th>
+                                <th style="min-width: 110px;">Coupon Code</th>
+                                <th style="min-width: 170px;">Scratched Date &amp; Time (IST)</th>
+                                <th style="min-width: 110px;">Status</th>
+                                <th style="width: 70px; text-align: center;">Action</th>
                             </tr>
                         </thead>
                         <tbody id="modalCardLeadsTbody">
@@ -739,9 +952,20 @@
                         </tbody>
                     </table>
                 </div>
+
+                <!-- Table Footer Info -->
+                <div class="d-flex align-items-center justify-content-between mt-2 px-1">
+                    <small class="text-muted" id="modalFooterShowingCount">Loading leads...</small>
+                    <small class="text-muted"><i class="ti ti-info-circle me-1"></i>Click the status badge to toggle between Claimed and Redeemed</small>
+                </div>
             </div>
-            <div class="modal-footer border-0 pt-0 bg-light">
-                <button type="button" class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Close</button>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer border-0 pt-0 bg-light px-4 py-3 d-flex justify-content-between">
+                <div class="small text-muted">
+                    <i class="ti ti-clock me-1"></i>All timestamps displayed in <strong>Indian Standard Time (IST)</strong>
+                </div>
+                <button type="button" class="btn btn-secondary btn-sm px-4 fw-bold" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -840,81 +1064,100 @@ document.getElementById('createScratchModal').addEventListener('hidden.bs.modal'
     document.getElementById('cardImagePreviewContainer').classList.add('d-none');
 });
 
+// ─────────────────────────────────────────────────────────────
+// CARD ANALYTICS & LEADS MANAGEMENT (EXPANDED MODAL)
+// ─────────────────────────────────────────────────────────────
+var currentModalCardId = null;
+var currentModalCard = null;
+var modalAllLeads = [];
+var modalFilteredLeads = [];
+var selectedModalLeadIds = new Set();
+
 // Open Card Analytics & Leads Breakdown Modal
 function openCardAnalyticsModal(cardId) {
-    fetch('{{ url("admin/scratch_cards/analytics") }}/' + cardId)
+    currentModalCardId = cardId;
+    selectedModalLeadIds.clear();
+    updateModalSelectionUI();
+
+    // Reset filter inputs on fresh modal open
+    var fromInput = document.getElementById('modalFilterFromDate');
+    var toInput = document.getElementById('modalFilterToDate');
+    var statusInput = document.getElementById('modalFilterStatus');
+    var searchInput = document.getElementById('modalFilterSearch');
+    if (fromInput) fromInput.value = '';
+    if (toInput) toInput.value = '';
+    if (statusInput) statusInput.value = '';
+    if (searchInput) searchInput.value = '';
+
+    fetchCardAnalyticsData(cardId, {});
+}
+
+// Fetch analytics and leads from backend
+function fetchCardAnalyticsData(cardId, params, keepModalOpen) {
+    var url = new URL('{{ url("admin/scratch_cards/analytics") }}/' + cardId, window.location.origin);
+    if (params) {
+        Object.keys(params).forEach(function(k) {
+            if (params[k]) url.searchParams.append(k, params[k]);
+        });
+    }
+
+    fetch(url.toString())
         .then(r => r.json())
         .then(res => {
             if (res.success) {
-                var card = res.card;
-                var leads = res.leads;
+                currentModalCard = res.card;
+                modalAllLeads = res.leads || [];
+                modalFilteredLeads = [...modalAllLeads];
 
-                document.getElementById('modalCardThemeBadge').innerText = card.card_theme + ' Theme';
-                document.getElementById('modalCardTitle').innerText = card.title;
-                document.getElementById('modalCardCreated').innerText = 'Created on ' + card.created_at;
-                document.getElementById('modalStatScratches').innerText = card.scratch_count;
-                document.getElementById('modalStatLeads').innerText = card.leads_count;
-                document.getElementById('modalStatClaimed').innerText = card.claimed_count;
-                document.getElementById('modalStatRedeemed').innerText = card.redeemed_count;
+                // Header details
+                document.getElementById('modalCardThemeBadge').innerText = (res.card.card_theme || 'gold') + ' Theme';
+                document.getElementById('modalCardTitle').innerText = res.card.title || 'Untitled Card';
+                document.getElementById('modalCardCreated').innerText = 'Created on ' + (res.card.created_at || 'N/A');
 
-                document.getElementById('modalCardOfferText').innerText = card.offer_text;
-                document.getElementById('modalCardCouponWrap').innerHTML = card.coupon_code 
-                    ? '<span class="badge bg-primary font-monospace">CODE: ' + card.coupon_code + '</span>' 
+                // Metric boxes (unfiltered overall totals)
+                document.getElementById('modalStatScratches').innerText = res.card.scratch_count || 0;
+                document.getElementById('modalStatLeads').innerText = res.card.leads_count || 0;
+                document.getElementById('modalStatClaimed').innerText = res.card.claimed_count || 0;
+                document.getElementById('modalStatRedeemed').innerText = res.card.redeemed_count || 0;
+
+                // Card details snippet
+                document.getElementById('modalCardOfferText').innerText = res.card.offer_text || 'No offer text';
+                document.getElementById('modalCardCouponWrap').innerHTML = res.card.coupon_code 
+                    ? '<span class="badge bg-primary font-monospace" style="cursor: pointer;" onclick="copyModalCoupon(\'' + res.card.coupon_code + '\', this)" title="Click to copy coupon code">CODE: ' + res.card.coupon_code + ' <i class="ti ti-copy ms-1"></i></span>' 
                     : '<span class="text-muted">No coupon code</span>';
 
                 var imgWrap = document.getElementById('modalCardImageWrap');
-                if (card.image) {
-                    var imgUrl = (card.image.indexOf('http') === 0 || card.image.indexOf('/') === 0) ? card.image : ('{{ url('/') }}/' + card.image);
+                if (res.card.image) {
+                    var imgUrl = (res.card.image.indexOf('http') === 0 || res.card.image.indexOf('/') === 0) ? res.card.image : ('{{ url('/') }}/' + res.card.image);
                     imgWrap.innerHTML = '<img src="' + imgUrl + '" style="width: 52px; height: 52px; object-fit: cover; border-radius: 10px; border: 1.5px solid #cbd5e1;">';
                 } else {
                     imgWrap.innerHTML = '<div style="width: 52px; height: 52px; border-radius: 10px; background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;"><i class="ti ti-gift"></i></div>';
                 }
 
-                document.getElementById('modalCardStatusWrap').innerHTML = (card.status === 'active')
-                    ? '<span class="badge bg-success px-3 py-1.5"><span class="pulse-active-dot me-1"></span> LIVE ON PAGE</span>'
-                    : '<span class="badge bg-secondary px-3 py-1.5">Inactive</span>';
+                document.getElementById('modalCardStatusWrap').innerHTML = (res.card.status === 'active')
+                    ? '<span class="badge bg-success px-2.5 py-1 text-uppercase fw-bold"><span class="pulse-active-dot me-1"></span> Live</span>'
+                    : '<span class="badge bg-secondary px-2.5 py-1 text-uppercase fw-bold">Inactive</span>';
 
-                // Configure Purge Leads form for this card
+                // Configure Purge Leads form
                 var purgeForm = document.getElementById('modalPurgeLeadsForm');
                 var purgeBtn = document.getElementById('btnModalPurgeLeads');
                 if (purgeForm) {
-                    purgeForm.action = '{{ url("admin/scratch_cards/leads/delete_all_for_card") }}/' + card.id;
+                    purgeForm.action = '{{ url("admin/scratch_cards/leads/delete_all_for_card") }}/' + res.card.id;
                 }
                 if (purgeBtn) {
-                    purgeBtn.style.display = leads.length > 0 ? 'inline-block' : 'none';
+                    purgeBtn.style.display = (res.card.leads_count > 0) ? 'inline-block' : 'none';
                 }
 
-                // Leads list table with single lead delete action
-                var tbody = document.getElementById('modalCardLeadsTbody');
-                if (leads.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted"><i class="ti ti-inbox fs-2 text-slate-300 d-block mb-1"></i>No customer leads for this scratch card yet.</td></tr>';
-                } else {
-                    var html = '';
-                    leads.forEach(function(l) {
-                        var phoneNum = l.customer_phone ? l.customer_phone.replace(/[^0-9]/g, '') : '';
-                        html += '<tr>' +
-                            '<td><strong>' + l.customer_name + '</strong>' + (l.customer_email ? '<div class="small text-muted">' + l.customer_email + '</div>' : '') + '</td>' +
-                            '<td>' +
-                                '<div class="small text-dark">' + l.customer_phone + '</div>' +
-                                (phoneNum ? '<a href="https://wa.me/' + phoneNum + '" target="_blank" class="badge bg-success text-white text-decoration-none mt-0.5"><i class="ti ti-brand-whatsapp"></i> WhatsApp</a>' : '') +
-                            '</td>' +
-                            '<td><span class="font-monospace fw-bold text-primary">' + (l.coupon_code || '-') + '</span></td>' +
-                            '<td><div class="fw-bold small">' + l.date_time + '</div><div class="text-muted" style="font-size: 0.72rem;">' + l.date_relative + '</div></td>' +
-                            '<td><span class="badge ' + (l.status === 'redeemed' ? 'bg-success' : 'bg-warning text-dark') + ' text-capitalize">' + l.status + '</span></td>' +
-                            '<td>' +
-                                '<button type="button" class="btn btn-sm btn-outline-danger px-2" onclick="deleteModalLeadAjax(' + l.id + ', ' + card.id + ')" title="Delete Lead">' +
-                                    '<i class="ti ti-trash"></i>' +
-                                '</button>' +
-                            '</td>' +
-                        '</tr>';
-                    });
-                    tbody.innerHTML = html;
-                }
+                // Render Table
+                renderModalLeadsTable(modalFilteredLeads);
 
-                var modal = new bootstrap.Modal(document.getElementById('cardAnalyticsModal'));
-                modal.show();
+                if (!keepModalOpen) {
+                    var modalEl = document.getElementById('cardAnalyticsModal');
+                    var modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+                    modal.show();
+                }
             } else {
-                alert('Failed to load card details.');
+                alert(res.message || 'Failed to load card details.');
             }
         })
         .catch(err => {
@@ -923,7 +1166,410 @@ function openCardAnalyticsModal(cardId) {
         });
 }
 
-// Delete individual lead inside analytics modal via AJAX
+// Render leads table inside modal
+function renderModalLeadsTable(leads) {
+    var tbody = document.getElementById('modalCardLeadsTbody');
+    var counterBadge = document.getElementById('modalLeadsCounterBadge');
+    var footerCount = document.getElementById('modalFooterShowingCount');
+    var summaryText = document.getElementById('modalFilterSummaryText');
+    var selectAllChk = document.getElementById('modalSelectAllLeads');
+
+    if (counterBadge) counterBadge.innerText = leads.length;
+    if (footerCount) footerCount.innerText = 'Showing ' + leads.length + ' of ' + modalAllLeads.length + ' customer leads';
+
+    if (modalAllLeads.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center py-5 text-muted"><i class="ti ti-inbox fs-1 text-slate-300 d-block mb-2"></i><strong>No customer leads found for this scratch card yet.</strong><div class="small mt-1">When customers scratch this card on your profile page, their leads will show up here.</div></td></tr>';
+        if (selectAllChk) { selectAllChk.checked = false; selectAllChk.disabled = true; }
+        if (summaryText) summaryText.innerText = 'No leads recorded';
+        return;
+    }
+
+    if (leads.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center py-5 text-muted"><i class="ti ti-filter-off fs-1 text-slate-300 d-block mb-2"></i><strong>No leads match your filter criteria.</strong><div class="mt-2"><button type="button" class="btn btn-sm btn-outline-primary" onclick="resetModalFilters()"><i class="ti ti-refresh me-1"></i>Reset Filters</button></div></td></tr>';
+        if (selectAllChk) { selectAllChk.checked = false; selectAllChk.disabled = true; }
+        if (summaryText) summaryText.innerText = '0 matching leads';
+        return;
+    }
+
+    if (selectAllChk) selectAllChk.disabled = false;
+
+    // Check if all visible leads are currently selected
+    var allVisibleSelected = leads.length > 0 && leads.every(function(l) { return selectedModalLeadIds.has(l.id); });
+    if (selectAllChk) selectAllChk.checked = allVisibleSelected;
+
+    var html = '';
+    leads.forEach(function(l) {
+        var isChecked = selectedModalLeadIds.has(l.id);
+        var cleanPhone = l.customer_phone ? l.customer_phone.replace(/[^0-9]/g, '') : '';
+        // If 10 digits, add country code 91 for Indian WhatsApp
+        var waPhone = cleanPhone;
+        if (waPhone.length === 10) waPhone = '91' + waPhone;
+
+        var waMessage = encodeURIComponent('Hi ' + l.customer_name + '! Thank you for scratching our card at ' + (currentModalCard ? currentModalCard.title : '') + '. Your coupon code is: ' + (l.coupon_code || '-') + '.');
+
+        var isRedeemed = (l.status === 'redeemed');
+        var nextStatus = isRedeemed ? 'claimed' : 'redeemed';
+        var statusBadgeClass = isRedeemed ? 'bg-success' : 'bg-warning text-dark';
+        var statusBadgeIcon = isRedeemed ? 'ti-circle-check' : 'ti-clock';
+
+        html += '<tr id="modalLeadRow_' + l.id + '" class="' + (isChecked ? 'table-primary bg-opacity-25' : '') + '">' +
+            // Checkbox
+            '<td class="text-center">' +
+                '<input type="checkbox" class="form-check-input modal-lead-chk" value="' + l.id + '" onchange="toggleSelectLeadRow(' + l.id + ', this.checked)" ' + (isChecked ? 'checked' : '') + ' style="cursor: pointer; width: 17px; height: 17px;">' +
+            '</td>' +
+            // Customer Name & Email
+            '<td>' +
+                '<div class="fw-bold text-dark">' + l.customer_name + '</div>' +
+                (l.customer_email ? '<div class="small text-muted"><i class="ti ti-mail me-1" style="font-size: 0.8rem;"></i>' + l.customer_email + '</div>' : '') +
+            '</td>' +
+            // Phone & WhatsApp with 1-click Copy
+            '<td>' +
+                '<div class="d-flex align-items-center gap-1.5">' +
+                    '<span class="fw-bold text-dark font-monospace small">' + l.customer_phone + '</span>' +
+                    '<button type="button" class="btn btn-xs btn-light border py-0 px-1 text-muted" onclick="copyModalPhone(\'' + l.customer_phone + '\', this)" title="Copy Phone Number" style="border-radius: 6px;">' +
+                        '<i class="ti ti-copy"></i>' +
+                    '</button>' +
+                '</div>' +
+                (cleanPhone ? '<a href="https://wa.me/' + waPhone + '?text=' + waMessage + '" target="_blank" class="badge bg-success text-white text-decoration-none mt-1 d-inline-flex align-items-center gap-1 py-1 px-2" style="font-size: 0.72rem; border-radius: 6px;"><i class="ti ti-brand-whatsapp"></i> Chat WhatsApp</a>' : '') +
+            '</td>' +
+            // Coupon Code
+            '<td>' +
+                (l.coupon_code 
+                    ? '<span class="badge bg-light text-primary border font-monospace fw-bold px-2 py-1" style="cursor: pointer;" onclick="copyModalCoupon(\'' + l.coupon_code + '\', this)" title="Click to copy coupon">' + l.coupon_code + ' <i class="ti ti-copy ms-0.5"></i></span>'
+                    : '<span class="text-muted small">-</span>') +
+            '</td>' +
+            // Date & Time (IST)
+            '<td>' +
+                '<div class="fw-bold small text-dark"><i class="ti ti-calendar-time me-1 text-muted"></i>' + l.date_time + '</div>' +
+                (l.date_relative ? '<div class="text-muted" style="font-size: 0.72rem;">' + l.date_relative + '</div>' : '') +
+            '</td>' +
+            // Interactive Status Badge (1-click Toggle)
+            '<td>' +
+                '<button type="button" class="badge ' + statusBadgeClass + ' text-capitalize border-0 py-1.5 px-2.5 rounded-pill d-inline-flex align-items-center gap-1 shadow-sm" onclick="toggleModalLeadStatus(' + l.id + ', \'' + nextStatus + '\')" title="Click to switch to ' + nextStatus.toUpperCase() + '" style="cursor: pointer; transition: transform 0.15s ease;">' +
+                    '<i class="ti ' + statusBadgeIcon + '"></i> ' + l.status +
+                '</button>' +
+            '</td>' +
+            // Action (Delete Lead)
+            '<td class="text-center">' +
+                '<button type="button" class="btn btn-sm btn-outline-danger py-1 px-2" onclick="deleteModalLeadAjax(' + l.id + ', ' + currentModalCardId + ')" title="Delete Lead" style="border-radius: 8px;">' +
+                    '<i class="ti ti-trash"></i>' +
+                '</button>' +
+            '</td>' +
+        '</tr>';
+    });
+
+    tbody.innerHTML = html;
+
+    if (summaryText) {
+        var claimedCount = leads.filter(l => l.status === 'claimed').length;
+        var redeemedCount = leads.filter(l => l.status === 'redeemed').length;
+        summaryText.innerHTML = 'Showing <strong>' + leads.length + '</strong> leads (<span class="text-success fw-bold">' + claimedCount + ' Claimed</span>, <span class="text-purple fw-bold" style="color: #9333ea;">' + redeemedCount + ' Redeemed</span>)';
+    }
+}
+
+// Master Select / Deselect All visible leads
+function toggleSelectAllModalLeads(masterChk) {
+    var isChecked = masterChk.checked;
+    modalFilteredLeads.forEach(function(l) {
+        if (isChecked) {
+            selectedModalLeadIds.add(l.id);
+        } else {
+            selectedModalLeadIds.delete(l.id);
+        }
+    });
+    updateModalSelectionUI();
+    renderModalLeadsTable(modalFilteredLeads);
+}
+
+// Toggle individual lead row checkbox
+function toggleSelectLeadRow(leadId, isChecked) {
+    if (isChecked) {
+        selectedModalLeadIds.add(leadId);
+    } else {
+        selectedModalLeadIds.delete(leadId);
+    }
+    updateModalSelectionUI();
+    // Highlight row
+    var row = document.getElementById('modalLeadRow_' + leadId);
+    if (row) {
+        if (isChecked) {
+            row.classList.add('table-primary', 'bg-opacity-25');
+        } else {
+            row.classList.remove('table-primary', 'bg-opacity-25');
+        }
+    }
+    // Update master checkbox
+    var selectAllChk = document.getElementById('modalSelectAllLeads');
+    if (selectAllChk && modalFilteredLeads.length > 0) {
+        selectAllChk.checked = modalFilteredLeads.every(function(l) { return selectedModalLeadIds.has(l.id); });
+    }
+}
+
+// Update Selection Toolbar UI
+function updateModalSelectionUI() {
+    var toolbar = document.getElementById('modalSelectionToolbar');
+    var countBadge = document.getElementById('modalSelectedCountBadge');
+    var countText = document.getElementById('modalSelectedCountText');
+    var size = selectedModalLeadIds.size;
+
+    if (!toolbar) return;
+
+    if (size > 0) {
+        toolbar.style.setProperty('display', 'flex', 'important');
+        if (countBadge) countBadge.innerText = size + ' Selected';
+        if (countText) countText.innerText = size + ' lead' + (size > 1 ? 's' : '') + ' selected. Apply batch actions below:';
+    } else {
+        toolbar.style.setProperty('display', 'none', 'important');
+    }
+}
+
+// Clear all lead selections
+function clearModalSelection() {
+    selectedModalLeadIds.clear();
+    updateModalSelectionUI();
+    var selectAllChk = document.getElementById('modalSelectAllLeads');
+    if (selectAllChk) selectAllChk.checked = false;
+    document.querySelectorAll('.modal-lead-chk').forEach(function(chk) {
+        chk.checked = false;
+    });
+    document.querySelectorAll('#modalCardLeadsTbody tr').forEach(function(tr) {
+        tr.classList.remove('table-primary', 'bg-opacity-25');
+    });
+}
+
+// Live client-side instant filter on typing / date change
+function onModalFilterChanged() {
+    var fromDate = document.getElementById('modalFilterFromDate').value;
+    var toDate = document.getElementById('modalFilterToDate').value;
+    var status = document.getElementById('modalFilterStatus').value;
+    var search = (document.getElementById('modalFilterSearch').value || '').trim().toLowerCase();
+
+    modalFilteredLeads = modalAllLeads.filter(function(l) {
+        // Date filter (l.date_iso is in YYYY-MM-DD format)
+        if (fromDate && l.date_iso && l.date_iso < fromDate) return false;
+        if (toDate && l.date_iso && l.date_iso > toDate) return false;
+
+        // Status filter
+        if (status && l.status !== status) return false;
+
+        // Search text filter
+        if (search) {
+            var name = (l.customer_name || '').toLowerCase();
+            var phone = (l.customer_phone || '').toLowerCase();
+            var email = (l.customer_email || '').toLowerCase();
+            var coupon = (l.coupon_code || '').toLowerCase();
+            var offer = (l.offer_won || '').toLowerCase();
+            if (!name.includes(search) && !phone.includes(search) && !email.includes(search) && !coupon.includes(search) && !offer.includes(search)) {
+                return false;
+            }
+        }
+
+        return true;
+    });
+
+    renderModalLeadsTable(modalFilteredLeads);
+}
+
+// Apply Server-side filtering
+function applyModalServerFilter() {
+    var fromDate = document.getElementById('modalFilterFromDate').value;
+    var toDate = document.getElementById('modalFilterToDate').value;
+    var status = document.getElementById('modalFilterStatus').value;
+    var search = (document.getElementById('modalFilterSearch').value || '').trim();
+
+    fetchCardAnalyticsData(currentModalCardId, {
+        from_date: fromDate,
+        to_date: toDate,
+        status: status,
+        search: search
+    }, true);
+}
+
+// Reset all filters in modal
+function resetModalFilters() {
+    document.getElementById('modalFilterFromDate').value = '';
+    document.getElementById('modalFilterToDate').value = '';
+    document.getElementById('modalFilterStatus').value = '';
+    document.getElementById('modalFilterSearch').value = '';
+    applyModalServerFilter();
+}
+
+// Quick Date Range Presets
+function setModalDateRange(rangeType) {
+    var today = new Date();
+    var formatDate = function(d) {
+        var month = '' + (d.getMonth() + 1);
+        var day = '' + d.getDate();
+        var year = d.getFullYear();
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+        return [year, month, day].join('-');
+    };
+
+    var fromStr = '';
+    var toStr = formatDate(today);
+
+    if (rangeType === 'today') {
+        fromStr = formatDate(today);
+    } else if (rangeType === 'yesterday') {
+        var yest = new Date();
+        yest.setDate(yest.getDate() - 1);
+        fromStr = formatDate(yest);
+        toStr = formatDate(yest);
+    } else if (rangeType === '7days') {
+        var d7 = new Date();
+        d7.setDate(d7.getDate() - 7);
+        fromStr = formatDate(d7);
+    } else if (rangeType === '30days') {
+        var d30 = new Date();
+        d30.setDate(d30.getDate() - 30);
+        fromStr = formatDate(d30);
+    } else if (rangeType === 'this_month') {
+        var firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+        fromStr = formatDate(firstDay);
+    } else if (rangeType === 'all') {
+        fromStr = '';
+        toStr = '';
+    }
+
+    document.getElementById('modalFilterFromDate').value = fromStr;
+    document.getElementById('modalFilterToDate').value = toStr;
+    onModalFilterChanged();
+}
+
+// Single-click status toggle inside modal
+function toggleModalLeadStatus(leadId, newStatus) {
+    fetch('{{ route("scratch_cards.update_lead_status") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({ lead_id: leadId, status: newStatus })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            // Update in local arrays
+            modalAllLeads.forEach(function(l) {
+                if (l.id === leadId) l.status = data.status;
+            });
+            modalFilteredLeads.forEach(function(l) {
+                if (l.id === leadId) l.status = data.status;
+            });
+
+            // Update stats
+            var claimed = modalAllLeads.filter(l => l.status === 'claimed').length;
+            var redeemed = modalAllLeads.filter(l => l.status === 'redeemed').length;
+            document.getElementById('modalStatClaimed').innerText = claimed;
+            document.getElementById('modalStatRedeemed').innerText = redeemed;
+
+            renderModalLeadsTable(modalFilteredLeads);
+        } else {
+            alert(data.message || 'Failed to update status.');
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert('Error updating status.');
+    });
+}
+
+// Bulk update status for selected leads
+function bulkUpdateSelectedStatus(newStatus) {
+    var ids = Array.from(selectedModalLeadIds);
+    if (ids.length === 0) {
+        alert('Please select at least one lead first.');
+        return;
+    }
+
+    fetch('{{ route("scratch_cards.leads.bulk_update_status") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({ lead_ids: ids, status: newStatus })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            modalAllLeads.forEach(function(l) {
+                if (selectedModalLeadIds.has(l.id)) l.status = data.status;
+            });
+            modalFilteredLeads.forEach(function(l) {
+                if (selectedModalLeadIds.has(l.id)) l.status = data.status;
+            });
+
+            var claimed = modalAllLeads.filter(l => l.status === 'claimed').length;
+            var redeemed = modalAllLeads.filter(l => l.status === 'redeemed').length;
+            document.getElementById('modalStatClaimed').innerText = claimed;
+            document.getElementById('modalStatRedeemed').innerText = redeemed;
+
+            renderModalLeadsTable(modalFilteredLeads);
+            alert(data.message || 'Status updated successfully.');
+        } else {
+            alert(data.message || 'Failed to update status.');
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert('Error in bulk status update.');
+    });
+}
+
+// Bulk delete selected leads
+function bulkDeleteSelectedLeads() {
+    var ids = Array.from(selectedModalLeadIds);
+    if (ids.length === 0) {
+        alert('Please select at least one lead first.');
+        return;
+    }
+
+    if (!confirm('Are you sure you want to delete ' + ids.length + ' selected lead(s)? This cannot be undone!')) {
+        return;
+    }
+
+    fetch('{{ route("scratch_cards.leads.bulk_delete") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({ lead_ids: ids, card_id: currentModalCardId })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            // Remove from local arrays
+            modalAllLeads = modalAllLeads.filter(l => !selectedModalLeadIds.has(l.id));
+            modalFilteredLeads = modalFilteredLeads.filter(l => !selectedModalLeadIds.has(l.id));
+            selectedModalLeadIds.clear();
+            updateModalSelectionUI();
+
+            // Update stats
+            document.getElementById('modalStatLeads').innerText = modalAllLeads.length;
+            document.getElementById('modalStatClaimed').innerText = modalAllLeads.filter(l => l.status === 'claimed').length;
+            document.getElementById('modalStatRedeemed').innerText = modalAllLeads.filter(l => l.status === 'redeemed').length;
+
+            renderModalLeadsTable(modalFilteredLeads);
+
+            if (data.remaining_leads === 0) {
+                window.location.reload();
+            } else {
+                alert(data.message || 'Leads deleted successfully.');
+            }
+        } else {
+            alert(data.message || 'Failed to delete leads.');
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert('Error in bulk delete.');
+    });
+}
+
+// Delete single lead
 function deleteModalLeadAjax(leadId, cardId) {
     if (!confirm('Are you sure you want to delete this customer lead?')) {
         return;
@@ -939,10 +1585,19 @@ function deleteModalLeadAjax(leadId, cardId) {
     .then(r => r.json())
     .then(data => {
         if (data.success) {
-            // Refresh analytics modal
-            openCardAnalyticsModal(cardId);
+            selectedModalLeadIds.delete(leadId);
+            updateModalSelectionUI();
+
+            modalAllLeads = modalAllLeads.filter(l => l.id !== leadId);
+            modalFilteredLeads = modalFilteredLeads.filter(l => l.id !== leadId);
+
+            document.getElementById('modalStatLeads').innerText = modalAllLeads.length;
+            document.getElementById('modalStatClaimed').innerText = modalAllLeads.filter(l => l.status === 'claimed').length;
+            document.getElementById('modalStatRedeemed').innerText = modalAllLeads.filter(l => l.status === 'redeemed').length;
+
+            renderModalLeadsTable(modalFilteredLeads);
+
             if (data.remaining_leads === 0) {
-                // If this was the last lead, refresh the main view so card delete button unlocks
                 window.location.reload();
             }
         } else {
@@ -952,6 +1607,190 @@ function deleteModalLeadAjax(leadId, cardId) {
     .catch(err => {
         console.error(err);
         alert('Error deleting lead.');
+    });
+}
+
+// ─────────────────────────────────────────────────────────────
+// EXPORT FUNCTIONS (EXCEL / CSV, PDF, PRINT)
+// ─────────────────────────────────────────────────────────────
+
+// Export Excel / CSV (Filtered or Selected)
+function exportCardLeadsExcel() {
+    var leadsToExport = (selectedModalLeadIds.size > 0)
+        ? modalAllLeads.filter(l => selectedModalLeadIds.has(l.id))
+        : modalFilteredLeads;
+
+    if (leadsToExport.length === 0) {
+        alert('No leads available to export.');
+        return;
+    }
+
+    var cardTitle = currentModalCard ? (currentModalCard.title || 'scratch_card') : 'scratch_card';
+    var cleanSlug = cardTitle.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+    var filename = 'leads_' + cleanSlug + '_' + (new Date().toISOString().slice(0, 10)) + '.csv';
+
+    // Build CSV with UTF-8 BOM
+    var csvContent = '\uFEFF';
+    csvContent += 'Sl No,Customer Name,Phone Number,Email,Offer Won,Coupon Code,Status,Scratched Date & Time (IST)\r\n';
+
+    leadsToExport.forEach(function(l, idx) {
+        var escapeCsv = function(val) {
+            if (val === null || val === undefined) return '""';
+            var s = String(val).replace(/"/g, '""');
+            return '"' + s + '"';
+        };
+
+        var row = [
+            idx + 1,
+            escapeCsv(l.customer_name),
+            '="' + (l.customer_phone || '') + '"', // Forces Excel to format phone as plain text string
+            escapeCsv(l.customer_email || 'N/A'),
+            escapeCsv(l.offer_won || (currentModalCard ? currentModalCard.offer_text : 'N/A')),
+            escapeCsv(l.coupon_code || 'N/A'),
+            escapeCsv(l.status),
+            escapeCsv(l.date_time)
+        ];
+        csvContent += row.join(',') + '\r\n';
+    });
+
+    var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    var link = document.createElement('a');
+    var url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+function exportSelectedOnlyExcel() {
+    exportCardLeadsExcel();
+}
+
+// Export PDF (Filtered or Selected via Backend DomPDF)
+function exportCardLeadsPdf() {
+    if (!currentModalCardId) return;
+
+    var url = new URL('{{ url("admin/scratch_cards/leads/export_card_pdf") }}/' + currentModalCardId, window.location.origin);
+
+    if (selectedModalLeadIds.size > 0) {
+        url.searchParams.append('ids', Array.from(selectedModalLeadIds).join(','));
+    } else {
+        var fromDate = document.getElementById('modalFilterFromDate').value;
+        var toDate = document.getElementById('modalFilterToDate').value;
+        var status = document.getElementById('modalFilterStatus').value;
+        var search = (document.getElementById('modalFilterSearch').value || '').trim();
+
+        if (fromDate) url.searchParams.append('from_date', fromDate);
+        if (toDate) url.searchParams.append('to_date', toDate);
+        if (status) url.searchParams.append('status', status);
+        if (search) url.searchParams.append('search', search);
+    }
+
+    window.open(url.toString(), '_blank');
+}
+
+function exportSelectedOnlyPdf() {
+    exportCardLeadsPdf();
+}
+
+// Print Leads Report
+function printModalLeads() {
+    var leadsToPrint = (selectedModalLeadIds.size > 0)
+        ? modalAllLeads.filter(l => selectedModalLeadIds.has(l.id))
+        : modalFilteredLeads;
+
+    var cardTitle = currentModalCard ? (currentModalCard.title || 'Scratch Card') : 'Scratch Card';
+    var offerText = currentModalCard ? (currentModalCard.offer_text || '') : '';
+    var couponCode = currentModalCard ? (currentModalCard.coupon_code || '') : '';
+
+    var printWin = window.open('', '_blank', 'width=1000,height=750');
+    var html = '<!DOCTYPE html><html><head><title>Leads Report - ' + cardTitle + '</title>' +
+        '<style>' +
+            'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #1e293b; padding: 24px; font-size: 12px; }' +
+            'h2 { margin: 0 0 4px 0; color: #1e40af; }' +
+            '.meta { color: #64748b; font-size: 11px; margin-bottom: 16px; border-bottom: 1px solid #cbd5e1; padding-bottom: 10px; }' +
+            '.card-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; }' +
+            'table { width: 100%; border-collapse: collapse; margin-top: 10px; }' +
+            'th { background: #1e293b; color: white; text-align: left; padding: 7px 8px; font-size: 10px; text-transform: uppercase; }' +
+            'td { padding: 7px 8px; border-bottom: 1px solid #e2e8f0; font-size: 11px; }' +
+            'tr:nth-child(even) { background: #f8fafc; }' +
+            '.badge { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 9px; font-weight: bold; text-transform: uppercase; }' +
+            '.badge-claimed { background: #fef3c7; color: #b45309; }' +
+            '.badge-redeemed { background: #d1fae5; color: #065f46; }' +
+        '</style>' +
+    '</head><body>' +
+        '<h2>AskReview &mdash; Scratch Card Customer Leads</h2>' +
+        '<div class="meta">Generated: ' + (new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })) + ' (IST) &bull; Total Records: ' + leadsToPrint.length + '</div>' +
+        '<div class="card-box">' +
+            '<strong>Card:</strong> ' + cardTitle + ' | <strong>Offer:</strong> ' + (offerText || 'N/A') + ' | <strong>Default Code:</strong> ' + (couponCode || 'N/A') +
+        '</div>' +
+        '<table><thead><tr>' +
+            '<th style="width: 35px;">#</th><th>Customer Name</th><th>Phone Number</th><th>Email</th><th>Coupon Code</th><th>Date & Time (IST)</th><th>Status</th>' +
+        '</tr></thead><tbody>';
+
+    leadsToPrint.forEach(function(l, i) {
+        html += '<tr>' +
+            '<td>' + (i + 1) + '</td>' +
+            '<td><strong>' + l.customer_name + '</strong></td>' +
+            '<td>' + l.customer_phone + '</td>' +
+            '<td>' + (l.customer_email || '-') + '</td>' +
+            '<td><span style="font-family: monospace; font-weight: bold;">' + (l.coupon_code || '-') + '</span></td>' +
+            '<td>' + l.date_time + '</td>' +
+            '<td><span class="badge badge-' + l.status + '">' + l.status + '</span></td>' +
+        '</tr>';
+    });
+
+    html += '</tbody></table>' +
+        '<div style="margin-top: 24px; font-size: 10px; color: #94a3b8; text-align: center;">AskReview &bull; Scratch Card Leads Report</div>' +
+    '</body></html>';
+
+    printWin.document.write(html);
+    printWin.document.close();
+    printWin.focus();
+    setTimeout(function() {
+        printWin.print();
+        printWin.close();
+    }, 500);
+}
+
+// 1-Click Copy Phone Number
+function copyModalPhone(phone, btn) {
+    if (!phone) return;
+    navigator.clipboard.writeText(phone).then(function() {
+        var old = btn.innerHTML;
+        btn.innerHTML = '<i class="ti ti-check text-success"></i>';
+        setTimeout(function() { btn.innerHTML = old; }, 1800);
+    }).catch(function() {
+        var el = document.createElement('input');
+        el.value = phone;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        var old = btn.innerHTML;
+        btn.innerHTML = '<i class="ti ti-check text-success"></i>';
+        setTimeout(function() { btn.innerHTML = old; }, 1800);
+    });
+}
+
+// 1-Click Copy Coupon Code
+function copyModalCoupon(code, btn) {
+    if (!code) return;
+    navigator.clipboard.writeText(code).then(function() {
+        var old = btn.innerHTML;
+        btn.innerHTML = '<i class="ti ti-check text-success me-1"></i> Copied!';
+        setTimeout(function() { btn.innerHTML = old; }, 1800);
+    }).catch(function() {
+        var el = document.createElement('input');
+        el.value = code;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        var old = btn.innerHTML;
+        btn.innerHTML = '<i class="ti ti-check text-success me-1"></i> Copied!';
+        setTimeout(function() { btn.innerHTML = old; }, 1800);
     });
 }
 

@@ -311,6 +311,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
     Route::post('scratch_cards/update_lead_status', [ScratchCardController::class, 'updateLeadStatus'])->name('scratch_cards.update_lead_status');
     Route::get('scratch_cards/export_leads', [ScratchCardController::class, 'exportLeads'])->name('scratch_cards.export_leads');
     Route::get('scratch_cards/analytics/{id}', [ScratchCardController::class, 'cardAnalytics'])->name('scratch_cards.analytics');
+    Route::post('scratch_cards/leads/bulk_delete', [ScratchCardController::class, 'bulkDeleteLeadsAjax'])->name('scratch_cards.leads.bulk_delete');
+    Route::post('scratch_cards/leads/bulk_update_status', [ScratchCardController::class, 'bulkUpdateLeadStatusAjax'])->name('scratch_cards.leads.bulk_update_status');
+    Route::get('scratch_cards/leads/export_card_csv/{id}', [ScratchCardController::class, 'exportCardLeadsCsv'])->name('scratch_cards.leads.export_card_csv');
+    Route::get('scratch_cards/leads/export_card_pdf/{id}', [ScratchCardController::class, 'exportCardLeadsPdf'])->name('scratch_cards.leads.export_card_pdf');
 
 });
 

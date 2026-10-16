@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Models\Payment;
 use App\Models\ScratchCard;
 use App\Models\ScratchCardLead;
+use Illuminate\Support\Str;
+use PDF;
 
 class ScratchCardController extends Controller
 {
@@ -354,9 +356,9 @@ class ScratchCardController extends Controller
     }
 
     /**
-     * Card-wise deep analytics and lead breakdown
+     * Card-wise deep analytics and lead breakdown with date/status/search filters
      */
-    public function cardAnalytics($id)
+    public function cardAnalytics(Request $request, $id)
     {
         if (!Auth::check()) {
             return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
@@ -368,41 +370,74 @@ class ScratchCardController extends Controller
             return response()->json(['success' => false, 'message' => 'Card not found'], 404);
         }
 
-        $leads = ScratchCardLead::where('scratch_card_id', $card->id)
-            ->orderBy('id', 'desc')
-            ->get()
-            ->map(function ($lead) {
-                return [
-                    'id' => $lead->id,
-                    'customer_name' => $lead->customer_name,
-                    'customer_phone' => $lead->customer_phone,
-                    'customer_email' => $lead->customer_email,
-                    'offer_won' => $lead->offer_won,
-                    'coupon_code' => $lead->coupon_code,
-                    'status' => $lead->status,
-                    'date_time' => $lead->created_at ? $lead->created_at->format('d M Y, h:i A') : 'N/A',
-                    'date_relative' => $lead->created_at ? $lead->created_at->diffForHumans() : '',
-                ];
+        // Overall stats for this card (unfiltered)
+        $allLeadsQuery = ScratchCardLead::where('scratch_card_id', $card->id);
+        $totalLeads = (clone $allLeadsQuery)->count();
+        $totalClaimed = (clone $allLeadsQuery)->where('status', 'claimed')->count();
+        $totalRedeemed = (clone $allLeadsQuery)->where('status', 'redeemed')->count();
+
+        // Filtered leads query
+        $query = ScratchCardLead::where('scratch_card_id', $card->id);
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+        if ($request->filled('to_date')) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        if ($request->filled('search')) {
+            $term = '%' . trim($request->search) . '%';
+            $query->where(function ($q) use ($term) {
+                $q->where('customer_name', 'like', $term)
+                  ->orWhere('customer_phone', 'like', $term)
+                  ->orWhere('customer_email', 'like', $term)
+                  ->orWhere('coupon_code', 'like', $term)
+                  ->orWhere('offer_won', 'like', $term);
             });
+        }
+
+        $filteredLeads = $query->orderBy('id', 'desc')->get();
+
+        $leadsData = $filteredLeads->map(function ($lead) {
+            $istTime = $lead->created_at ? $lead->created_at->timezone('Asia/Kolkata') : null;
+            return [
+                'id' => $lead->id,
+                'customer_name' => $lead->customer_name,
+                'customer_phone' => $lead->customer_phone,
+                'customer_email' => $lead->customer_email,
+                'offer_won' => $lead->offer_won,
+                'coupon_code' => $lead->coupon_code,
+                'status' => $lead->status,
+                'date_time' => $istTime ? $istTime->format('d M Y, h:i A') : 'N/A',
+                'date_iso' => $istTime ? $istTime->format('Y-m-d') : '',
+                'date_relative' => $lead->created_at ? $lead->created_at->diffForHumans() : '',
+            ];
+        });
 
         return response()->json([
             'success' => true,
             'card' => [
                 'id' => $card->id,
-                'title' => $card->title,
+                'title' => $card->title ?: 'Untitled Card',
                 'offer_text' => $card->offer_text,
                 'coupon_code' => $card->coupon_code,
                 'description' => $card->description,
-                'card_theme' => $card->card_theme,
+                'card_theme' => $card->card_theme ?: 'gold',
                 'image' => $card->image ? asset($card->image) : null,
                 'status' => $card->status,
-                'created_at' => $card->created_at ? $card->created_at->format('d M Y, h:i A') : 'N/A',
-                'scratch_count' => max($card->scratch_count, $leads->count()),
-                'leads_count' => $leads->count(),
-                'claimed_count' => $leads->where('status', 'claimed')->count(),
-                'redeemed_count' => $leads->where('status', 'redeemed')->count(),
+                'created_at' => $card->created_at ? $card->created_at->timezone('Asia/Kolkata')->format('d M Y, h:i A') : 'N/A',
+                'scratch_count' => max($card->scratch_count, $totalLeads),
+                'leads_count' => $totalLeads,
+                'claimed_count' => $totalClaimed,
+                'redeemed_count' => $totalRedeemed,
+                'filtered_count' => $filteredLeads->count(),
+                'filtered_claimed' => $filteredLeads->where('status', 'claimed')->count(),
+                'filtered_redeemed' => $filteredLeads->where('status', 'redeemed')->count(),
             ],
-            'leads' => $leads
+            'leads' => $leadsData
         ]);
     }
 
@@ -429,6 +464,199 @@ class ScratchCardController extends Controller
         }
 
         return response()->json(['success' => false, 'message' => 'Lead not found.'], 404);
+    }
+
+    /**
+     * AJAX Bulk delete selected customer leads
+     */
+    public function bulkDeleteLeadsAjax(Request $request)
+    {
+        if (!Auth::check()) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
+        }
+
+        $user = Auth::user();
+        $leadIds = $request->lead_ids;
+
+        if (!is_array($leadIds) || empty($leadIds)) {
+            return response()->json(['success' => false, 'message' => 'No leads selected.'], 400);
+        }
+
+        $deleted = ScratchCardLead::where('user_id', $user->id)
+            ->whereIn('id', $leadIds)
+            ->delete();
+
+        $cardId = $request->card_id;
+        $remaining = $cardId ? ScratchCardLead::where('scratch_card_id', $cardId)->count() : 0;
+
+        return response()->json([
+            'success' => true,
+            'deleted_count' => $deleted,
+            'remaining_leads' => $remaining,
+            'message' => "Successfully deleted {$deleted} selected customer lead(s)."
+        ]);
+    }
+
+    /**
+     * AJAX Bulk update status of selected customer leads
+     */
+    public function bulkUpdateLeadStatusAjax(Request $request)
+    {
+        if (!Auth::check()) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
+        }
+
+        $user = Auth::user();
+        $leadIds = $request->lead_ids;
+        $status = $request->status === 'redeemed' ? 'redeemed' : 'claimed';
+
+        if (!is_array($leadIds) || empty($leadIds)) {
+            return response()->json(['success' => false, 'message' => 'No leads selected.'], 400);
+        }
+
+        $updated = ScratchCardLead::where('user_id', $user->id)
+            ->whereIn('id', $leadIds)
+            ->update(['status' => $status]);
+
+        return response()->json([
+            'success' => true,
+            'updated_count' => $updated,
+            'status' => $status,
+            'message' => "Updated {$updated} selected lead(s) to " . ucfirst($status) . "."
+        ]);
+    }
+
+    /**
+     * Export customer leads of a card to CSV (with date filters / selected IDs support)
+     */
+    public function exportCardLeadsCsv(Request $request, $id)
+    {
+        if (!Auth::check()) {
+            return redirect('login');
+        }
+
+        $user = Auth::user();
+        $card = ScratchCard::where('user_id', $user->id)->where('id', $id)->firstOrFail();
+
+        $query = ScratchCardLead::where('scratch_card_id', $card->id);
+
+        if ($request->filled('ids')) {
+            $ids = is_array($request->ids) ? $request->ids : explode(',', $request->ids);
+            $query->whereIn('id', array_filter($ids));
+        } else {
+            if ($request->filled('from_date')) {
+                $query->whereDate('created_at', '>=', $request->from_date);
+            }
+            if ($request->filled('to_date')) {
+                $query->whereDate('created_at', '<=', $request->to_date);
+            }
+            if ($request->filled('status')) {
+                $query->where('status', $request->status);
+            }
+            if ($request->filled('search')) {
+                $term = '%' . trim($request->search) . '%';
+                $query->where(function ($q) use ($term) {
+                    $q->where('customer_name', 'like', $term)
+                      ->orWhere('customer_phone', 'like', $term)
+                      ->orWhere('customer_email', 'like', $term)
+                      ->orWhere('coupon_code', 'like', $term);
+                });
+            }
+        }
+
+        $leads = $query->orderBy('id', 'desc')->get();
+        $cardSlug = Str::slug($card->title ?: 'scratch_card');
+        $filename = "leads_{$cardSlug}_" . date('Y-m-d_Hi') . ".csv";
+
+        $headers = [
+            "Content-type" => "text/csv; charset=UTF-8",
+            "Content-Disposition" => "attachment; filename={$filename}",
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
+        ];
+
+        $columns = ['#', 'Customer Name', 'Phone Number', 'Email', 'Offer Won', 'Coupon Code', 'Status', 'Date & Time (IST)'];
+
+        $callback = function () use ($leads, $columns, $card) {
+            $file = fopen('php://output', 'w');
+            fputs($file, "\xEF\xBB\xBF"); // UTF-8 BOM for Microsoft Excel
+            fputcsv($file, $columns);
+
+            foreach ($leads as $index => $row) {
+                $dateIst = $row->created_at ? $row->created_at->timezone('Asia/Kolkata')->format('d M Y, h:i A') : 'N/A';
+                fputcsv($file, [
+                    $index + 1,
+                    $row->customer_name,
+                    $row->customer_phone,
+                    $row->customer_email ?: 'N/A',
+                    $row->offer_won ?: ($card->offer_text ?: 'N/A'),
+                    $row->coupon_code ?: ($card->coupon_code ?: 'N/A'),
+                    ucfirst($row->status),
+                    $dateIst
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    /**
+     * Export customer leads of a card to PDF (with date filters / selected IDs support)
+     */
+    public function exportCardLeadsPdf(Request $request, $id)
+    {
+        if (!Auth::check()) {
+            return redirect('login');
+        }
+
+        $user = Auth::user();
+        $card = ScratchCard::where('user_id', $user->id)->where('id', $id)->firstOrFail();
+
+        $query = ScratchCardLead::where('scratch_card_id', $card->id);
+
+        if ($request->filled('ids')) {
+            $ids = is_array($request->ids) ? $request->ids : explode(',', $request->ids);
+            $query->whereIn('id', array_filter($ids));
+        } else {
+            if ($request->filled('from_date')) {
+                $query->whereDate('created_at', '>=', $request->from_date);
+            }
+            if ($request->filled('to_date')) {
+                $query->whereDate('created_at', '<=', $request->to_date);
+            }
+            if ($request->filled('status')) {
+                $query->where('status', $request->status);
+            }
+            if ($request->filled('search')) {
+                $term = '%' . trim($request->search) . '%';
+                $query->where(function ($q) use ($term) {
+                    $q->where('customer_name', 'like', $term)
+                      ->orWhere('customer_phone', 'like', $term)
+                      ->orWhere('customer_email', 'like', $term)
+                      ->orWhere('coupon_code', 'like', $term);
+                });
+            }
+        }
+
+        $leads = $query->orderBy('id', 'desc')->get();
+        $cardSlug = Str::slug($card->title ?: 'scratch_card');
+        $filename = "leads_{$cardSlug}_" . date('Y-m-d_Hi') . ".pdf";
+
+        $data = [
+            'card' => $card,
+            'user' => $user,
+            'leads' => $leads,
+            'fromDate' => $request->from_date,
+            'toDate' => $request->to_date,
+            'generatedAt' => now()->timezone('Asia/Kolkata')->format('d M Y, h:i A')
+        ];
+
+        $pdf = PDF::loadView('user.scratch_card.leads_pdf', $data);
+        $pdf->setPaper('a4', 'landscape');
+        return $pdf->download($filename);
     }
 
     /**
