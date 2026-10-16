@@ -639,6 +639,10 @@ html, body.auth-body {
   stroke: #4285f4 !important;
   stroke-width: 2 !important;
   fill: #eff6ff !important;
+  filter: drop-shadow(0 3px 10px rgba(66, 133, 244, 0.32));
+}
+.hub-review-row[data-platform="Google"].active path.row-arrow {
+  stroke: #4285f4 !important;
 }
 
 /* 2. Facebook Hover & Active (Facebook Blue #1877F2) */
@@ -655,6 +659,10 @@ html, body.auth-body {
   stroke: #1877f2 !important;
   stroke-width: 2 !important;
   fill: #eff6ff !important;
+  filter: drop-shadow(0 3px 10px rgba(24, 119, 242, 0.32));
+}
+.hub-review-row[data-platform="Facebook"].active path.row-arrow {
+  stroke: #1877f2 !important;
 }
 
 /* 3. Instagram Hover & Active (Instagram Magenta/Pink #E1306C) */
@@ -671,6 +679,10 @@ html, body.auth-body {
   stroke: #e1306c !important;
   stroke-width: 2 !important;
   fill: #fdf2f8 !important;
+  filter: drop-shadow(0 3px 10px rgba(225, 48, 108, 0.35));
+}
+.hub-review-row[data-platform="Instagram"].active path.row-arrow {
+  stroke: #e1306c !important;
 }
 
 /* 4. YouTube Hover & Active (YouTube Red #FF0000) */
@@ -687,6 +699,10 @@ html, body.auth-body {
   stroke: #ff0000 !important;
   stroke-width: 2 !important;
   fill: #fef2f2 !important;
+  filter: drop-shadow(0 3px 10px rgba(255, 0, 0, 0.32));
+}
+.hub-review-row[data-platform="YouTube"].active path.row-arrow {
+  stroke: #ff0000 !important;
 }
 
 /* 5. Video Testimonial Hover & Active (Brand Rose/Red #E11D48) */
@@ -703,6 +719,10 @@ html, body.auth-body {
   stroke: #e11d48 !important;
   stroke-width: 2 !important;
   fill: #ffe4e6 !important;
+  filter: drop-shadow(0 3px 10px rgba(225, 29, 72, 0.32));
+}
+.hub-review-row[data-platform="Video Testimonial"].active path.row-arrow {
+  stroke: #e11d48 !important;
 }
 
 /* 6. Private Enquiry Hover & Active (Warm Amber/Gold #D97706) */
@@ -719,9 +739,33 @@ html, body.auth-body {
   stroke: #d97706 !important;
   stroke-width: 2 !important;
   fill: #fef3c7 !important;
+  filter: drop-shadow(0 3px 10px rgba(217, 119, 6, 0.35));
+}
+.hub-review-row[data-platform="Private Enquiry"].active path.row-arrow {
+  stroke: #d97706 !important;
 }
 
-/* 7. Install App Pill Button Hover & Active (Royal Blue #2563EB) */
+/* 7. Scratch Card Hover & Active (Amber/Gold #F59E0B) */
+.hub-review-row[data-platform="Scratch Card"]:hover rect.hub-card-bg {
+  stroke: #f59e0b !important;
+  stroke-width: 1.8 !important;
+  filter: drop-shadow(0 3px 10px rgba(245, 158, 11, 0.35));
+}
+.hub-review-row[data-platform="Scratch Card"]:hover path.row-arrow {
+  stroke: #f59e0b !important;
+  stroke-width: 1.8 !important;
+}
+.hub-review-row[data-platform="Scratch Card"].active rect.hub-card-bg {
+  stroke: #f59e0b !important;
+  stroke-width: 2 !important;
+  fill: #fffbeb !important;
+  filter: drop-shadow(0 3px 10px rgba(245, 158, 11, 0.35));
+}
+.hub-review-row[data-platform="Scratch Card"].active path.row-arrow {
+  stroke: #f59e0b !important;
+}
+
+/* 8. Install App Pill Button Hover & Active (Royal Blue #2563EB) */
 .hub-review-row[data-platform="App Install"]:hover rect.hub-card-bg {
   stroke: #2563eb !important;
   stroke-width: 1.6 !important;
@@ -731,6 +775,7 @@ html, body.auth-body {
   stroke: #2563eb !important;
   stroke-width: 1.8 !important;
   fill: #dbeafe !important;
+  filter: drop-shadow(0 3px 10px rgba(37, 99, 235, 0.32));
 }
 
 /* Pulsing Live REC Dot in Video Testimonial */
@@ -2122,16 +2167,6 @@ html, body.auth-body {
 /* Row Active State inside phone */
 .hub-review-row {
   cursor: pointer;
-}
-
-.hub-review-row.active .hub-card-bg {
-  stroke: #e11d48 !important;
-  stroke-width: 1.8 !important;
-  filter: drop-shadow(0 2px 8px rgba(225, 29, 72, 0.25)) !important;
-}
-
-.hub-review-row.active .row-arrow {
-  stroke: #e11d48 !important;
 }
 
 a.slide-pill.active {

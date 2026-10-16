@@ -251,13 +251,6 @@
                       <text x="80" y="11.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="5.8" font-weight="700" fill="#2563eb" text-anchor="middle">Install App on Home Screen</text>
                     </g>
 
-                    <!-- Dynamic Spotlight Rectangle & Pointer for Mobile Line Tour -->
-                    <rect id="mobileLineSpotlight" x="130" y="84" width="200" height="28" rx="8" fill="rgba(225, 29, 72, 0.05)" stroke="#e11d48" stroke-width="2" style="transition: all 0.35s cubic-bezier(0.34, 1.4, 0.64, 1); pointer-events: none;"/>
-                    <g id="mobileLinePointer" transform="translate(112, 92)" style="transition: all 0.35s cubic-bezier(0.34, 1.4, 0.64, 1); pointer-events: none;">
-                      <circle cx="6" cy="6" r="6" fill="#e11d48" filter="url(#floatShadow)"/>
-                      <path d="M4 3.5 L8 6 L4 8.5" fill="#ffffff"/>
-                    </g>
-
                     <!-- Interactive Notification Toast Inside Smartphone Screen -->
                     <g id="hubToastMessage" opacity="0" transform="translate(148, 330)" style="transition: all 0.3s cubic-bezier(0.34, 1.4, 0.64, 1); pointer-events: none;">
                       <rect width="164" height="26" rx="13" fill="#0f172a" filter="url(#floatShadow)"/>
@@ -1380,8 +1373,6 @@
       let mobileTourAutoPlayTimer = null;
       let isMobileTourPlaying = false;
 
-      const mltSpotlight = document.getElementById('mobileLineSpotlight');
-      const mltPointer = document.getElementById('mobileLinePointer');
       const mltDemoLink = document.getElementById('mltDemoLink');
       const mltDemoBtnText = document.getElementById('mltDemoBtnText');
       const mltAutoPlayBtn = document.getElementById('mltAutoPlayBtn');
@@ -1401,26 +1392,7 @@
         currentMobileLine = idx;
         const line = mobileLines[idx];
 
-        // 1. Move SVG Spotlight
-        if (mltSpotlight) {
-          mltSpotlight.setAttribute('x', line.x);
-          mltSpotlight.setAttribute('y', line.y);
-          mltSpotlight.setAttribute('width', line.w);
-          mltSpotlight.setAttribute('height', line.h);
-          mltSpotlight.setAttribute('stroke', line.color);
-          mltSpotlight.setAttribute('fill', `${line.color}18`);
-        }
-
-        // 2. Move SVG Pointer
-        if (mltPointer) {
-          const ptrX = line.x - 18;
-          const ptrY = line.y + (line.h / 2) - 6;
-          mltPointer.setAttribute('transform', `translate(${ptrX}, ${ptrY})`);
-          const ptrCircle = mltPointer.querySelector('circle');
-          if (ptrCircle) ptrCircle.setAttribute('fill', line.color);
-        }
-
-        // 3. Highlight row in SVG
+        // 1. Highlight row in SVG (Single clean border with brand color & soft glow)
         hubRows.forEach((r, i) => {
           if (i === idx) {
             r.classList.add('active');
