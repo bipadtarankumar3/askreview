@@ -3,36 +3,60 @@
     $theme = $activeScratchCard->card_theme ?? 'gold';
     $themeStyles = [
         'gold' => [
-            'gradient' => 'linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%)',
+            'gradient' => 'linear-gradient(135deg, #b45309 0%, #f59e0b 50%, #d97706 100%)',
             'foil' => 'linear-gradient(135deg, #d97706 0%, #fef3c7 25%, #f59e0b 50%, #fef3c7 75%, #b45309 100%)',
             'border' => '#fcd34d',
             'accent' => '#f59e0b',
             'badge' => '#92400e',
             'canvas_color' => '#d97706'
         ],
-        'purple' => [
-            'gradient' => 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 50%, #4c1d95 100%)',
-            'foil' => 'linear-gradient(135deg, #7c3aed 0%, #ede9fe 25%, #a855f7 50%, #f3e8ff 75%, #581c87 100%)',
-            'border' => '#c4b5fd',
-            'accent' => '#8b5cf6',
-            'badge' => '#4c1d95',
-            'canvas_color' => '#7c3aed'
-        ],
         'emerald' => [
-            'gradient' => 'linear-gradient(135deg, #10b981 0%, #059669 50%, #064e3b 100%)',
+            'gradient' => 'linear-gradient(135deg, #047857 0%, #10b981 50%, #059669 100%)',
             'foil' => 'linear-gradient(135deg, #059669 0%, #d1fae5 25%, #10b981 50%, #ecfdf5 75%, #065f46 100%)',
             'border' => '#6ee7b7',
             'accent' => '#10b981',
             'badge' => '#064e3b',
             'canvas_color' => '#059669'
         ],
-        'blue' => [
-            'gradient' => 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e3a8a 100%)',
+        'sapphire' => [
+            'gradient' => 'linear-gradient(135deg, #1d4ed8 0%, #3b82f6 50%, #2563eb 100%)',
             'foil' => 'linear-gradient(135deg, #2563eb 0%, #dbeafe 25%, #3b82f6 50%, #eff6ff 75%, #1e40af 100%)',
             'border' => '#93c5fd',
             'accent' => '#3b82f6',
             'badge' => '#1e3a8a',
             'canvas_color' => '#2563eb'
+        ],
+        'blue' => [
+            'gradient' => 'linear-gradient(135deg, #1d4ed8 0%, #3b82f6 50%, #2563eb 100%)',
+            'foil' => 'linear-gradient(135deg, #2563eb 0%, #dbeafe 25%, #3b82f6 50%, #eff6ff 75%, #1e40af 100%)',
+            'border' => '#93c5fd',
+            'accent' => '#3b82f6',
+            'badge' => '#1e3a8a',
+            'canvas_color' => '#2563eb'
+        ],
+        'crimson' => [
+            'gradient' => 'linear-gradient(135deg, #be123c 0%, #f43f5e 50%, #e11d48 100%)',
+            'foil' => 'linear-gradient(135deg, #e11d48 0%, #ffe4e6 25%, #f43f5e 50%, #fff1f2 75%, #9f1239 100%)',
+            'border' => '#fecdd3',
+            'accent' => '#f43f5e',
+            'badge' => '#881337',
+            'canvas_color' => '#e11d48'
+        ],
+        'violet' => [
+            'gradient' => 'linear-gradient(135deg, #6d28d9 0%, #8b5cf6 50%, #7c3aed 100%)',
+            'foil' => 'linear-gradient(135deg, #7c3aed 0%, #ede9fe 25%, #a855f7 50%, #f3e8ff 75%, #581c87 100%)',
+            'border' => '#c4b5fd',
+            'accent' => '#8b5cf6',
+            'badge' => '#4c1d95',
+            'canvas_color' => '#7c3aed'
+        ],
+        'purple' => [
+            'gradient' => 'linear-gradient(135deg, #6d28d9 0%, #8b5cf6 50%, #7c3aed 100%)',
+            'foil' => 'linear-gradient(135deg, #7c3aed 0%, #ede9fe 25%, #a855f7 50%, #f3e8ff 75%, #581c87 100%)',
+            'border' => '#c4b5fd',
+            'accent' => '#8b5cf6',
+            'badge' => '#4c1d95',
+            'canvas_color' => '#7c3aed'
         ],
     ];
     $activeTheme = $themeStyles[$theme] ?? $themeStyles['gold'];
@@ -137,63 +161,17 @@
                         </span>
                     </div>
 
-                    <!-- 2. Detailed Voucher Summary Card -->
+                    <!-- 2. Terms & Instructions (Only shown if provided) -->
+                    @if(!empty($activeScratchCard->description))
                     <div class="voucher-info-card p-3 mb-3">
-                        <div class="d-flex align-items-center justify-content-between pb-2 mb-2 border-bottom">
-                            <div class="d-flex align-items-center gap-1.5 text-uppercase fw-bold" style="font-size: 0.76rem; letter-spacing: 0.05em; color: #475569;">
-                                <i class="fa-solid fa-receipt text-primary"></i> Voucher Details &amp; Summary
-                            </div>
-                            <span class="badge bg-success-subtle text-success fw-bold" style="font-size: 0.72rem; border-radius: 6px;">
-                                <i class="fa-solid fa-check me-1"></i> Active
-                            </span>
+                        <div class="d-flex align-items-center gap-1.5 text-uppercase fw-bold mb-2 text-muted" style="font-size: 0.74rem; letter-spacing: 0.05em;">
+                            <i class="fa-solid fa-circle-info text-info"></i> Terms &amp; Instructions:
                         </div>
-
-                        <!-- Rows of details -->
-                        <div class="voucher-detail-row">
-                            <span class="detail-label"><i class="fa-solid fa-store text-warning me-1"></i> Store</span>
-                            <span class="detail-value fw-bold text-dark">{{ $user->name }}</span>
+                        <div class="terms-callout-box">
+                            {{ $activeScratchCard->description }}
                         </div>
-
-                        @if(!empty($activeScratchCard->offer_text))
-                        <div class="voucher-detail-row">
-                            <span class="detail-label"><i class="fa-solid fa-gift text-primary me-1"></i> Reward Won</span>
-                            <span class="detail-value fw-bold text-success">{{ $activeScratchCard->offer_text }}</span>
-                        </div>
-                        @elseif(!empty($activeScratchCard->title))
-                        <div class="voucher-detail-row">
-                            <span class="detail-label"><i class="fa-solid fa-gift text-primary me-1"></i> Offer</span>
-                            <span class="detail-value fw-bold text-success">{{ $activeScratchCard->title }}</span>
-                        </div>
-                        @endif
-
-                        @if(!empty($couponCode))
-                        <div class="voucher-detail-row">
-                            <span class="detail-label"><i class="fa-solid fa-ticket text-danger me-1"></i> Coupon Code</span>
-                            <div class="d-flex align-items-center gap-1.5">
-                                <span class="voucher-code-pill" id="detailCouponCodeDisplay">{{ $couponCode }}</span>
-                                <button type="button" class="btn btn-sm btn-light border py-1 px-2 text-dark btn-copy-mini" onclick="copyScratchCoupon('{{ $couponCode }}', this)" title="Copy Code">
-                                    <i class="fa-regular fa-copy"></i>
-                                </button>
-                            </div>
-                        </div>
-                        @endif
-
-                        <div class="voucher-detail-row">
-                            <span class="detail-label"><i class="fa-solid fa-location-dot text-danger me-1"></i> Location</span>
-                            <span class="detail-value text-muted">In-Store at {{ $user->name }}</span>
-                        </div>
-
-                        @if(!empty($activeScratchCard->description))
-                        <div class="voucher-detail-terms mt-2 pt-2 border-top">
-                            <div class="detail-label small mb-1 text-muted" style="font-size: 0.74rem;">
-                                <i class="fa-solid fa-circle-info text-info me-1"></i> Terms &amp; Instructions:
-                            </div>
-                            <div class="terms-callout-box">
-                                {{ $activeScratchCard->description }}
-                            </div>
-                        </div>
-                        @endif
                     </div>
+                    @endif
 
                     <!-- 3. Customer Lead / Claim Registration Box -->
                     <!-- Case A: Already Claimed / Lead Exists -->
@@ -1358,24 +1336,31 @@
 
         // Rich metallic gradient cover
         var grad = ctx.createLinearGradient(0, 0, width, height);
-        if (scratchCardInstance.theme === 'purple') {
-            grad.addColorStop(0, '#7c3aed');
+        var t = scratchCardInstance.theme;
+        if (t === 'violet' || t === 'purple') {
+            grad.addColorStop(0, '#6d28d9');
             grad.addColorStop(0.3, '#c084fc');
-            grad.addColorStop(0.5, '#9333ea');
+            grad.addColorStop(0.5, '#8b5cf6');
             grad.addColorStop(0.7, '#e879f9');
-            grad.addColorStop(1, '#6b21a8');
-        } else if (scratchCardInstance.theme === 'emerald') {
-            grad.addColorStop(0, '#059669');
+            grad.addColorStop(1, '#581c87');
+        } else if (t === 'emerald') {
+            grad.addColorStop(0, '#047857');
             grad.addColorStop(0.3, '#6ee7b7');
             grad.addColorStop(0.5, '#10b981');
             grad.addColorStop(0.7, '#a7f3d0');
             grad.addColorStop(1, '#064e3b');
-        } else if (scratchCardInstance.theme === 'blue') {
-            grad.addColorStop(0, '#2563eb');
+        } else if (t === 'sapphire' || t === 'blue') {
+            grad.addColorStop(0, '#1d4ed8');
             grad.addColorStop(0.3, '#93c5fd');
             grad.addColorStop(0.5, '#3b82f6');
             grad.addColorStop(0.7, '#bfdbfe');
-            grad.addColorStop(1, '#1e40af');
+            grad.addColorStop(1, '#1e3a8a');
+        } else if (t === 'crimson') {
+            grad.addColorStop(0, '#be123c');
+            grad.addColorStop(0.3, '#fda4af');
+            grad.addColorStop(0.5, '#f43f5e');
+            grad.addColorStop(0.7, '#ffe4e6');
+            grad.addColorStop(1, '#881337');
         } else {
             // Gold foil default
             grad.addColorStop(0, '#b45309');
