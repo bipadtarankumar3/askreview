@@ -1217,10 +1217,9 @@ function renderModalLeadsTable(leads) {
             '<td class="text-center">' +
                 '<input type="checkbox" class="form-check-input modal-lead-chk" value="' + l.id + '" onchange="toggleSelectLeadRow(' + l.id + ', this.checked)" ' + (isChecked ? 'checked' : '') + ' style="cursor: pointer; width: 17px; height: 17px;">' +
             '</td>' +
-            // Customer Name & Email
+            // Customer Name
             '<td>' +
                 '<div class="fw-bold text-dark">' + l.customer_name + '</div>' +
-                (l.customer_email ? '<div class="small text-muted"><i class="ti ti-mail me-1" style="font-size: 0.8rem;"></i>' + l.customer_email + '</div>' : '') +
             '</td>' +
             // Phone & WhatsApp with 1-click Copy
             '<td>' +
@@ -1631,7 +1630,7 @@ function exportCardLeadsExcel() {
 
     // Build CSV with UTF-8 BOM
     var csvContent = '\uFEFF';
-    csvContent += 'Sl No,Customer Name,Phone Number,Email,Offer Won,Coupon Code,Status,Scratched Date & Time (IST)\r\n';
+    csvContent += 'Sl No,Customer Name,Phone Number,Offer Won,Coupon Code,Status,Scratched Date & Time (IST)\r\n';
 
     leadsToExport.forEach(function(l, idx) {
         var escapeCsv = function(val) {
@@ -1644,7 +1643,6 @@ function exportCardLeadsExcel() {
             idx + 1,
             escapeCsv(l.customer_name),
             '="' + (l.customer_phone || '') + '"', // Forces Excel to format phone as plain text string
-            escapeCsv(l.customer_email || 'N/A'),
             escapeCsv(l.offer_won || (currentModalCard ? currentModalCard.offer_text : 'N/A')),
             escapeCsv(l.coupon_code || 'N/A'),
             escapeCsv(l.status),
@@ -1726,7 +1724,7 @@ function printModalLeads() {
             '<strong>Card:</strong> ' + cardTitle + ' | <strong>Offer:</strong> ' + (offerText || 'N/A') + ' | <strong>Default Code:</strong> ' + (couponCode || 'N/A') +
         '</div>' +
         '<table><thead><tr>' +
-            '<th style="width: 35px;">#</th><th>Customer Name</th><th>Phone Number</th><th>Email</th><th>Coupon Code</th><th>Date & Time (IST)</th><th>Status</th>' +
+            '<th style="width: 35px;">#</th><th>Customer Name</th><th>Phone Number</th><th>Coupon Code</th><th>Date & Time (IST)</th><th>Status</th>' +
         '</tr></thead><tbody>';
 
     leadsToPrint.forEach(function(l, i) {
@@ -1734,7 +1732,6 @@ function printModalLeads() {
             '<td>' + (i + 1) + '</td>' +
             '<td><strong>' + l.customer_name + '</strong></td>' +
             '<td>' + l.customer_phone + '</td>' +
-            '<td>' + (l.customer_email || '-') + '</td>' +
             '<td><span style="font-family: monospace; font-weight: bold;">' + (l.coupon_code || '-') + '</span></td>' +
             '<td>' + l.date_time + '</td>' +
             '<td><span class="badge badge-' + l.status + '">' + l.status + '</span></td>' +

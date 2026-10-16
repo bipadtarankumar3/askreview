@@ -576,7 +576,7 @@ class ScratchCardController extends Controller
             "Expires" => "0"
         ];
 
-        $columns = ['#', 'Customer Name', 'Phone Number', 'Email', 'Offer Won', 'Coupon Code', 'Status', 'Date & Time (IST)'];
+        $columns = ['#', 'Customer Name', 'Phone Number', 'Offer Won', 'Coupon Code', 'Status', 'Date & Time (IST)'];
 
         $callback = function () use ($leads, $columns, $card) {
             $file = fopen('php://output', 'w');
@@ -589,7 +589,6 @@ class ScratchCardController extends Controller
                     $index + 1,
                     $row->customer_name,
                     $row->customer_phone,
-                    $row->customer_email ?: 'N/A',
                     $row->offer_won ?: ($card->offer_text ?: 'N/A'),
                     $row->coupon_code ?: ($card->coupon_code ?: 'N/A'),
                     ucfirst($row->status),
@@ -680,7 +679,7 @@ class ScratchCardController extends Controller
             "Expires" => "0"
         ];
 
-        $columns = ['ID', 'Customer Name', 'Phone Number', 'Email', 'Offer Won', 'Coupon Code', 'Status', 'Date & Time'];
+        $columns = ['ID', 'Customer Name', 'Phone Number', 'Offer Won', 'Coupon Code', 'Status', 'Date & Time'];
 
         $callback = function () use ($leads, $columns) {
             $file = fopen('php://output', 'w');
@@ -691,7 +690,6 @@ class ScratchCardController extends Controller
                     $row->id,
                     $row->customer_name,
                     $row->customer_phone,
-                    $row->customer_email ?? 'N/A',
                     $row->offer_won ?? 'N/A',
                     $row->coupon_code ?? 'N/A',
                     ucfirst($row->status),

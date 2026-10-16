@@ -200,13 +200,12 @@
         <thead>
             <tr>
                 <th style="width: 35px; text-align: center;">#</th>
-                <th style="width: 140px;">Customer Name</th>
-                <th style="width: 110px;">Phone Number</th>
-                <th style="width: 140px;">Email</th>
+                <th style="width: 170px;">Customer Name</th>
+                <th style="width: 130px;">Phone Number</th>
                 <th>Offer Won</th>
-                <th style="width: 85px;">Coupon Code</th>
-                <th style="width: 125px;">Date &amp; Time (IST)</th>
-                <th style="width: 80px; text-align: center;">Status</th>
+                <th style="width: 95px;">Coupon Code</th>
+                <th style="width: 140px;">Date &amp; Time (IST)</th>
+                <th style="width: 85px; text-align: center;">Status</th>
             </tr>
         </thead>
         <tbody>
@@ -215,7 +214,6 @@
                     <td style="text-align: center; color: #64748b; font-weight: bold;">{{ $index + 1 }}</td>
                     <td><strong>{{ $lead->customer_name }}</strong></td>
                     <td>{{ $lead->customer_phone }}</td>
-                    <td style="color: #475569;">{{ $lead->customer_email ?: '-' }}</td>
                     <td style="color: #0f172a;">{{ $lead->offer_won ?: ($card->offer_text ?: '-') }}</td>
                     <td>
                         @if($lead->coupon_code)
@@ -235,7 +233,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="8" style="text-align: center; padding: 20px; color: #64748b;">
+                    <td colspan="7" style="text-align: center; padding: 20px; color: #64748b;">
                         No customer leads match the selected criteria.
                     </td>
                 </tr>
