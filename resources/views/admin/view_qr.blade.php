@@ -58,87 +58,72 @@
         <div class="col-12 col-md-5 col-lg-4 mx-auto text-center">
 
             @if($currentStyle === 'style2')
-                <!-- STYLE 2: EXECUTIVE ACRYLIC STANDEE WITH LUXURY MESH BG & CENTER LOGO QR -->
-                <div class="qr_box_modern shadow-lg" id="qr_box" style="position: relative; background-color: #ffffff; border-radius: 24px; border: 2px solid #e2e8f0; overflow: hidden; color: #0f172a; text-align: center; box-shadow: 0 20px 45px rgba(15, 23, 42, 0.12);">
-                    <!-- Luxury Standee Background Image -->
-                    <img src="{{ asset('frontend/images/qr_standee_luxury.jpg') }}" alt="Standee Background" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; pointer-events: none;">
+                <!-- STYLE 2: MODERN ACRYLIC STANDEE -->
+                <div class="qr_box_modern shadow-lg" id="qr_box" style="position: relative; background-color: #ffffff; border-radius: 26px; border: 2px solid #e2e8f0; overflow: hidden; color: #0f172a; text-align: center; box-shadow: 0 20px 45px rgba(0,0,0,0.12);">
+                    <!-- Standee Background Image -->
+                    <img src="{{ asset('frontend/images/qr_standee_bg.jpg') }}" alt="Standee Background" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; pointer-events: none;">
 
                     <!-- Content Layer -->
-                    <div style="position: relative; z-index: 1; display: flex; flex-direction: column; min-height: 600px;">
-                        <!-- Top Google Colors Accent Bar -->
-                        <div style="background: linear-gradient(90deg, #4285F4 25%, #EA4335 25% 50%, #FBBC05 50% 75%, #34A853 75% 100%); height: 6px;"></div>
+                    <div style="position: relative; z-index: 1; display: flex; flex-direction: column; min-height: 580px;">
+                        <!-- Top Google Gradient Ribbon -->
+                        <div style="background: linear-gradient(90deg, #4285F4 0%, #EA4335 33%, #FBBC05 66%, #34A853 100%); height: 8px;"></div>
                         
                         <!-- Header Section -->
                         <div style="padding: 22px 20px 6px 20px;">
-                            <!-- Google Reviews Header Pill -->
-                            <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.95); padding: 6px 16px; border-radius: 30px; border: 1.5px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,0.04); margin-bottom: 8px;">
-                                <svg width="18" height="18" viewBox="0 0 24 24" style="vertical-align: middle;">
-                                    <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
-                                    <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.36 24 12 24z"/>
-                                    <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
-                                    <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.36 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
-                                </svg>
-                                <span style="font-weight: 800; font-size: 13px; color: #1e293b; letter-spacing: 0.3px;">Google Reviews</span>
-                                <div style="color: #f59e0b; font-size: 13px; display: inline-flex; gap: 2px;">
-                                    <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
-                                </div>
+                            <!-- 5 Stars -->
+                            <div style="display: inline-flex; align-items: center; justify-content: center; gap: 5px; color: #f59e0b; font-size: 24px; margin-bottom: 4px;">
+                                <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
                             </div>
 
-                            <h2 style="color: #0f172a; font-weight: 900; font-size: 24px; letter-spacing: 0.8px; text-transform: uppercase; margin: 4px 0 2px 0; line-height: 1.2;">
+                            <!-- Title -->
+                            <h2 style="color: #0b132b; font-weight: 900; font-size: 26px; letter-spacing: 1px; text-transform: uppercase; margin: 2px 0 0 0; line-height: 1.2;">
                                 Review Us On Google
                             </h2>
 
-                            <div style="margin-top: 4px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
-                                <span style="color: #1d4ed8; font-weight: 800; font-size: 18px; letter-spacing: 0.2px;">{{ Auth::user()->name }}</span>
-                                <span style="color: #2563eb; font-size: 16px;" title="Verified Business"><i class="fa-solid fa-circle-check"></i></span>
+                            <!-- Store Name -->
+                            <div style="margin-top: 4px;">
+                                <span style="color: #1a56db; font-weight: 800; font-size: 19px; letter-spacing: 0.2px;">{{ Auth::user()->name }}</span>
                             </div>
 
-                            <p style="color: #64748b; font-size: 13px; margin: 3px 0 12px 0; font-weight: 600;">
+                            <!-- Subtitle -->
+                            <p style="color: #475569; font-size: 13.5px; margin: 4px 0 0 0; font-weight: 600;">
                                 Your 5-star review helps our business grow!
                             </p>
                         </div>
 
-                        <!-- Elevated QR Code Plaque -->
-                        <div style="margin: 0 auto;">
-                            <div style="display: inline-block; background: #ffffff; padding: 15px 15px 12px 15px; border-radius: 22px; box-shadow: 0 12px 35px rgba(15, 23, 42, 0.1), 0 2px 6px rgba(0,0,0,0.04); border: 2px solid #f1f5f9; position: relative;">
-                                <div class="qr_code_frame" style="position: relative; display: inline-block; line-height: 0;">
-                                    {!! QrCode::size(210)->errorCorrection('H')->generate($url."?from=qr") !!}
-                                    @if(!empty(Auth::user()->logo))
-                                        <div class="qr_center_logo" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 56px; height: 56px; background: #ffffff; border-radius: 14px; padding: 5px; box-shadow: 0 4px 14px rgba(0,0,0,0.22); display: flex; align-items: center; justify-content: center; border: 2.5px solid #ffffff; overflow: hidden; z-index: 2;">
-                                            <img src="{{ Auth::user()->logo }}" alt="{{ Auth::user()->name }}" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px;">
-                                        </div>
-                                    @endif
-                                </div>
-                                <div style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 10px; color: #1e293b; font-weight: 700; font-size: 13px;">
-                                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: #eff6ff; color: #2563eb; font-size: 11px;">
-                                        <i class="fa fa-camera"></i>
-                                    </span>
-                                    <span>Point camera & tap link to review</span>
-                                </div>
+                        <!-- White Framed QR Code Card -->
+                        <div style="background: #ffffff; margin: 12px 24px 14px 24px; padding: 22px 18px 16px 18px; border-radius: 26px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); border: 1.5px solid rgba(255, 255, 255, 0.9);">
+                            <div class="qr_code_frame" style="position: relative; display: inline-block; line-height: 0;">
+                                {!! QrCode::size(215)->errorCorrection('H')->generate($url."?from=qr") !!}
+                                @if(!empty(Auth::user()->logo))
+                                    <div class="qr_center_logo" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 52px; height: 52px; background: #ffffff; border-radius: 12px; padding: 4px; box-shadow: 0 4px 14px rgba(0,0,0,0.18); display: flex; align-items: center; justify-content: center; border: 2.5px solid #ffffff; overflow: hidden; z-index: 2;">
+                                        <img src="{{ Auth::user()->logo }}" alt="{{ Auth::user()->name }}" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px;">
+                                    </div>
+                                @endif
+                            </div>
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 12px; color: #0f172a; font-weight: 700; font-size: 13.5px;">
+                                <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: #eff6ff; color: #2563eb; font-size: 11px;">
+                                    <i class="fa fa-camera"></i>
+                                </span>
+                                <span>Point camera & tap the link</span>
                             </div>
                         </div>
 
-                        <!-- NFC & Contactless Feature Pill -->
-                        <div style="margin: 12px auto 6px auto; display: inline-flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.9); padding: 5px 16px; border-radius: 30px; border: 1.5px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
-                            <span style="color: #0284c7; font-size: 14px;"><i class="fa fa-wifi" style="transform: rotate(90deg);"></i></span>
-                            <span style="font-size: 12px; font-weight: 700; color: #334155;">NFC Tap & QR Code Supported</span>
+                        <!-- Google Review Badge -->
+                        <div style="padding: 2px 20px 14px 20px;">
+                            <img src="{{ asset('frontend/images/gog_rev.png') }}" alt="Google Reviews" style="height: 58px; filter: drop-shadow(0 3px 8px rgba(0,0,0,0.08));">
                         </div>
 
-                        <!-- Google Review Rating Badge -->
-                        <div style="margin: 4px auto 12px auto;">
-                            <img src="{{ asset('frontend/images/gog_rev.png') }}" alt="Google Reviews" style="height: 50px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.08));">
-                        </div>
-
-                        <!-- Footer Verified & Powered By -->
-                        <div style="margin-top: auto; padding: 12px 20px; background: rgba(255, 255, 255, 0.88); backdrop-filter: blur(8px); border-top: 1px solid rgba(226, 232, 240, 0.8); display: flex; align-items: center; justify-content: space-between;">
-                            <div style="display: flex; align-items: center; gap: 6px; color: #64748b; font-size: 12px; font-weight: 700;">
-                                <span style="display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: #e0f2fe; color: #0284c7; font-size: 10px;">
-                                    <i class="fa fa-shield-halved"></i>
+                        <!-- Footer Bar -->
+                        <div style="margin-top: auto; padding: 13px 20px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); border-top: 1px solid rgba(226, 232, 240, 0.85); display: flex; align-items: center; justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: 7px; color: #1e293b; font-size: 12.5px; font-weight: 700;">
+                                <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: #e0f2fe; color: #0284c7; font-size: 11px;">
+                                    <i class="fa fa-wifi" style="transform: rotate(90deg);"></i>
                                 </span>
-                                <span>Verified Review Standee</span>
+                                <span>Touch-Free Review</span>
                             </div>
                             <div style="display: flex; align-items: center; gap: 5px;">
-                                <span style="color: #94a3b8; font-size: 11px; text-transform: uppercase; font-weight: 600;">Powered by</span>
+                                <span style="color: #64748b; font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Powered by</span>
                                 <img src="{{ asset('frontend/images/ask.png') }}" alt="AskReview" style="height: 22px;">
                             </div>
                         </div>
