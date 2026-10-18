@@ -57,11 +57,8 @@
             <!-- SLIDE 1: Multi-Platform Review Hub (Matching /u/rajuranjanagency) -->
             <div class="carousel-slide active" data-index="0">
               <div class="slide-visual-card">
-                <!-- Top Slide Header With Badge & Auto Button -->
+                <!-- Top Slide Action (Auto Tour) -->
                 <div class="slide-header-top">
-                  <div class="slide-badge-top">
-                    <i class="bi bi-grid-fill"></i> Multi-Platform Review Hub
-                  </div>
                   <button type="button" class="slide-auto-play-btn" id="mltAutoPlayBtn" title="Auto-Tour Review Platforms">
                     <i class="bi bi-play-fill" id="mltPlayIcon"></i>
                     <span>Auto</span>

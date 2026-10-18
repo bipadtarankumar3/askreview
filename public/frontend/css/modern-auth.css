@@ -390,7 +390,7 @@ html, body.auth-body {
 .slide-header-top {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   width: 100%;
   max-width: 520px;
   margin-bottom: 0.35rem;
