@@ -301,8 +301,8 @@ class UserController extends Controller
             'wp_share' => 'Yes',
             'template_category_id' => $TemplateCategory ? $TemplateCategory->id : '',
             'user_create_type' => 'google',
-            'private_page_text' => 'Leave us a review, it will help us grow and better serve our customers like you.',
-            'dynamic_page_text' => 'Leave us a review, it will help us grow and better serve our customers like you.',
+            'private_page_text' => 'Valuable Feedback',
+            'dynamic_page_text' => 'Share your valuable feedback with our team',
             'google_page_text' => 'We want our customers to be 100% satisfied. Please let us know why you had a bad experience, so we can improve our service. Leave your email to be contacted.',
             'user_id' => $parentUserId
         ]);
@@ -869,8 +869,8 @@ class UserController extends Controller
                     'facebook_share' => 'Yes',
                     'wp_share' => 'Yes',
                     'user_id' => Auth::user()->id,
-                    'private_page_text' => 'Leave us a review, it will help us grow and better serve our customers like you.',
-                    'dynamic_page_text' => 'Leave us a review, it will help us grow and better serve our customers like you.',
+                    'private_page_text' => 'Valuable Feedback',
+                    'dynamic_page_text' => 'Valuable Feedback',
                     'google_page_text' => 'We want our customers to be 100% satisfied. Please let us know why you had a bad experience, so we can improve our service. Leave your email to be contacted.',
                     'logo' => $document_link
                 ]);

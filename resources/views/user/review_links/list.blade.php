@@ -681,8 +681,8 @@
                     'default_icon' => '',
                 ],
                 'private' => [
-                    'title' => 'Private Feedback Shield',
-                    'desc' => 'Intercepts 1-3 star reviews privately so you can resolve customer issues in secret.',
+                    'title' => 'Valuable Feedback',
+                    'desc' => 'Gives customers a direct, confidential channel to leadership so issues can be resolved and experience improved.',
                     'category' => 'shield',
                     'tint' => '#faf5ff',
                     'border' => '#f3e8ff',
@@ -867,11 +867,11 @@
                                     @if ($hasPrivateAccess)
                                         <div class="d-flex align-items-center gap-2 w-100">
                                             @if ($isPrivateActive)
-                                                <button type="button" class="btn btn-outline-danger btn-sm flex-fill fw-bold py-1.5" style="border-radius: 8px; font-size: 0.78rem;" onclick="quickTogglePrivateFeedback('no')" title="Deactivate Private Feedback">
+                                                <button type="button" class="btn btn-outline-danger btn-sm flex-fill fw-bold py-1.5" style="border-radius: 8px; font-size: 0.78rem;" onclick="quickTogglePrivateFeedback('no')" title="Deactivate Valuable Feedback">
                                                     <i class="fa fa-power-off me-1"></i> Deactivate
                                                 </button>
                                             @else
-                                                <button type="button" class="btn btn-success btn-sm flex-fill fw-bold py-1.5" style="border-radius: 8px; font-size: 0.78rem;" onclick="quickTogglePrivateFeedback('yes')" title="Activate Private Feedback">
+                                                <button type="button" class="btn btn-success btn-sm flex-fill fw-bold py-1.5" style="border-radius: 8px; font-size: 0.78rem;" onclick="quickTogglePrivateFeedback('yes')" title="Activate Valuable Feedback">
                                                     <i class="fa fa-check me-1"></i> Activate
                                                 </button>
                                             @endif
@@ -882,7 +882,7 @@
                                     @else
                                         <button type="button" class="btn btn-sm w-100 fw-bold d-flex align-items-center justify-content-center gap-1.5 shadow-sm py-2" style="background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); color: #ffffff; border: none; border-radius: 8px; font-size: 0.78rem;" onclick="promptPrivateUpgrade()">
                                             <i class="fa fa-crown text-warning"></i>
-                                            <span>Upgrade to Unlock Shield</span>
+                                            <span>Upgrade to Unlock Valuable Feedback</span>
                                         </button>
                                     @endif
 
@@ -1062,10 +1062,10 @@
                     </div>
                     <div>
                         <div class="d-flex align-items-center gap-2">
-                            <h5 class="modal-title fw-bold mb-0" id="privateFeedbackModalLabel" style="font-size: 1.15rem; color: #0f172a;">Private Feedback Shield Settings</h5>
+                            <h5 class="modal-title fw-bold mb-0" id="privateFeedbackModalLabel" style="font-size: 1.15rem; color: #0f172a;">Valuable Feedback Settings</h5>
                             <span class="badge" style="background: linear-gradient(135deg, #7c3aed, #6d28d9); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 4px 8px; border-radius: 20px;"><i class="fa fa-crown text-warning me-1"></i> PRO</span>
                         </div>
-                        <small class="text-muted" style="font-size: 0.8rem;">Intercept low customer reviews and capture private feedback</small>
+                        <small class="text-muted" style="font-size: 0.8rem;">Direct confidential customer feedback and improvement channel</small>
                     </div>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="hide_modal()"></button>
@@ -1074,7 +1074,7 @@
                 <div class="row g-4">
                     <div class="col-lg-7">
                         <div class="mb-4">
-                            <label class="form-label fw-bold text-dark mb-2" style="font-size: 0.88rem;">Shield Status</label>
+                            <label class="form-label fw-bold text-dark mb-2" style="font-size: 0.88rem;">Feedback Channel Status</label>
                             <div class="row g-2">
                                 <div class="col-6">
                                     <label class="w-100 p-3 rounded-3 border position-relative cursor-pointer" style="cursor: pointer; transition: all 0.2s;" id="label_shield_active">
@@ -1084,7 +1084,7 @@
                                                 <i class="fa fa-check-circle me-1"></i> Active
                                             </label>
                                         </div>
-                                        <small class="text-muted d-block mt-1 ps-4" style="font-size: 0.74rem; line-height: 1.3;">Enable shield for low ratings</small>
+                                        <small class="text-muted d-block mt-1 ps-4" style="font-size: 0.74rem; line-height: 1.3;">Enable Valuable Feedback</small>
                                     </label>
                                 </div>
                                 <div class="col-6">
@@ -1095,7 +1095,7 @@
                                                 <i class="fa fa-times-circle me-1"></i> Inactive
                                             </label>
                                         </div>
-                                        <small class="text-muted d-block mt-1 ps-4" style="font-size: 0.74rem; line-height: 1.3;">Disable private funnel</small>
+                                        <small class="text-muted d-block mt-1 ps-4" style="font-size: 0.74rem; line-height: 1.3;">Disable feedback funnel</small>
                                     </label>
                                 </div>
                             </div>
@@ -1103,15 +1103,15 @@
 
                         <div class="mb-3">
                             <label class="form-label fw-bold text-dark mb-1" style="font-size: 0.88rem;" for="modal_private_page_text">Customer Subtitle / Message</label>
-                            <textarea class="form-control" id="modal_private_page_text" rows="3" style="border-radius: 12px; font-size: 0.88rem; padding: 12px; line-height: 1.5;" placeholder="Leave us a review, it will help us grow and better serve our customers like you." oninput="updateShieldPreviewText()">{{ Auth::user()->private_page_text ?? 'Leave us a review, it will help us grow and better serve our customers like you.' }}</textarea>
-                            <small class="text-muted" style="font-size: 0.75rem;">Shown under "Private Message" on the customer form.</small>
+                            <textarea class="form-control" id="modal_private_page_text" rows="3" style="border-radius: 12px; font-size: 0.88rem; padding: 12px; line-height: 1.5;" placeholder="Valuable Feedback" oninput="updateShieldPreviewText()">{{ (!empty(Auth::user()->private_page_text) && !str_contains(Auth::user()->private_page_text, 'Leave us a review')) ? Auth::user()->private_page_text : 'Valuable Feedback' }}</textarea>
+                            <small class="text-muted" style="font-size: 0.75rem;">Shown under heading on the customer form.</small>
                         </div>
 
                         <div class="p-3 rounded-3" style="background: #faf5ff; border: 1px dashed #c084fc;">
                             <div class="d-flex align-items-start gap-2">
                                 <i class="fa fa-lightbulb text-warning mt-1" style="font-size: 1rem;"></i>
                                 <div style="font-size: 0.78rem; color: #581c87; line-height: 1.45;">
-                                    <strong>How Shield Works:</strong> Unhappy ratings are caught privately before reaching public review sites like Google or Facebook.
+                                    <strong>How Valuable Feedback Works:</strong> Gives customers a direct, confidential channel to leadership so issues can be resolved privately.
                                 </div>
                             </div>
                         </div>
@@ -1128,8 +1128,8 @@
                                         {{ substr(Auth::user()->name ?? 'B', 0, 1) }}
                                     </div>
                                 @endif
-                                <h6 class="fw-bold mb-1" style="font-size: 0.95rem; color: #1e1b4b;">Private Message</h6>
-                                <p id="preview_private_text" class="text-muted mb-0" style="font-size: 0.68rem; line-height: 1.35;">{{ Auth::user()->private_page_text ?? 'Leave us a review, it will help us grow and better serve our customers like you.' }}</p>
+                                <h6 class="fw-bold mb-1" style="font-size: 0.86rem; color: #1e1b4b; line-height: 1.25;">Your feedback helps us create memorable Experiences</h6>
+                                <p id="preview_private_text" class="text-muted mb-0" style="font-size: 0.68rem; line-height: 1.35;">{{ (!empty(Auth::user()->private_page_text) && !str_contains(Auth::user()->private_page_text, 'Leave us a review')) ? Auth::user()->private_page_text : 'Valuable Feedback' }}</p>
                             </div>
                             <div class="mb-2">
                                 <div class="p-1 px-2 rounded-2 border bg-light text-muted" style="font-size: 0.68rem;">Your Name</div>
@@ -1139,10 +1139,10 @@
                                 <div class="col-6"><div class="p-1 px-2 rounded-2 border bg-light text-muted" style="font-size: 0.65rem;">Email address</div></div>
                             </div>
                             <div class="mb-2">
-                                <div class="p-1 px-2 rounded-2 border bg-light text-muted" style="font-size: 0.68rem; height: 38px;">How can we assist you?</div>
+                                <div class="p-1 px-2 rounded-2 border bg-light text-muted" style="font-size: 0.68rem; height: 38px;">Share your Experience</div>
                             </div>
                             <div class="p-1.5 rounded-3 text-center fw-bold text-white shadow-sm" style="font-size: 0.7rem; background: linear-gradient(135deg, #4f46e5, #7c3aed);">
-                                <i class="fa fa-paper-plane me-1"></i> Send Private Message
+                                <i class="fa fa-paper-plane me-1"></i> Share your Experience
                             </div>
                         </div>
                     </div>
@@ -1193,7 +1193,7 @@
     function updateShieldPreviewText() {
         var text = $('#modal_private_page_text').val();
         if (!text || text.trim() === '') {
-            text = 'Leave us a review, it will help us grow and better serve our customers like you.';
+            text = 'Valuable Feedback';
         }
         $('#preview_private_text').text(text);
     }

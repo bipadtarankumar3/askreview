@@ -473,8 +473,8 @@ class FrontendController extends Controller
             'wp_share' => 'Yes',
             'template_category_id' => isset($TemplateCategory) ? $TemplateCategory->id : '',
             'user_create_type' => 'sign_up',
-            'private_page_text' => 'Leave us a review, it will help us grow and better serve our customers like you.',
-            'dynamic_page_text' => 'Leave us a review, it will help us grow and better serve our customers like you.',
+            'private_page_text' => 'Valuable Feedback',
+            'dynamic_page_text' => 'Share your valuable feedback with our team',
             'google_page_text' => 'We want our customers to be 100% satisfied. Please let us know why you had a bad experience, so we can improve our service. Leave your email to be contacted.',
             'user_id' => $user_id 
         ]);

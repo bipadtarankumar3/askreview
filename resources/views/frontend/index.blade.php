@@ -1051,12 +1051,12 @@
 
         /* Modern Heading & Subtitle */
         .executive-heading {
-            font-size: 1.85rem;
+            font-size: clamp(1.2rem, 4.5vw, 1.55rem);
             font-weight: 850;
             letter-spacing: -0.035em;
             color: #0f172a;
-            margin-bottom: 5px;
-            line-height: 1.2;
+            margin-bottom: 6px;
+            line-height: 1.25;
         }
 
         .executive-subtitle {
@@ -1696,7 +1696,7 @@
                                             'youtube' => 'Youtube',
                                             'whatsapp' => 'WhatsApp',
                                             'record' => 'Video Testimonial',
-                                            'private' => 'Private Message',
+                                            'private' => 'Valuable Feedback',
                                             'website' => 'Website',
                                         ];
 
@@ -1741,7 +1741,7 @@
                                                     <i class="fa-solid fa-shield-halved fa-lg"></i>
                                                 </div>
                                                 <div class="platform-info-text">
-                                                    <div class="platform-name">Private Message</div>
+                                                    <div class="platform-name">Valuable Feedback</div>
                                                     <p class="platform-hint">Direct confidential message to leadership</p>
                                                 </div>
                                                 <div class="platform-chevron-wrap">
@@ -1920,7 +1920,7 @@
                                             <i class="fa-solid fa-shield-halved fa-lg"></i>
                                         </div>
                                         <div class="platform-info-text">
-                                            <div class="platform-name">Private Message</div>
+                                            <div class="platform-name">Valuable Feedback</div>
                                             <p class="platform-hint">Direct confidential message to leadership</p>
                                         </div>
                                         <div class="platform-chevron-wrap">
@@ -2108,9 +2108,9 @@
                             </div>
                         </div>
 
-                        <h2 class="executive-heading">Private Message</h2>
+                        <h2 class="executive-heading">Valuable Feedback</h2>
                         <p class="executive-subtitle">
-                            @if (!empty($user->private_page_text) && !str_contains($user->private_page_text, 'Leave us a review'))
+                            @if (!empty($user->private_page_text) && !str_contains($user->private_page_text, 'Leave us a review') && $user->private_page_text != 'Valuable Feedback')
                                 {{$user->private_page_text}}
                             @else
                                 Have feedback or a concern? Connect directly with senior leadership for discreet, prompt attention.
@@ -2158,17 +2158,17 @@
 
                     <div class="executive-field-group">
                         <label class="executive-field-label">
-                            <span>Your Message</span>
+                            <span>Share your Experience</span>
                             <span class="req-star">*</span>
                         </label>
                         <div class="executive-input-wrapper">
                             <i class="fa-regular fa-comment-dots executive-input-icon icon-textarea"></i>
-                            <textarea name="customer_message" required id="customer_message" class="executive-textarea-control" placeholder="How can leadership assist or address your experience?"></textarea>
+                            <textarea name="customer_message" required id="customer_message" class="executive-textarea-control" placeholder="Share your experience with us..."></textarea>
                         </div>
                     </div>
 
                     <button type="submit" class="executive-submit-cta">
-                        <span>Send Private Message</span>
+                        <span>Share your Experience</span>
                         <i class="fa-solid fa-paper-plane cta-icon"></i>
                     </button>
 

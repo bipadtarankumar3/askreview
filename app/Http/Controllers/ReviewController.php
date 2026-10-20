@@ -156,7 +156,7 @@ class ReviewController extends Controller
                     'youtube' => 'Youtube',
                     'whatsapp' => 'WhatsApp',
                     'record' => 'Video Testimonial',
-                    'private' => 'Private Enquiry',
+                    'private' => 'Valuable Feedback',
                     'website' => 'Website',
                 ];
                 $orderIndex = 1;
@@ -248,7 +248,7 @@ class ReviewController extends Controller
                     'type' => 'private',
                     'user_id' => Auth::user()->id,
                     'button_icon' => URL::to('frontend/images/private.png'),
-                    'button_name' => 'Private Enquiry',
+                    'button_name' => 'Valuable Feedback',
                     'button_order' => $maxOrder + 1,
                     'status' => (Auth::user()->private_feedback == 'no') ? 'inactive' : 'active'
                 ]);
@@ -365,7 +365,7 @@ class ReviewController extends Controller
                     'type' => 'private',
                     'user_id' => Auth::user()->id,
                     'button_icon' => URL::to('frontend/images/private.png'),
-                    'button_name' => 'Private Enquiry',
+                    'button_name' => 'Valuable Feedback',
                     'button_order' => 7
                 ],
                 [
@@ -833,7 +833,7 @@ class ReviewController extends Controller
             if (!$has_private_access) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Private Feedback Shield is an exclusive Pro & Premium Plan feature. Please upgrade your plan to unlock.'
+                    'message' => 'Valuable Feedback is an exclusive Pro & Premium Plan feature. Please upgrade your plan to unlock.'
                 ], 403);
             }
 
@@ -855,7 +855,7 @@ class ReviewController extends Controller
             return response()->json([
                 'status' => 'success',
                 'private_feedback' => $privateFeedback,
-                'message' => 'Private Feedback Shield ' . ($privateFeedback === 'yes' ? 'activated' : 'deactivated') . ' successfully!'
+                'message' => 'Valuable Feedback ' . ($privateFeedback === 'yes' ? 'activated' : 'deactivated') . ' successfully!'
             ]);
         }
 
