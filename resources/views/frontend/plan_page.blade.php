@@ -1419,6 +1419,234 @@
             color: #cbd5e1;
         }
 
+        /* Luxury Voice Feedback Recorder */
+        .executive-badge-soft {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #64748b;
+            background: #f1f5f9;
+            padding: 2px 8px;
+            border-radius: 12px;
+            letter-spacing: 0.02em;
+        }
+
+        .executive-voice-card {
+            border: 1.5px solid #e2e8f0;
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 10px 12px;
+            box-shadow: 0 2px 4px rgba(15, 23, 42, 0.02);
+            transition: all 0.25s ease;
+        }
+
+        .executive-voice-card:hover {
+            border-color: #cbd5e1;
+        }
+
+        .executive-voice-card.is-recording {
+            border-color: #f87171;
+            background: #fffafa;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+        }
+
+        .executive-voice-card.has-preview {
+            border-color: #c4b5fd;
+            background: #faf5ff;
+        }
+
+        .voice-record-trigger {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: transparent;
+            border: none;
+            padding: 4px;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .voice-mic-icon-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7c3aed, #9333ea);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
+            transition: transform 0.2s ease;
+        }
+
+        .voice-record-trigger:hover .voice-mic-icon-circle {
+            transform: scale(1.08);
+        }
+
+        .voice-trigger-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .voice-trigger-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .voice-trigger-hint {
+            font-size: 0.74rem;
+            color: #64748b;
+        }
+
+        /* Recording Active State */
+        .voice-active-state {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 4px;
+        }
+
+        .voice-recording-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .voice-live-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ef4444;
+            display: inline-block;
+            animation: pulseRecord 1s infinite alternate;
+        }
+
+        @keyframes pulseRecord {
+            0% { transform: scale(0.9); opacity: 0.6; box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6); }
+            100% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+        }
+
+        .voice-recording-text {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #b91c1c;
+        }
+
+        .voice-timer {
+            font-size: 0.85rem;
+            font-weight: 750;
+            color: #1e293b;
+            font-variant-numeric: tabular-nums;
+            background: #fee2e2;
+            padding: 2px 7px;
+            border-radius: 6px;
+        }
+
+        .voice-sound-waves {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            height: 24px;
+        }
+
+        .vwave-bar {
+            width: 3px;
+            background: #ef4444;
+            border-radius: 2px;
+            height: 6px;
+            animation: soundWaveAnim 0.8s ease-in-out infinite alternate;
+        }
+
+        .vwave-bar:nth-child(1) { animation-delay: 0.1s; height: 10px; }
+        .vwave-bar:nth-child(2) { animation-delay: 0.25s; height: 18px; }
+        .vwave-bar:nth-child(3) { animation-delay: 0.15s; height: 22px; }
+        .vwave-bar:nth-child(4) { animation-delay: 0.3s; height: 14px; }
+        .vwave-bar:nth-child(5) { animation-delay: 0.05s; height: 8px; }
+        .vwave-bar:nth-child(6) { animation-delay: 0.2s; height: 16px; }
+
+        @keyframes soundWaveAnim {
+            0% { transform: scaleY(0.3); }
+            100% { transform: scaleY(1); }
+        }
+
+        .btn-voice-stop-record {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            padding: 7px 14px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .btn-voice-stop-record:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(239, 68, 68, 0.4);
+        }
+
+        /* Preview State */
+        .preview-info-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .preview-success-tag {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #15803d;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-voice-re-record {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            color: #64748b;
+            font-size: 0.76rem;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 3px 9px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+
+        .btn-voice-re-record:hover {
+            color: #ef4444;
+            border-color: #fca5a5;
+            background: #fff1f2;
+        }
+
+        .preview-audio-container audio {
+            width: 100%;
+            height: 38px;
+        }
+
+        .voice-error-msg {
+            color: #dc2626;
+            font-size: 0.78rem;
+            margin-top: 6px;
+            padding: 4px 8px;
+            background: #fef2f2;
+            border-radius: 6px;
+        }
+
         .secondary-btn {
             background: #f1f5f9;
             color: var(--text-dark);
@@ -2186,7 +2414,7 @@
                 </form>
 
                 <!-- 4. PRIVATE ENQUIRY FORM (PURE PREMIUM EXECUTIVE UI) -->
-                <form method="post" action="{{URL::to('/u/private_feedback')}}" class="private_feedback text-start" style="display: none;">
+                <form method="post" action="{{URL::to('/u/private_feedback')}}" enctype="multipart/form-data" onsubmit="return validatePrivateFeedbackForm(event)" class="private_feedback text-start" style="display: none;">
                     @csrf
                     <input type="hidden" name="user_id" value="{{encrypt($user->id)}}">
                     <input type="hidden" name="rating_number" id="rating_number">
@@ -2242,41 +2470,98 @@
                         </div>
                     </div>
 
-                    <div class="row g-2">
-                        <div class="col-6">
-                            <div class="executive-field-group">
-                                <label class="executive-field-label">
-                                    <span>Phone</span>
-                                    <span class="req-star">*</span>
-                                </label>
-                                <div class="executive-input-wrapper">
-                                    <i class="fa-solid fa-phone executive-input-icon"></i>
-                                    <input type="text" pattern="^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[789]\d{9}$" title="Enter valid mobile number" required name="customer_number" id="customer_number" maxlength="10" class="executive-input-control" placeholder="Mobile no">
+                    <div class="executive-field-group">
+                        <label class="executive-field-label">
+                            <span>Phone</span>
+                            <span class="req-star">*</span>
+                        </label>
+                        <div class="executive-input-wrapper">
+                            <i class="fa-solid fa-phone executive-input-icon"></i>
+                            <input type="text" pattern="^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[789]\d{9}$" title="Enter valid mobile number" required name="customer_number" id="customer_number" maxlength="10" class="executive-input-control" placeholder="Mobile no">
+                        </div>
+                    </div>
+
+                    <!-- Voice Recording Option (Replaces Email) -->
+                    <div class="executive-field-group">
+                        <div class="d-flex align-items-center justify-content-between mb-1">
+                            <label class="executive-field-label mb-0">
+                                <i class="fa-solid fa-microphone-lines me-1" style="color: #7c3aed;"></i>
+                                <span>Voice Feedback</span>
+                            </label>
+                            <span class="executive-badge-soft" id="voice_status_badge">Optional</span>
+                        </div>
+
+                        <div class="executive-voice-card" id="executive_voice_card">
+                            <!-- 1. Idle State: Tap to record -->
+                            <div class="voice-idle-state" id="voice_idle_state">
+                                <button type="button" class="voice-record-trigger" onclick="toggleVoiceRecording()">
+                                    <div class="voice-mic-icon-circle">
+                                        <i class="fa-solid fa-microphone"></i>
+                                    </div>
+                                    <div class="voice-trigger-text">
+                                        <span class="voice-trigger-title">Tap to Record Voice Note</span>
+                                        <span class="voice-trigger-hint">Click mic to record your voice feedback (up to 2 mins)</span>
+                                    </div>
+                                </button>
+                            </div>
+
+                            <!-- 2. Active Recording State -->
+                            <div class="voice-active-state" id="voice_active_state" style="display: none;">
+                                <div class="voice-recording-info">
+                                    <span class="voice-live-dot"></span>
+                                    <span class="voice-recording-text">Recording...</span>
+                                    <span class="voice-timer" id="voice_timer_display">00:00</span>
+                                </div>
+                                
+                                <div class="voice-sound-waves">
+                                    <span class="vwave-bar"></span>
+                                    <span class="vwave-bar"></span>
+                                    <span class="vwave-bar"></span>
+                                    <span class="vwave-bar"></span>
+                                    <span class="vwave-bar"></span>
+                                    <span class="vwave-bar"></span>
+                                </div>
+
+                                <button type="button" class="btn-voice-stop-record" onclick="stopVoiceRecording()" title="Stop and Preview">
+                                    <i class="fa-solid fa-stop"></i>
+                                    <span>Done</span>
+                                </button>
+                            </div>
+
+                            <!-- 3. Preview & Playback State -->
+                            <div class="voice-preview-state" id="voice_preview_state" style="display: none;">
+                                <div class="preview-info-row">
+                                    <span class="preview-success-tag">
+                                        <i class="fa-solid fa-circle-check"></i> Voice Note Ready
+                                    </span>
+                                    <button type="button" class="btn-voice-re-record" onclick="discardVoiceRecording()" title="Delete and record again">
+                                        <i class="fa-solid fa-rotate-left"></i> Re-record
+                                    </button>
+                                </div>
+                                <div class="preview-audio-container">
+                                    <audio id="feedback_audio_player" controls controlsList="nodownload" preload="metadata" style="width: 100%; height: 40px; border-radius: 10px;"></audio>
                                 </div>
                             </div>
+
+                            <!-- Error Message -->
+                            <div class="voice-error-msg" id="voice_error_msg" style="display: none;"></div>
                         </div>
-                        <div class="col-6">
-                            <div class="executive-field-group">
-                                <label class="executive-field-label">
-                                    <span>Email</span>
-                                </label>
-                                <div class="executive-input-wrapper">
-                                    <i class="fa-regular fa-envelope executive-input-icon"></i>
-                                    <input type="email" name="customer_email" id="customer_email" class="executive-input-control" placeholder="Email address">
-                                </div>
-                            </div>
-                        </div>
+
+                        <!-- Hidden Inputs for Audio File and Base64 -->
+                        <input type="file" name="voice_file" id="feedback_voice_file" accept="audio/*" style="display: none;">
+                        <input type="hidden" name="voice_base64" id="feedback_voice_base64" value="">
                     </div>
 
                     <div class="executive-field-group">
                         <label class="executive-field-label">
                             <span>Share your Experience</span>
-                            <span class="req-star">*</span>
+                            <span class="req-star" id="message_req_star">*</span>
                         </label>
                         <div class="executive-input-wrapper">
                             <i class="fa-regular fa-comment-dots executive-input-icon icon-textarea"></i>
-                            <textarea name="customer_message" required id="customer_message" class="executive-textarea-control" placeholder="Share your experience with us..."></textarea>
+                            <textarea name="customer_message" id="customer_message" class="executive-textarea-control" placeholder="Share your experience or details with us..."></textarea>
                         </div>
+                        <div class="text-danger mt-1" id="feedback_message_error" style="display: none; font-size: 0.78rem; font-weight: 600;"></div>
                     </div>
 
                     <button type="submit" class="executive-submit-cta">
@@ -2797,7 +3082,243 @@
             $('.more_three_star').fadeIn(200);
         }
 
+        /* ==========================================================================
+           VOICE FEEDBACK RECORDING & PREVIEW LOGIC
+           ========================================================================== */
+        let feedbackMediaRecorder = null;
+        let feedbackAudioChunks = [];
+        let feedbackAudioStream = null;
+        let feedbackTimerInterval = null;
+        let feedbackSecondsElapsed = 0;
+        let feedbackAudioBlob = null;
+        let feedbackMimeType = '';
+
+        function getFeedbackAudioMimeType() {
+            if (typeof MediaRecorder === 'undefined') return '';
+            const types = [
+                'audio/webm;codecs=opus',
+                'audio/webm',
+                'audio/mp4',
+                'audio/ogg;codecs=opus',
+                'audio/wav'
+            ];
+            for (let i = 0; i < types.length; i++) {
+                if (MediaRecorder.isTypeSupported(types[i])) {
+                    return types[i];
+                }
+            }
+            return '';
+        }
+
+        async function toggleVoiceRecording() {
+            const errorEl = document.getElementById('voice_error_msg');
+            if (errorEl) errorEl.style.display = 'none';
+
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                if (errorEl) {
+                    errorEl.innerText = 'Audio recording is not supported in this browser.';
+                    errorEl.style.display = 'block';
+                }
+                return;
+            }
+
+            try {
+                feedbackAudioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                feedbackAudioChunks = [];
+                feedbackMimeType = getFeedbackAudioMimeType();
+
+                const options = feedbackMimeType ? { mimeType: feedbackMimeType } : {};
+                feedbackMediaRecorder = new MediaRecorder(feedbackAudioStream, options);
+
+                feedbackMediaRecorder.ondataavailable = function(e) {
+                    if (e.data && e.data.size > 0) {
+                        feedbackAudioChunks.push(e.data);
+                    }
+                };
+
+                feedbackMediaRecorder.onstop = function() {
+                    if (feedbackAudioChunks.length > 0) {
+                        feedbackAudioBlob = new Blob(feedbackAudioChunks, { type: feedbackMimeType || 'audio/webm' });
+                        const audioUrl = URL.createObjectURL(feedbackAudioBlob);
+                        const player = document.getElementById('feedback_audio_player');
+                        if (player) {
+                            player.src = audioUrl;
+                        }
+
+                        // Attach to file input via DataTransfer if supported
+                        try {
+                            const ext = (feedbackMimeType && feedbackMimeType.includes('mp4')) ? 'mp4' : 'webm';
+                            const file = new File([feedbackAudioBlob], 'voice_feedback_' + Date.now() + '.' + ext, { type: feedbackAudioBlob.type });
+                            const dt = new DataTransfer();
+                            dt.items.add(file);
+                            const fileInput = document.getElementById('feedback_voice_file');
+                            if (fileInput) fileInput.files = dt.files;
+                        } catch(err) {
+                            console.log('DataTransfer fallback used');
+                        }
+
+                        // Store base64 data as fallback
+                        const reader = new FileReader();
+                        reader.onloadend = function() {
+                            const base64Input = document.getElementById('feedback_voice_base64');
+                            if (base64Input) base64Input.value = reader.result;
+                        };
+                        reader.readAsDataURL(feedbackAudioBlob);
+
+                        // Switch state to preview
+                        document.getElementById('voice_idle_state').style.display = 'none';
+                        document.getElementById('voice_active_state').style.display = 'none';
+                        document.getElementById('voice_preview_state').style.display = 'block';
+
+                        const card = document.getElementById('executive_voice_card');
+                        if (card) {
+                            card.classList.remove('is-recording');
+                            card.classList.add('has-preview');
+                        }
+
+                        const badge = document.getElementById('voice_status_badge');
+                        if (badge) {
+                            badge.innerText = 'Recorded';
+                            badge.style.color = '#15803d';
+                            badge.style.background = '#dcfce7';
+                        }
+
+                        const msgStar = document.getElementById('message_req_star');
+                        if (msgStar) msgStar.style.display = 'none';
+                        const msgInput = document.getElementById('customer_message');
+                        if (msgInput) {
+                            msgInput.placeholder = 'Add extra notes if desired (optional)...';
+                        }
+                    }
+                };
+
+                feedbackMediaRecorder.start();
+                feedbackSecondsElapsed = 0;
+                updateFeedbackTimerDisplay();
+
+                feedbackTimerInterval = setInterval(function() {
+                    feedbackSecondsElapsed++;
+                    updateFeedbackTimerDisplay();
+                    if (feedbackSecondsElapsed >= 120) { // Max 2 mins
+                        stopVoiceRecording();
+                    }
+                }, 1000);
+
+                // Switch UI to recording state
+                document.getElementById('voice_idle_state').style.display = 'none';
+                document.getElementById('voice_active_state').style.display = 'flex';
+                document.getElementById('voice_preview_state').style.display = 'none';
+
+                const card = document.getElementById('executive_voice_card');
+                if (card) {
+                    card.classList.add('is-recording');
+                    card.classList.remove('has-preview');
+                }
+
+                const badge = document.getElementById('voice_status_badge');
+                if (badge) {
+                    badge.innerText = 'Recording';
+                    badge.style.color = '#dc2626';
+                    badge.style.background = '#fee2e2';
+                }
+
+            } catch (err) {
+                console.error('Microphone access error:', err);
+                let msg = 'Unable to access microphone. Please allow microphone access.';
+                if (err.name === 'NotFoundError') msg = 'No microphone device found.';
+                if (err.name === 'NotAllowedError') msg = 'Microphone permission denied.';
+                if (errorEl) {
+                    errorEl.innerText = msg;
+                    errorEl.style.display = 'block';
+                }
+            }
+        }
+
+        function updateFeedbackTimerDisplay() {
+            const mins = String(Math.floor(feedbackSecondsElapsed / 60)).padStart(2, '0');
+            const secs = String(feedbackSecondsElapsed % 60).padStart(2, '0');
+            const timerEl = document.getElementById('voice_timer_display');
+            if (timerEl) timerEl.innerText = mins + ':' + secs;
+        }
+
+        function stopVoiceRecording() {
+            if (feedbackTimerInterval) {
+                clearInterval(feedbackTimerInterval);
+                feedbackTimerInterval = null;
+            }
+            if (feedbackMediaRecorder && feedbackMediaRecorder.state === 'recording') {
+                feedbackMediaRecorder.stop();
+            }
+            if (feedbackAudioStream) {
+                feedbackAudioStream.getTracks().forEach(function(track) { track.stop(); });
+                feedbackAudioStream = null;
+            }
+        }
+
+        function discardVoiceRecording() {
+            stopVoiceRecording();
+            feedbackAudioChunks = [];
+            feedbackAudioBlob = null;
+
+            const fileInput = document.getElementById('feedback_voice_file');
+            if (fileInput) fileInput.value = '';
+            const base64Input = document.getElementById('feedback_voice_base64');
+            if (base64Input) base64Input.value = '';
+            const player = document.getElementById('feedback_audio_player');
+            if (player) {
+                player.pause();
+                player.src = '';
+            }
+
+            document.getElementById('voice_idle_state').style.display = 'block';
+            document.getElementById('voice_active_state').style.display = 'none';
+            document.getElementById('voice_preview_state').style.display = 'none';
+
+            const card = document.getElementById('executive_voice_card');
+            if (card) {
+                card.classList.remove('is-recording');
+                card.classList.remove('has-preview');
+            }
+
+            const badge = document.getElementById('voice_status_badge');
+            if (badge) {
+                badge.innerText = 'Optional';
+                badge.style.color = '#64748b';
+                badge.style.background = '#f1f5f9';
+            }
+
+            const msgStar = document.getElementById('message_req_star');
+            if (msgStar) msgStar.style.display = 'inline';
+            const msgInput = document.getElementById('customer_message');
+            if (msgInput) {
+                msgInput.placeholder = 'Share your experience or details with us...';
+            }
+        }
+
+        function validatePrivateFeedbackForm(e) {
+            if (feedbackMediaRecorder && feedbackMediaRecorder.state === 'recording') {
+                stopVoiceRecording();
+            }
+            const hasVoice = (feedbackAudioBlob !== null) || (document.getElementById('feedback_voice_base64') && document.getElementById('feedback_voice_base64').value.length > 20);
+            const msg = (document.getElementById('customer_message') ? document.getElementById('customer_message').value.trim() : '');
+            const errorEl = document.getElementById('feedback_message_error');
+
+            if (!hasVoice && !msg) {
+                if (e) e.preventDefault();
+                if (errorEl) {
+                    errorEl.innerText = 'Please share your experience in writing or record a voice note.';
+                    errorEl.style.display = 'block';
+                }
+                const msgInput = document.getElementById('customer_message');
+                if (msgInput) msgInput.focus();
+                return false;
+            }
+            if (errorEl) errorEl.style.display = 'none';
+            return true;
+        }
+
         function close_private_form() {
+            discardVoiceRecording();
             $('.private_feedback').hide();
             $('.more_three_star').fadeIn(250);
         }

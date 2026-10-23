@@ -18,12 +18,21 @@ use Response;
 use PDF;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
 
 class PrivateReviewController extends Controller
 {
     public function private_review_list(Request $request){
 
         if(Auth::check()){
+
+            // Ensure voice column exists in private_reviews table
+            if (Schema::hasTable('private_reviews') && !Schema::hasColumn('private_reviews', 'voice')) {
+                Schema::table('private_reviews', function (Blueprint $table) {
+                    $table->string('voice')->nullable()->after('email');
+                });
+            }
 
             $where = '1=1';
 
@@ -63,11 +72,14 @@ class PrivateReviewController extends Controller
             if ($id != null) {
 
                 $array['list'] = privateReview::whereIn('private_reviews.id',$id )
-                    ->where('private_reviews.created_by',Auth::user()->id)
+                    ->where(function($q) {
+                        $q->where('private_reviews.user_id', Auth::user()->id)
+                          ->orWhere('private_reviews.created_by', Auth::user()->id);
+                    })
                     ->get();
                 $pdf = PDF::loadView('user.pdf.privateReview', $array);
         
-            return $pdf->download('spinner.pdf');
+            return $pdf->download('private_reviews.pdf');
             } else {
                 return back();
             }

@@ -17,7 +17,7 @@
                                 <th  style="border: 1px solid black ;">Sl.</th>
                                 <th  style="border: 1px solid black ;">Name</th>
                                 <th  style="border: 1px solid black ;">Number</th>
-                                <th  style="border: 1px solid black ;">Email</th>
+                                <th  style="border: 1px solid black ;">Voice / Email</th>
                                 <th  style="border: 1px solid black ;">Message</th>
                             </tr>
                             <!-- end row -->
@@ -30,7 +30,13 @@
                                     <td  style="border: 1px solid black ;">{{$key+1}}</td>
                                     <td  style="border: 1px solid black ;">{{$item->name}}</td>
                                     <td  style="border: 1px solid black ;">{{$item->number}}</td>
-                                    <td  style="border: 1px solid black ;">{{$item->email}}</td>
+                                    <td  style="border: 1px solid black ;">
+                                        @if(!empty($item->voice))
+                                            Voice Note Attached
+                                        @else
+                                            {{$item->email ?: 'N/A'}}
+                                        @endif
+                                    </td>
                                     <td  style="border: 1px solid black ;">{{$item->message}}</td>
                                     
                                 </tr>

@@ -34,6 +34,8 @@ use App\Models\GoogleFeedbackTemplate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
 use Hash;
 
 
@@ -774,145 +776,224 @@ class FrontendController extends Controller
         try {
             $user_id = decrypt($request->user_id);
         } catch (\Exception $e) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['status' => 'error', 'message' => 'Invalid request.'], 400);
+            }
             return response()->json(['status' => 'error', 'message' => 'Invalid request.'], 400);
         }
 
         $User = User::where('id',$user_id)->first();
-            $data = $request->all();
-            //dd($data );
-            if ($User) {
+        if ($User) {
 
-                date_default_timezone_set("Asia/Calcutta"); 
-                $arr = array(
-                    'name'=>$request->customer_name,
-                    'email'=>$request->customer_email,
-                    'number'=>$request->customer_number,
-                    'message'=>$request->customer_message,
-                    'user_id'=>$user_id,
-                );
-                $privateReview = privateReview::create($arr);
-
-
-                $notification_arr = array(
-                    'type'=>'private',
-                    'item_id'=>$privateReview->id,
-                    'url'=>'admin/private_review_list',
-                    'text'=>'Private Contact: '.($request->customer_name ?: 'Customer'),
-                    'user_id'=>$user_id,
-                );
-                $notification = notification::create($notification_arr);
-
-                $userDate = User::where('id', $user_id)->first();
-                if ($userDate) {
-                    $businessName = $userDate->name ?? 'AskReview';
-                    $adminUser = !empty($userDate->user_id) ? User::find($userDate->user_id) : null;
-                    $superAdmin = User::where('type', 'super_admin')->first() ?? User::where('type', 'admin')->first();
-
-                    // Create in-app notification for the parent admin if separate
-                    if ($adminUser && $adminUser->id != $user_id) {
-                        try {
-                            notification::create([
-                                'type' => 'private',
-                                'item_id' => $privateReview->id,
-                                'url' => 'admin/private_review_list',
-                                'text' => 'Private Contact for ' . $businessName . ': ' . ($request->customer_name ?: 'Customer'),
-                                'user_id' => $adminUser->id,
-                            ]);
-                        } catch (\Throwable $ne) {}
-                    }
-
-                    // Create in-app notification for super admin if separate
-                    if ($superAdmin && $superAdmin->id != $user_id && (!$adminUser || $superAdmin->id != $adminUser->id)) {
-                        try {
-                            notification::create([
-                                'type' => 'private',
-                                'item_id' => $privateReview->id,
-                                'url' => 'admin/private_review_list',
-                                'text' => 'Private Contact for ' . $businessName . ': ' . ($request->customer_name ?: 'Customer'),
-                                'user_id' => $superAdmin->id,
-                            ]);
-                        } catch (\Throwable $ne) {}
-                    }
-
-                    // Setup Mail configuration
-                    $this->setMailConfig();
-                    $subject = "New Private Enquiry from AskReview" . " - " . $businessName;
-                    
-                    $mail_arr = array(
-                        'title' => 'New Private Message Received',
-                        'name' => $request->customer_name,
-                        'email' => $request->customer_email,
-                        'phone' => $request->customer_number,
-                        'message' => $request->customer_message,
-                        'business_name' => $businessName,
-                        'submitted_at' => \Carbon\Carbon::now('Asia/Kolkata')->format('d M Y, h:i A'),
-                        'admin_url' => url('admin/private_review_list')
-                    );
-
-                    // 1. Send Email ONLY to Store User (Business owner)
-                    if (!empty($userDate->email)) {
-                        try {
-                            Mail::to($userDate->email)->send(new SpinnerFormMail('ADMIN', $mail_arr, $subject));
-                        } catch (\Throwable $e) {
-                            \Log::error('Private feedback user email error: ' . $e->getMessage());
-                        }
-                    }
-
-                    // 2. Send Confirmation Email to the customer if provided
-                    if (!empty($request->customer_email)) {
-                        try {
-                            Mail::to($request->customer_email)->send(new SpinnerFormMail('CUSTOMER', $mail_arr, 'Thank you for contacting ' . $businessName));
-                        } catch (\Throwable $e) {
-                            \Log::error('Private feedback customer email error: ' . $e->getMessage());
-                        }
-                    }
-
-                    if(!empty($request->customer_number) && !empty($userDate->wp_key)){
-                        try {
-                            $curl = curl_init();
-                            $string = "प्रिय ग्राहक, धन्यवाद 🙏 हम अपने ग्राहकों से फीडबैक सुनना पसंद करते हैं। आपका फीडबैक हमे प्राप्त हो गया है, ये फीडबैक ही हमे बेहतर को और बेहतर करने के लिए प्रेरित करता है। आपकी संतुष्टि ही हमारा लक्ष्य है जल्द ही हमारी टीम आपसे संपर्क करेगी |";
-                            $message = urlencode($string);
-                        
-                            curl_setopt_array($curl, array(
-                              CURLOPT_URL => 'http://api.vyyapar.com/wapp/api/send?apikey='.$userDate->wp_key.'&mobile='.$request->customer_number.'&msg='.$message,
-                              CURLOPT_RETURNTRANSFER => true,
-                              CURLOPT_ENCODING => '',
-                              CURLOPT_MAXREDIRS => 5,
-                              CURLOPT_TIMEOUT => 5,
-                              CURLOPT_CONNECTTIMEOUT => 5,
-                              CURLOPT_FOLLOWLOCATION => true,
-                              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                              CURLOPT_CUSTOMREQUEST => 'GET',
-                            ));
-                            
-                            $response = curl_exec($curl);
-                            curl_close($curl);
-
-                            $count = empty($userDate->wp_count) ? 1 : ($userDate->wp_count + 1);
-                            User::where('id', $userDate->id)->update(['wp_count' => $count]);
-                        } catch (\Throwable $e) {
-                            \Log::error('Private feedback whatsapp error: ' . $e->getMessage());
-                        }
-                    }
-
-                    
-                }
-                
-
-                $notification = array(
-                    'messege'=>'Review Added Successfully',
-                    'alert-type'=>'success'
-                );
-                return redirect('/u/success_submit/'.$User->name_url.'')->with($notification);
-    
-    
-            } else {
-                $notification = array(
-                    'messege'=>'Not Valid User Id',
-                    'alert-type'=>'error'
-                );
-                return back()->with($notification);
+            // Ensure voice column exists in private_reviews table
+            if (Schema::hasTable('private_reviews') && !Schema::hasColumn('private_reviews', 'voice')) {
+                Schema::table('private_reviews', function (Blueprint $table) {
+                    $table->string('voice')->nullable()->after('email');
+                });
             }
+
+            date_default_timezone_set("Asia/Calcutta");
+
+            $voiceFileName = null;
+
+            // 1. Check if direct file was uploaded
+            if ($request->hasFile('voice_file')) {
+                try {
+                    $file = $request->file('voice_file');
+                    $ext = $file->getClientOriginalExtension() ?: 'webm';
+                    if ($ext === 'bin' || empty($ext)) {
+                        $ext = 'webm';
+                    }
+                    $voiceFileName = 'voice_' . time() . '_' . uniqid() . '.' . $ext;
+                    $destinationPath = public_path('upload');
+                    if (!file_exists($destinationPath)) {
+                        @mkdir($destinationPath, 0777, true);
+                    }
+                    $file->move($destinationPath, $voiceFileName);
+                } catch (\Throwable $fe) {
+                    \Log::error('Voice file upload error: ' . $fe->getMessage());
+                }
+            } elseif (!empty($request->voice_base64)) {
+                // 2. Base64 audio fallback
+                try {
+                    $base64Data = $request->voice_base64;
+                    $ext = 'webm';
+                    if (str_contains($base64Data, ';base64,')) {
+                        [$typeInfo, $data] = explode(';', $base64Data);
+                        [, $data] = explode(',', $data);
+                        if (str_contains($typeInfo, 'mp4')) {
+                            $ext = 'mp4';
+                        } elseif (str_contains($typeInfo, 'ogg')) {
+                            $ext = 'ogg';
+                        } elseif (str_contains($typeInfo, 'wav')) {
+                            $ext = 'wav';
+                        } elseif (str_contains($typeInfo, 'mpeg') || str_contains($typeInfo, 'mp3')) {
+                            $ext = 'mp3';
+                        }
+                    } else {
+                        $data = $base64Data;
+                    }
+                    $decoded = base64_decode($data);
+                    if ($decoded !== false && strlen($decoded) > 0) {
+                        $voiceFileName = 'voice_' . time() . '_' . uniqid() . '.' . $ext;
+                        $destinationPath = public_path('upload');
+                        if (!file_exists($destinationPath)) {
+                            @mkdir($destinationPath, 0777, true);
+                        }
+                        file_put_contents($destinationPath . '/' . $voiceFileName, $decoded);
+                    }
+                } catch (\Throwable $be) {
+                    \Log::error('Voice base64 decode error: ' . $be->getMessage());
+                }
+            }
+
+            $messageText = $request->customer_message;
+            if (empty($messageText) && !empty($voiceFileName)) {
+                $messageText = '[Voice Recording Feedback]';
+            }
+
+            $arr = array(
+                'name'=>$request->customer_name,
+                'email'=>$request->customer_email,
+                'number'=>$request->customer_number,
+                'message'=>$messageText,
+                'voice'=>$voiceFileName,
+                'user_id'=>$user_id,
+            );
+            $privateReview = privateReview::create($arr);
+
+            $hasVoice = !empty($voiceFileName);
+            $voiceTag = $hasVoice ? ' 🎙️ (Voice Note)' : '';
+
+            $notification_arr = array(
+                'type'=>'private',
+                'item_id'=>$privateReview->id,
+                'url'=>'admin/private_review_list',
+                'text'=>'Private Contact: '.($request->customer_name ?: 'Customer') . $voiceTag,
+                'user_id'=>$user_id,
+            );
+            $notification = notification::create($notification_arr);
+
+            $userDate = User::where('id', $user_id)->first();
+            if ($userDate) {
+                $businessName = $userDate->name ?? 'AskReview';
+                $adminUser = !empty($userDate->user_id) ? User::find($userDate->user_id) : null;
+                $superAdmin = User::where('type', 'super_admin')->first() ?? User::where('type', 'admin')->first();
+
+                // Create in-app notification for the parent admin if separate
+                if ($adminUser && $adminUser->id != $user_id) {
+                    try {
+                        notification::create([
+                            'type' => 'private',
+                            'item_id' => $privateReview->id,
+                            'url' => 'admin/private_review_list',
+                            'text' => 'Private Contact for ' . $businessName . ': ' . ($request->customer_name ?: 'Customer') . $voiceTag,
+                            'user_id' => $adminUser->id,
+                        ]);
+                    } catch (\Throwable $ne) {}
+                }
+
+                // Create in-app notification for super admin if separate
+                if ($superAdmin && $superAdmin->id != $user_id && (!$adminUser || $superAdmin->id != $adminUser->id)) {
+                    try {
+                        notification::create([
+                            'type' => 'private',
+                            'item_id' => $privateReview->id,
+                            'url' => 'admin/private_review_list',
+                            'text' => 'Private Contact for ' . $businessName . ': ' . ($request->customer_name ?: 'Customer') . $voiceTag,
+                            'user_id' => $superAdmin->id,
+                        ]);
+                    } catch (\Throwable $ne) {}
+                }
+
+                // Setup Mail configuration
+                $this->setMailConfig();
+                $subject = "New Private Enquiry from AskReview" . " - " . $businessName . ($hasVoice ? ' (Includes Voice Note)' : '');
+                
+                $mail_arr = array(
+                    'title' => 'New Private Message Received' . ($hasVoice ? ' (Voice Note Included)' : ''),
+                    'name' => $request->customer_name,
+                    'email' => $request->customer_email,
+                    'phone' => $request->customer_number,
+                    'message' => $messageText,
+                    'voice_url' => $hasVoice ? asset('upload/' . $voiceFileName) : null,
+                    'business_name' => $businessName,
+                    'submitted_at' => \Carbon\Carbon::now('Asia/Kolkata')->format('d M Y, h:i A'),
+                    'admin_url' => url('admin/private_review_list')
+                );
+
+                // 1. Send Email ONLY to Store User (Business owner)
+                if (!empty($userDate->email)) {
+                    try {
+                        Mail::to($userDate->email)->send(new SpinnerFormMail('ADMIN', $mail_arr, $subject));
+                    } catch (\Throwable $e) {
+                        \Log::error('Private feedback user email error: ' . $e->getMessage());
+                    }
+                }
+
+                // 2. Send Confirmation Email to the customer if provided
+                if (!empty($request->customer_email)) {
+                    try {
+                        Mail::to($request->customer_email)->send(new SpinnerFormMail('CUSTOMER', $mail_arr, 'Thank you for contacting ' . $businessName));
+                    } catch (\Throwable $e) {
+                        \Log::error('Private feedback customer email error: ' . $e->getMessage());
+                    }
+                }
+
+                if(!empty($request->customer_number) && !empty($userDate->wp_key)){
+                    try {
+                        $curl = curl_init();
+                        $string = "प्रिय ग्राहक, धन्यवाद 🙏 हम अपने ग्राहकों से फीडबैक सुनना पसंद करते हैं। आपका फीडबैक हमे प्राप्त हो गया है, ये फीडबैक ही हमे बेहतर को और बेहतर करने के लिए प्रेरित करता है। आपकी संतुष्टि ही हमारा लक्ष्य है जल्द ही हमारी टीम आपसे संपर्क करेगी |";
+                        $message = urlencode($string);
+                    
+                        curl_setopt_array($curl, array(
+                          CURLOPT_URL => 'http://api.vyyapar.com/wapp/api/send?apikey='.$userDate->wp_key.'&mobile='.$request->customer_number.'&msg='.$message,
+                          CURLOPT_RETURNTRANSFER => true,
+                          CURLOPT_ENCODING => '',
+                          CURLOPT_MAXREDIRS => 5,
+                          CURLOPT_TIMEOUT => 5,
+                          CURLOPT_CONNECTTIMEOUT => 5,
+                          CURLOPT_FOLLOWLOCATION => true,
+                          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                          CURLOPT_CUSTOMREQUEST => 'GET',
+                        ));
+                        
+                        $response = curl_exec($curl);
+                        curl_close($curl);
+
+                        $count = empty($userDate->wp_count) ? 1 : ($userDate->wp_count + 1);
+                        User::where('id', $userDate->id)->update(['wp_count' => $count]);
+                    } catch (\Throwable $e) {
+                        \Log::error('Private feedback whatsapp error: ' . $e->getMessage());
+                    }
+                }
+
+            }
+
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Review Added Successfully',
+                    'redirect' => url('/u/success_submit/'.$User->name_url)
+                ]);
+            }
+
+            $notification = array(
+                'messege'=>'Review Added Successfully',
+                'alert-type'=>'success'
+            );
+            return redirect('/u/success_submit/'.$User->name_url.'')->with($notification);
+
+        } else {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['status' => 'error', 'message' => 'Not Valid User Id'], 400);
+            }
+            $notification = array(
+                'messege'=>'Not Valid User Id',
+                'alert-type'=>'error'
+            );
+            return back()->with($notification);
+        }
         // } catch (\Throwable $th) {
         //     $data = array(
         //         'message'=>'Code Error',

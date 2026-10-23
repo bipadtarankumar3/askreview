@@ -84,7 +84,7 @@
                                 <th>Date</th>
                                 <th>Name</th>
                                 <th>Number</th>
-                                <th>Email</th>
+                                <th>Voice Recording</th>
                                 <th>Message</th>
                                 <th>Action</th>
                             </tr>
@@ -100,11 +100,32 @@
                                     <td>{{$item->created_at}}</td>
                                     <td>{{$item->name}}</td>
                                     <td>{{$item->number}}</td>
-                                    <td>{{$item->email}}</td>
-                                    <td>{{$item->message}}</td>
+                                    <td style="min-width: 260px;">
+                                        @if(!empty($item->voice))
+                                            <div class="d-flex align-items-center gap-2">
+                                                <audio controls controlsList="nodownload" preload="none" style="height: 36px; max-width: 200px;">
+                                                    <source src="{{ asset('upload/'.$item->voice) }}" type="audio/webm">
+                                                    <source src="{{ asset('upload/'.$item->voice) }}" type="audio/mp4">
+                                                    <source src="{{ asset('upload/'.$item->voice) }}" type="audio/ogg">
+                                                    <source src="{{ asset('upload/'.$item->voice) }}" type="audio/mpeg">
+                                                    Your browser does not support audio playback.
+                                                </audio>
+                                                <a href="{{ asset('upload/'.$item->voice) }}" download="voice_feedback_{{$item->id}}" class="btn btn-sm btn-outline-primary d-inline-flex align-items-center justify-content-center" style="border-radius: 8px; width: 34px; height: 34px; flex-shrink: 0;" title="Download Voice Recording">
+                                                    <i class="fas fa-download"></i>
+                                                </a>
+                                            </div>
+                                        @elseif(!empty($item->email))
+                                            <span class="text-muted" style="font-size: 0.85rem;"><i class="fa fa-envelope me-1 opacity-75"></i>{{$item->email}}</span>
+                                        @else
+                                            <span class="badge bg-light text-muted" style="border-radius: 6px; font-size: 0.76rem; border: 1px solid #e2e8f0; font-weight: 500;">
+                                                <i class="fas fa-microphone-slash me-1 opacity-50"></i> No Audio
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <td style="max-width: 280px; white-space: normal; word-break: break-word;">{{$item->message}}</td>
                                     <td>
                                         {{-- <a href="#" onclick="view_review('{{URL::to('admin/view_review/'.$item->id)}}')"><i class="fas fa-eye"></i></a> --}}
-                                        <a href="{{URL::to('admin/delete_private_review/'.$item->id)}}" onclick="dataDelete(event)"><i class="fas fa-trash-alt"></i></a>
+                                        <a href="{{URL::to('admin/delete_private_review/'.$item->id)}}" onclick="dataDelete(event)" class="text-danger"><i class="fas fa-trash-alt"></i></a>
                                     </td>
                                 </tr>
                             @endforeach

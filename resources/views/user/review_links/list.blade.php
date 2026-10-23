@@ -1134,12 +1134,17 @@
                             <div class="mb-2">
                                 <div class="p-1 px-2 rounded-2 border bg-light text-muted" style="font-size: 0.68rem;">Your Name</div>
                             </div>
-                            <div class="row g-1 mb-2">
-                                <div class="col-6"><div class="p-1 px-2 rounded-2 border bg-light text-muted" style="font-size: 0.65rem;">Mobile no</div></div>
-                                <div class="col-6"><div class="p-1 px-2 rounded-2 border bg-light text-muted" style="font-size: 0.65rem;">Email address</div></div>
+                            <div class="mb-2">
+                                <div class="p-1 px-2 rounded-2 border bg-light text-muted" style="font-size: 0.68rem;">Mobile no</div>
                             </div>
                             <div class="mb-2">
-                                <div class="p-1 px-2 rounded-2 border bg-light text-muted" style="font-size: 0.68rem; height: 38px;">Share your Experience</div>
+                                <div class="p-1 px-2 rounded-2 border bg-light text-muted d-flex align-items-center justify-content-between" style="font-size: 0.65rem; background: #faf5ff !important; border-color: #d8b4fe !important; color: #7c3aed !important;">
+                                    <span><i class="fa fa-microphone me-1"></i> Record Voice Note</span>
+                                    <span class="badge bg-white text-muted" style="font-size: 0.6rem; border: 1px solid #e2e8f0;">Optional</span>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="p-1 px-2 rounded-2 border bg-light text-muted" style="font-size: 0.68rem; height: 34px;">Share your Experience</div>
                             </div>
                             <div class="p-1.5 rounded-3 text-center fw-bold text-white shadow-sm" style="font-size: 0.7rem; background: linear-gradient(135deg, #4f46e5, #7c3aed);">
                                 <i class="fa fa-paper-plane me-1"></i> Share your Experience
