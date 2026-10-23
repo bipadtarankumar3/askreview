@@ -1210,6 +1210,28 @@
     }
 
     function open_scratch_card_modal() {
+        try {
+            if (typeof review_links_analytics === 'function') {
+                review_links_analytics('scratch_card');
+            } else if (typeof $ !== 'undefined') {
+                var uId = "{{ $user->id ?? ($activeScratchCard->user_id ?? '') }}";
+                var csrf = "{{ csrf_token() }}";
+                if (uId) {
+                    $.ajax({
+                        url: '{{ URL::to("/review_links_analytics") }}',
+                        type: 'POST',
+                        data: {
+                            type: 'scratch_card',
+                            _token: csrf,
+                            user_id: uId
+                        }
+                    });
+                }
+            }
+        } catch (e) {
+            console.warn('Track scratch err', e);
+        }
+
         scratchAudio.init();
         var modalEl = document.getElementById('scratchCardModal');
         if (!modalEl) return;

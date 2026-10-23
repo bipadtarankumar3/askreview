@@ -61,6 +61,7 @@ Route::post('/u/spinner_form_check/post',[FrontendController::class,'spinner_for
 Route::post('/u/spinner_round_check',[FrontendController::class,'spinner_round_check']);
 Route::get('/u/success_submit/{user_name}',[FrontendController::class,'success_submit']);
 Route::post('/u/review_links_analytics',[FrontendController::class,'review_links_analytics']);
+Route::post('/review_links_analytics',[FrontendController::class,'review_links_analytics']);
 Route::post('/u/scratch_card/submit', [ScratchCardController::class, 'submitCustomerLead'])->name('scratch_card.submit');
 Route::post('/u/scratch_card/track_scratch', [ScratchCardController::class, 'trackScratch'])->name('scratch_card.track');
 

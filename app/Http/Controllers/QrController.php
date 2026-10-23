@@ -33,65 +33,118 @@ class QrController extends Controller
                 $type = $request->input('type');
             
     
+            // Auto-sync any existing scratch card ip logs / leads for this user into review_links_analytics
+            try {
+                $scratchLogs = DB::table('scratch_card_ip_logs')
+                    ->where('user_id', $userId)
+                    ->get();
+                foreach ($scratchLogs as $sLog) {
+                    $exists = ReviewLinksAnalytics::where('user_id', $userId)
+                        ->whereIn('type', ['scratch_card', 'scratch'])
+                        ->where('ip_address', $sLog->ip_address)
+                        ->exists();
+                    if (!$exists) {
+                        ReviewLinksAnalytics::create([
+                            'user_id' => $userId,
+                            'ip_address' => $sLog->ip_address,
+                            'type' => 'scratch_card',
+                            'count' => 1,
+                            'created_at' => $sLog->created_at ?? now(),
+                            'updated_at' => $sLog->updated_at ?? now(),
+                        ]);
+                    }
+                }
+
+                $scratchLeads = DB::table('scratch_card_leads')
+                    ->where('user_id', $userId)
+                    ->whereNotNull('ip_address')
+                    ->get();
+                foreach ($scratchLeads as $sLead) {
+                    $exists = ReviewLinksAnalytics::where('user_id', $userId)
+                        ->whereIn('type', ['scratch_card', 'scratch'])
+                        ->where('ip_address', $sLead->ip_address)
+                        ->exists();
+                    if (!$exists) {
+                        ReviewLinksAnalytics::create([
+                            'user_id' => $userId,
+                            'ip_address' => $sLead->ip_address,
+                            'type' => 'scratch_card',
+                            'count' => 1,
+                            'created_at' => $sLead->created_at ?? now(),
+                            'updated_at' => $sLead->updated_at ?? now(),
+                        ]);
+                    }
+                }
+            } catch (\Exception $e) {}
+
             // Total Scans and Today's Scans
             $array['total_count'] = ReviewLinksAnalytics::where('user_id', $userId)->count();
             $array['today_count'] = ReviewLinksAnalytics::where('user_id', $userId)
                 ->whereDate('created_at', date('Y-m-d'))
                 ->count();
-    
-                
-                // Fetch Month-Wise Data
-                $array['typeWiseData'] = ReviewLinksAnalytics::selectRaw('type, COUNT(*) as total')
+
+            // Fetch Type-Wise Data
+            $array['typeWiseData'] = ReviewLinksAnalytics::selectRaw('type, COUNT(*) as total')
                 ->where('user_id', $userId)
                 ->groupBy('type')
                 ->orderBy('type')
                 ->get()
                 ->map(function ($item) {
+                    $label = $item->type;
+                    if ($item->type === 'scratch_card' || $item->type === 'scratch') {
+                        $label = 'scratch card';
+                    }
                     return [
-                        'name' => $item->type, // Use the `type` field for the label
+                        'name' => $label, // Use the label for chart column
                         'y' => (int)$item->total // Total count for each type
                     ];
                 });
-            
 
-                    $array['pieChart'] = ReviewLinksAnalytics::whereYear('created_at', now()->year)
-                    ->selectRaw('MONTH(created_at) as month, COUNT(*) as count')
-                    ->where('user_id', $userId)
-                    ->groupBy('month')
-                    ->orderBy('month')
-                    ->get()
-                    ->map(function ($item) {
-                        return ['name' => DateTime::createFromFormat('!m', $item->month)->format('F'), 'y' => $item->count];
-                    });
-            
-                // Fetch Date-Wise Data (based on search filters)
-                $query = ReviewLinksAnalytics::selectRaw('DATE(created_at) as date, type, COUNT(*) as total')
+            $array['pieChart'] = ReviewLinksAnalytics::whereYear('created_at', now()->year)
+                ->selectRaw('MONTH(created_at) as month, COUNT(*) as count')
+                ->where('user_id', $userId)
+                ->groupBy('month')
+                ->orderBy('month')
+                ->get()
+                ->map(function ($item) {
+                    return ['name' => DateTime::createFromFormat('!m', $item->month)->format('F'), 'y' => $item->count];
+                });
+
+            // Fetch Date-Wise Data (based on search filters)
+            $query = ReviewLinksAnalytics::selectRaw('DATE(created_at) as date, type, COUNT(*) as total')
                 ->where('user_id', $userId)
                 ->groupBy('date', 'type')
                 ->orderBy('date', 'ASC');
-            
+
             if ($fromDate) {
                 $query->whereDate('created_at', '>=', $fromDate);
             }
-            
+
             if ($toDate) {
                 $query->whereDate('created_at', '<=', $toDate);
             }
-            
+
             if ($type && $type !== 'all') {
-                $query->where('type', $type);
+                if ($type === 'scratch_card' || $type === 'scratch') {
+                    $query->whereIn('type', ['scratch_card', 'scratch']);
+                } else {
+                    $query->where('type', $type);
+                }
             }
-            
+
             $array['dateTypeWiseData'] = $query->get()
                 ->map(function ($item) {
+                    $tName = $item->type;
+                    if ($tName === 'scratch_card' || $tName === 'scratch') {
+                        $tName = 'scratch card';
+                    }
                     return [
                         'date' => $item->date,
-                        'type' => $item->type,
+                        'type' => $tName,
                         'total' => (int)$item->total
                     ];
                 });
-            
-    
+
             return view('user.analytics.links_analytics', $array);
         }
     }

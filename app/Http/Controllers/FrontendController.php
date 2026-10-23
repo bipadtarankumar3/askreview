@@ -1090,21 +1090,27 @@ class FrontendController extends Controller
     public function review_links_analytics(Request $request){
 
         $ip_address = request()->ip();
+        $userId = $request->user_id;
+        if (empty($userId) && $request->filled('user_name')) {
+            $userId = User::where('name_url', $request->user_name)->value('id');
+        }
 
-        $review_track = ReviewLinksAnalytics::where('ip_address',request()->ip())
-        ->where('type',$request->type)
-        ->where('user_id',$request->user_id)
-        ->first();
-        if (empty($review_track)) {
-            ReviewLinksAnalytics::create([
-                'user_id'=>$request->user_id,
-                'ip_address'=>request()->ip(),
-                'type'=>$request->type,
-                'count'=>1
-            ]);
+        if (!empty($userId) && !empty($request->type)) {
+            $review_track = ReviewLinksAnalytics::where('ip_address', $ip_address)
+                ->where('type', $request->type)
+                ->where('user_id', $userId)
+                ->first();
+            if (empty($review_track)) {
+                ReviewLinksAnalytics::create([
+                    'user_id' => $userId,
+                    'ip_address' => $ip_address,
+                    'type' => $request->type,
+                    'count' => 1
+                ]);
+            }
         }
         
-        return response()->json(['status'=>true]);
+        return response()->json(['status' => true]);
         
     }
 

@@ -100,7 +100,7 @@
                                                     <input type="date" name="to_date" id="to_date" class="form-control" value="{{ request('to_date') }}">
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <label for="to_date">Type:</label>
+                                                    <label for="type">Type:</label>
                                                     <select name="type" id="type" class="form-control" >
                                                         <option value="all" @if(request('type') == 'all') selected @endif>All</option>
                                                         <option value="google"  @if(request('type') == 'google') selected @endif>Google</option>
@@ -110,6 +110,7 @@
                                                         <option value="youtube"  @if(request('type') == 'youtube') selected @endif>Youtube</option>
                                                         <option value="record"  @if(request('type') == 'record') selected @endif>Video Testimonial</option>
                                                         <option value="private"  @if(request('type') == 'private') selected @endif>Private Inquiry</option>
+                                                        <option value="scratch_card"  @if(request('type') == 'scratch_card' || request('type') == 'scratch') selected @endif>Scratch Card</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-3">
@@ -152,7 +153,7 @@
             xAxis: {
                 type: 'category',
                 title: {
-                    text: 'Month'
+                    text: 'Platform'
                 }
             },
             yAxis: {

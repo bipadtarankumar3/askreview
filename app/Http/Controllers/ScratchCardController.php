@@ -823,6 +823,22 @@ class ScratchCardController extends Controller
                     'updated_at' => now(),
                 ]);
             }
+
+            // Also record in ReviewLinksAnalytics
+            try {
+                $review_track = \App\Models\ReviewLinksAnalytics::where('ip_address', $ip)
+                    ->whereIn('type', ['scratch_card', 'scratch'])
+                    ->where('user_id', $user->id)
+                    ->first();
+                if (empty($review_track)) {
+                    \App\Models\ReviewLinksAnalytics::create([
+                        'user_id' => $user->id,
+                        'ip_address' => $ip,
+                        'type' => 'scratch_card',
+                        'count' => 1
+                    ]);
+                }
+            } catch (\Exception $e) {}
         }
 
         return response()->json([
@@ -846,6 +862,22 @@ class ScratchCardController extends Controller
             $card = ScratchCard::find($request->scratch_card_id);
             if ($card) {
                 $ip = $request->ip();
+
+                // Track in ReviewLinksAnalytics
+                try {
+                    $review_track = \App\Models\ReviewLinksAnalytics::where('ip_address', $ip)
+                        ->whereIn('type', ['scratch_card', 'scratch'])
+                        ->where('user_id', $card->user_id)
+                        ->first();
+                    if (empty($review_track)) {
+                        \App\Models\ReviewLinksAnalytics::create([
+                            'user_id' => $card->user_id,
+                            'ip_address' => $ip,
+                            'type' => 'scratch_card',
+                            'count' => 1
+                        ]);
+                    }
+                } catch (\Exception $e) {}
 
                 if (!empty($ip)) {
                     $alreadyScratched = DB::table('scratch_card_ip_logs')
